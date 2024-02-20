@@ -7,13 +7,13 @@ The application facilitates an exchange of books between users. This way promoti
 
 ## Features:
 
-- [x] **Book Listing:** Users can browse the collection of books available for rent.
+- [] **Book Listing:** Users can browse the collection of books available for rent.
   
-- [x] **Renting:** Users can rent books from others within the community.
+- [] **Renting:** Users can rent books from others within the community.
   
-- [x] **Lending:** Users can list their own books for rent, contributing to the shared pool of resources.
+- [] **Lending:** Users can list their own books for rent, contributing to the shared pool of resources.
 
-- [x] **User Profiles** Profiles for each user.
+- [] **User Profiles** Profiles for each user.
 
 -----------------------------
 
