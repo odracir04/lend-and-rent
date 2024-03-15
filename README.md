@@ -1,21 +1,12 @@
 # Lend and Rent
 
-## Overview
+## Overview:
 
 Lend and Rent is a team project aimed at creating a platform for users to rent and lend books.
 The application facilitates an exchange of books between users. This way promoting sustainability by reducing the demand for new copies, as well making it possible for some students to obtain essential course materials.
 
-## Features:
-
-- [] **Book Listing:** Users can browse the collection of books available for rent.
-  
-- [] **Renting:** Users can rent books from others within the community.
-  
-- [] **Lending:** Users can list their own books for rent, contributing to the shared pool of resources.
-
-- [] **User Profiles** Profiles for each user.
-
------------------------------
+* Business modeling 
+  * [Product Vision](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/blob/main/docs/ProductVision.md) 
 
 ## This project was developed by:
 
