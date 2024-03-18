@@ -4,6 +4,7 @@ Each user has a profile with its own page and details. This enables them to rent
     Scenario: User wants to see a profile
     When a user opens a profile page
     Then the information of that user should appear
+    And the comments should appear
 
     Scenario: User wants to edit his profile
     Given that a user is logged in
@@ -28,3 +29,14 @@ Each user has a profile with its own page and details. This enables them to rent
     Scenario: User creates profile
     When a user signs up
     Then his profile page should be created
+
+    Scenario: User comments on profile
+    Given that a user is logged in
+    When a user writes a comment
+    And clicks the comment button
+    Then the comment should be sent
+
+    Scenario: User reports profile
+    Given that a user is logged in
+    When the user presses the report button
+    Then a report should be sent

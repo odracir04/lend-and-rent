@@ -15,7 +15,18 @@ proper authentication.
     And the user presses login
     Then login should not occur
 
+    Scenario: Registering user
+    When the user presses register
+    Then the register page should appear
+
     Scenario: Wrong credentials
     When the user inputs the wrong username and password
     And the user presses login
     Then login should not occur
+
+    Scenario: Creating account
+    Given a user isn't registered
+    When the user inputs all his details
+    And the user presses register
+    Then an account should be created
+    And login should occur

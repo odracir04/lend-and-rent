@@ -4,6 +4,7 @@ Feature: Book page
     When a user opens a book page
     Then the book details should appear
     And the user renting the book should appear
+    And the comments should appear
 
     Scenario: User creates book page
     Given a user is logged in
@@ -28,4 +29,9 @@ Feature: Book page
     When a user clicks rent book
     Then a chat with the rented should be created
     And the chat should open
+
+    Scenario: User comments on book
+    When a user writes a comment
+    And clicks the comment button
+    Then the comment should be sent
     
