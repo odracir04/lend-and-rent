@@ -11,6 +11,7 @@ Admins should be able to remove books as they see fit.
     # Filtered book list search
     Scenario: User looks for books with filters
     Given the user has enabled search filters
+    And there are books in the database
     When a user searches for books
     Then the books matching the filters should be listed
     But the books not matching the filters should not be listed
@@ -34,7 +35,7 @@ Admins should be able to remove books as they see fit.
 
     # Remove books from list (rented)
     Scenario: Book is rented
-    When a book is rented
+    When a book is marked as rented
     Then the book should be unlisted
 
     # Go to book page

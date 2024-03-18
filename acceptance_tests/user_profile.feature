@@ -1,5 +1,5 @@
 Feature: User Profile
-Each user has a profile with its own page and details
+Each user has a profile with its own page and details. This enables them to rent books.
     
     Scenario: User wants to see a profile
     When a user opens a profile page

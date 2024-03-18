@@ -3,7 +3,7 @@ Feature: Book page
     Scenario: User opens book page
     When a user opens a book page
     Then the book details should appear
-    And the user renting it should appear
+    And the user renting the book should appear
 
     Scenario: User creates book page
     Given a user is logged in
@@ -23,4 +23,9 @@ Feature: Book page
     Scenario: User clicks renter icon
     When a user clicks the renter icon
     Then the renter's profile page should open
+
+    Scenario: User wants to rent book
+    When a user clicks rent book
+    Then a chat with the rented should be created
+    And the chat should open
     
