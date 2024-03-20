@@ -16,5 +16,4 @@ class App extends StatelessWidget {
       title: "Lend and Rent (Prototype)",
     );
   }
-
 }
