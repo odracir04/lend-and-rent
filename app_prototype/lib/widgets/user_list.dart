@@ -1,3 +1,4 @@
+import 'package:app_prototype/widgets/user_list_item.dart';
 import 'package:flutter/material.dart';
 
 class UserList extends StatelessWidget {
@@ -12,9 +13,6 @@ class UserList extends StatelessWidget {
         scrollDirection: Axis.vertical,
         itemCount: users.length,
         itemBuilder: (context, index) =>
-        ListTile(
-          title: Text("User ${users[index]}"),
-          leading: const Icon(Icons.person),
-        ));
+        const UserListItem());
   }
 }

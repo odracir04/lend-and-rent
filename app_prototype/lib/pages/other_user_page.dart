@@ -1,4 +1,5 @@
 import 'package:app_prototype/widgets/book_list.dart';
+import 'package:app_prototype/widgets/chat_button.dart';
 import 'package:app_prototype/widgets/user_profile.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,14 @@ class OtherUserPage extends StatelessWidget {
     return Scaffold(
       body: const Column(
         children: [
-          UserProfile(),
+          Row(
+          children: [
+            UserProfile(),
+            Padding(
+                padding: EdgeInsets.fromLTRB(150, 0, 0, 0),
+                child: ChatButton())
+            ],
+          ),
           Text("Books for Rent",
             style: TextStyle(fontWeight: FontWeight.w700),
           ),

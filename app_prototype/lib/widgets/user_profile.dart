@@ -6,17 +6,19 @@ class UserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        UserIcon(),
-        Column(
+    return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+        child: Row(
           children: [
-            Text("Username"),
-            Text("User location")
+            UserIcon(),
+            Column(
+              children: [
+                Text("Username"),
+                Text("User location")
+              ],
+            ),
           ],
-        )
-      ],
-    );
+    ));
   }
 
 }

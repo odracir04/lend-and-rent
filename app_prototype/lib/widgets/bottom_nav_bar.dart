@@ -1,6 +1,8 @@
+import 'package:app_prototype/pages/chat_list_page.dart';
 import 'package:flutter/material.dart';
 
 import '../pages/book_list_page.dart';
+import '../pages/chat_page.dart';
 import '../pages/login_page.dart';
 import '../pages/user_page.dart';
 
@@ -31,6 +33,11 @@ class BottomNavBarState extends State<BottomNavBar> {
         case 2:
           Navigator.push(context,
               MaterialPageRoute(builder:
+                  (BuildContext context) { return const ChatListPage(); }));
+          break;
+        case 3:
+          Navigator.push(context,
+              MaterialPageRoute(builder:
                   (BuildContext context) { return const LoginPage(); }));
       }
     });
@@ -40,12 +47,12 @@ class BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.book), label: "Books"),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        BottomNavigationBarItem(icon: Icon(Icons.logout), label: "Logout")
+        BottomNavigationBarItem(icon: Icon(Icons.book), label: "Books", backgroundColor: Colors.black),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile", backgroundColor: Colors.black),
+        BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Chats", backgroundColor: Colors.black),
+        BottomNavigationBarItem(icon: Icon(Icons.logout), label: "Logout", backgroundColor: Colors.black)
       ],
       onTap: _onTap,
-      selectedItemColor: Colors.deepPurple,
       currentIndex: widget.currentIndex,
     );
   }
