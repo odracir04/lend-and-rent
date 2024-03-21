@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../pages/user_page.dart';
+import '../pages/other_user_page.dart';
 
 class UserIcon extends StatefulWidget {
   const UserIcon({super.key});
@@ -13,7 +13,7 @@ class UserIconState extends State<UserIcon> {
   void _onPressed() {
     setState(() {
       Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) { return const UserPage(); }));
+          MaterialPageRoute(builder: (BuildContext context) { return const OtherUserPage(); }));
     });
   }
 
@@ -21,7 +21,7 @@ class UserIconState extends State<UserIcon> {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: _onPressed,
-      icon: const Icon(Icons.person)
+      icon: Image.asset("assets/images/profile.png", height: 30, width: 30,)
     );
   }
 

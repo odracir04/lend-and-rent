@@ -20,23 +20,17 @@ class BookListState extends State<BookList> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Expanded(child: ListView.builder(
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
-      children: [
-        GestureDetector(
+      itemCount: 5,
+      itemBuilder: (BuildContext context, int index) {
+        return GestureDetector(
           onTap: _onTap,
-          child: const BookCard(bookName: "Book 1", authorName: "Jack K."),
-        ),
-        GestureDetector(
-          onTap: _onTap,
-          child: const BookCard(bookName: "Book 2", authorName: "Fyodor D."),
-        ),
-        GestureDetector(
-          onTap: _onTap,
-          child: const BookCard(bookName: "Book 3", authorName: "Sylvia P."),
-        ),
-      ],
-    );
+          child: BookCard(bookName: "Book ${index + 1}",
+              authorName: "Author ${index + 1}"),
+        );
+      },
+    ));
   }
 }

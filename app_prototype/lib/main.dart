@@ -1,6 +1,5 @@
+import 'package:app_prototype/pages/login_page.dart';
 import 'package:flutter/material.dart';
-
-import 'pages/book_list_page.dart';
 
 void main() {
   runApp(const App());
@@ -12,7 +11,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: BookListPage(),
+      home: LoginPage(),
       title: "Lend and Rent (Prototype)",
     );
   }

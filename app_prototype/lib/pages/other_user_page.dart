@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 
 import '../widgets/bottom_nav_bar.dart';
 
-class UserPage extends StatelessWidget {
-  const UserPage({super.key});
+class OtherUserPage extends StatelessWidget {
+  const OtherUserPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: const Column(
-      children: [
-        UserProfile(),
-        Text("Previously Rented Books",
-          style: TextStyle(fontWeight: FontWeight.w700),
+      body: const Column(
+        children: [
+          UserProfile(),
+          Text("Books for Rent",
+            style: TextStyle(fontWeight: FontWeight.w700),
           ),
-        BookList()
-      ],
-    ),
+          BookList()
+        ],
+      ),
       bottomNavigationBar: BottomNavBar(currentIndex: 1,),
     );
   }

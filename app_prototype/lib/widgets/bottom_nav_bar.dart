@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../pages/book_list_page.dart';
+import '../pages/login_page.dart';
 import '../pages/user_page.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -16,15 +17,21 @@ class BottomNavBarState extends State<BottomNavBar> {
 
   void _onTap(int index) {
     setState((){
-      if (index == 0) {
-        Navigator.push(context,
-            MaterialPageRoute(builder:
+      switch (index){
+        case 0:
+          Navigator.push(context,
+              MaterialPageRoute(builder:
                 (BuildContext context) { return const BookListPage(); }));
-      }
-      else {
-        Navigator.push(context,
-            MaterialPageRoute(builder:
+        break;
+        case 1:
+          Navigator.push(context,
+             MaterialPageRoute(builder:
                 (BuildContext context) { return const UserPage(); }));
+        break;
+        case 2:
+          Navigator.push(context,
+              MaterialPageRoute(builder:
+                  (BuildContext context) { return const LoginPage(); }));
       }
     });
   }
@@ -35,6 +42,7 @@ class BottomNavBarState extends State<BottomNavBar> {
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.book), label: "Books"),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+        BottomNavigationBarItem(icon: Icon(Icons.logout), label: "Logout")
       ],
       onTap: _onTap,
       selectedItemColor: Colors.deepPurple,

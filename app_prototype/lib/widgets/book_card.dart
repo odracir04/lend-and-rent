@@ -16,7 +16,8 @@ class BookCard extends StatelessWidget {
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text("Book cover image"),
+          Image.asset("assets/images/book.jpg",
+              fit: BoxFit.fill),
           Row(
             children: [
               const UserIcon(),

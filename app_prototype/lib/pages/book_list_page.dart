@@ -1,4 +1,5 @@
 import 'package:app_prototype/widgets/book_list.dart';
+import 'package:app_prototype/widgets/filter_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/bottom_nav_bar.dart';
@@ -16,6 +17,7 @@ class BookListPage extends StatelessWidget {
             leading: const Icon(Icons.search),
             hintText: "Search for books here...",
           ),
+          const FilterBar(),
           const BookList(),
       ],
     ),
