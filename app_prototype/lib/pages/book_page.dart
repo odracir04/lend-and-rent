@@ -15,6 +15,7 @@ class BookPage extends StatelessWidget {
           const BookProfile(),
           const Text("Users renting this book"),
           UserList(),
+          const Text("Comments"),
         ],
       )),
       bottomNavigationBar: BottomNavBar(currentIndex: 0),

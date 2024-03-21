@@ -17,14 +17,18 @@ class OtherUserPage extends StatelessWidget {
           children: [
             UserProfile(),
             Padding(
-                padding: EdgeInsets.fromLTRB(150, 0, 0, 0),
-                child: ChatButton())
+                padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
+                child: Row(children: [
+                  ChatButton(),
+                  ElevatedButton(onPressed: null, child: Text("Report"),),
+                ],))
             ],
           ),
           Text("Books for Rent",
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
-          BookList()
+          BookList(),
+          Text("Comments",),
         ],
       ),
       bottomNavigationBar: BottomNavBar(currentIndex: 1,),
