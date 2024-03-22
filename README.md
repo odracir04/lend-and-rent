@@ -6,7 +6,7 @@ You can find here details about the _Lend and Rent_, from a high-level vision to
 
 * [Business modeling](#Business-Modelling) 
   * [Product Vision](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/blob/main/docs/ProductVision.md) 
-  * [Features and Assumptions](#Features-and-Assumptions)
+  * [Features and Assumptions](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/blob/main/docs/ProductVision.md#main-features)
   * [Elevator Pitch](#Elevator-pitch)
 * [Requirements](#Requirements)
   * [User stories](#User-stories)
@@ -31,14 +31,6 @@ Thank you!
 
 ---
 ## Business Modelling
-
-### Features and Assumptions
-Indicate an  initial/tentative list of high-level features - high-level capabilities or desired services of the system that are necessary to deliver benefits to the users.
- - Feature XPTO - a few words to briefly describe the feature
- - Feature ABCD - ...
-...
-
-Optionally, indicate an initial/tentative list of assumptions that you are doing about the app and dependencies of the app to other systems.
 
 ### Elevator Pitch
 Draft a small text to help you quickly introduce and describe your product in a short time (lift travel time ~90 seconds) and a few words (~800 characters), a technique usually known as elevator pitch.
