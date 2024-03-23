@@ -10,10 +10,10 @@ class UserPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: const Column(
+        body: Column(
       children: [
-        UserProfile(),
-        Text("Previously Rented Books",
+        const UserProfile(),
+        const Text("Previously Rented Books",
           style: TextStyle(fontWeight: FontWeight.w700),
           ),
         BookList()

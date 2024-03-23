@@ -11,9 +11,9 @@ class OtherUserPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Column(
+      body: Column(
         children: [
-          Row(
+          const Row(
           children: [
             UserProfile(),
             Padding(
@@ -24,11 +24,11 @@ class OtherUserPage extends StatelessWidget {
                 ],))
             ],
           ),
-          Text("Books for Rent",
+          const Text("Books for Rent",
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
           BookList(),
-          Text("Comments",),
+          const Text("Comments",),
         ],
       ),
       bottomNavigationBar: BottomNavBar(currentIndex: 1,),

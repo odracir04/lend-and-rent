@@ -18,7 +18,7 @@ class BookListPage extends StatelessWidget {
             hintText: "Search for books here...",
           ),
           const FilterBar(),
-          const BookList(),
+          BookList(),
       ],
     ),
       bottomNavigationBar: BottomNavBar(currentIndex: 0,),
