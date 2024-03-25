@@ -1,6 +1,6 @@
-import 'package:app_prototype/pages/login_page.dart';
+import 'package:app_prototype/pages/book_list_page.dart';
+import 'package:app_prototype/themes/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 
@@ -17,8 +17,9 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: LoginPage(),
+    return MaterialApp(
+      theme: Themes.getTheme(false),
+      home: const BookListPage(),
       title: "Lend and Rent (Prototype)",
     );
   }

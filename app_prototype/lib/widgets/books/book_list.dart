@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../database/books.dart';
-import '../pages/book_page.dart';
+import '../../database/books.dart';
 import 'book_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -14,13 +13,6 @@ class BookList extends StatefulWidget {
 class BookListState extends State<BookList> {
 
   late Future<List<DocumentSnapshot>> books;
-
-  void _onTap() {
-    setState(() {
-      Navigator.push(context, MaterialPageRoute
-        (builder: (context) => const BookPage()));
-    });
-  }
 
   @override
   void initState() {
@@ -48,9 +40,11 @@ class BookListState extends State<BookList> {
               itemBuilder: (BuildContext context, int index) {
                 Map<String, dynamic> bookData = books[index].data() as Map<String, dynamic>;
                 return GestureDetector(
-                  onTap: _onTap,
+                  onTap: null,
                   child: BookCard(bookName: "${bookData['title']}",
-                      authorName: "${bookData['author']}"),
+                      authorName: "${bookData['author']}",
+                      imagePath: "${bookData['imagePath']}",
+                      location: "${bookData['location']}",),
                 );
               },
             ));
