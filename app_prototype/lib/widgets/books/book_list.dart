@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../database/books.dart';
 import 'book_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BookList extends StatefulWidget {
-  const BookList({super.key});
+  BookList({super.key, required this.books});
+
+  late Future<List<DocumentSnapshot>> books;
 
   @override
   State<StatefulWidget> createState() => BookListState();
@@ -12,18 +13,10 @@ class BookList extends StatefulWidget {
 
 class BookListState extends State<BookList> {
 
-  late Future<List<DocumentSnapshot>> books;
-
-  @override
-  void initState() {
-    super.initState();
-    books = getBooks(5);
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: books,
+        future: widget.books,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();

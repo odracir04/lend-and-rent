@@ -18,7 +18,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: Themes.getTheme(false),
+      theme: Themes.getTheme(true),
       home: const BookListPage(),
       title: "Lend and Rent (Prototype)",
     );
