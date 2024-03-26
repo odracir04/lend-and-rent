@@ -75,6 +75,7 @@ The app is structured so that users can lend and rent books. Therefore, users ca
 ## Architecture and Design
 > [!WARNING]
 > This section is not written out yet.
+
 The architecture of a software system encompasses the set of key decisions about its overall organization. 
 
 A well written architecture document is brief but reduces the amount of time it takes new programmers to a project to understand the code to feel able to make modifications and enhancements.
@@ -109,6 +110,7 @@ The vertical prototype consists of a simpler version of the apps home page conta
 ## Project management
 > [!WARNING]
 > This section is not written out yet.
+
 Software project management is the art and science of planning and leading software projects, in which software projects are planned, implemented, monitored and controlled.
 
 In the context of ESOF, we recommend each team to adopt a set of project management practices and tools capable of registering tasks, assigning tasks to team members, adding estimations to tasks, monitor tasks progress, and therefore being able to track their projects.
