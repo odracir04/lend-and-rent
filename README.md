@@ -5,8 +5,8 @@ Welcome to the documentation pages of the _Lend and Rent_!
 You can find here details about the _Lend and Rent_, from a high-level vision to low-level implementation decisions, a kind of Software Development Report, organized by type of activities: 
 
 * [Business modeling](#Business-Modelling) 
-  * [Product Vision](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/blob/main/docs/ProductVision.md) 
-  * [Features and Assumptions](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/blob/main/docs/ProductVision.md#main-features)
+  * [Product Vision](#Product-Vision)
+  * [Features and Assumptions](#Features-and-Assumptions)
   * [Elevator Pitch](#Elevator-pitch)
 * [Requirements](#Requirements)
   * [User stories](#User-stories)
@@ -30,9 +30,9 @@ Thank you!
 - Tomás Alexandre Torres Pereira (up202108845@up.pt)
 
 ---
-### Business Modelling
+## Business Modelling
 
-## Product Vision
+### Product Vision
 Lend and Rent envisions to facilitate the lives of our community, encouraging a connected community throught resource sharing.
 
 We believe that knowledge is power, and our mission is to empower users through our app, fostering connections and promoting sustainable practices one book at a time.
@@ -49,6 +49,8 @@ We believe that knowledge is power, and our mission is to empower users through 
 - [x] **User Profiles:** Profiles for each user to manage their accounts and user details.
 
 ### Elevator Pitch
+> [!WARNING]
+> This section is not written out yet.
 Draft a small text to help you quickly introduce and describe your product in a short time (lift travel time ~90 seconds) and a few words (~800 characters), a technique usually known as elevator pitch.
 
 Take a look at the following links to learn some techniques:
@@ -71,6 +73,8 @@ The app is structured so that users can lend and rent books. Therefore, users ca
 
 
 ## Architecture and Design
+> [!WARNING]
+> This section is not written out yet.
 The architecture of a software system encompasses the set of key decisions about its overall organization. 
 
 A well written architecture document is brief but reduces the amount of time it takes new programmers to a project to understand the code to feel able to make modifications and enhancements.
@@ -94,14 +98,17 @@ It should describe also the technologies considered and justify the selections m
 ![DeploymentView](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/blob/main/docs/Architecture%20and%20Design/physical_architecture.png)
 
 ### Vertical prototype
-To help on validating all the architectural, design and technological decisions made, we usually implement a vertical prototype, a thin vertical slice of the system integrating as much technologies we can.
+To help on validating all the architectural, design and technological decisions made, we have implemented a vertical prototype, a thin vertical slice of the system integrating as many technologies as we can.
 
-In this subsection please describe which feature, or part of it, you have implemented, and how, together with a snapshot of the user interface, if applicable.
-
-At this phase, instead of a complete user story, you can simply implement a small part of a feature that demonstrates thay you can use the technology, for example, show a screen with the app credits (name and authors).
-
+The vertical prototype consists of a simpler version of the apps home page containing only the following functionalities:
+- Book display
+- Database access for book retrieval
+- Book search
+- Theming, dark and light mode
 
 ## Project management
+> [!WARNING]
+> This section is not written out yet.
 Software project management is the art and science of planning and leading software projects, in which software projects are planned, implemented, monitored and controlled.
 
 In the context of ESOF, we recommend each team to adopt a set of project management practices and tools capable of registering tasks, assigning tasks to team members, adding estimations to tasks, monitor tasks progress, and therefore being able to track their projects.
@@ -110,7 +117,7 @@ Common practices of managing iterative software development are: backlog managem
 
 You can find below information and references related with the project management in our team: 
 
-* Backlog management: Product backlog and Sprint backlog in a [Github Projects board](https://github.com/orgs/FEUP-LEIC-ES-2023-24/projects/64);
+* Backlog management: Product backlog and Sprint backlog in a [Github Projects board](https://github.com/orgs/FEUP-LEIC-ES-2023-24/projects/54);
 * Release management: [v0](#), v1, v2, v3, ...;
 * Sprint planning and retrospectives: 
   * plans: screenshots of Github Projects board at begin and end of each iteration;
