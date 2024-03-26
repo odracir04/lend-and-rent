@@ -9,17 +9,31 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const App());
+  runApp(App());
 }
 
-class App extends StatelessWidget {
-  const App({super.key});
+class App extends StatefulWidget {
+  App({super.key});
+
+  bool darkTheme = false;
+
+  @override
+  State<StatefulWidget> createState() => AppState();
+}
+
+class AppState extends State<App> {
+
+  void changeTheme() {
+    setState(() {
+      widget.darkTheme = !widget.darkTheme;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: Themes.getTheme(true),
-      home: const BookListPage(),
+      theme: Themes.getTheme(widget.darkTheme),
+      home: BookListPage(changeTheme: changeTheme, darkTheme: widget.darkTheme,),
       title: "Lend and Rent (Prototype)",
     );
   }

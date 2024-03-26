@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 
 
 class BookListPage extends StatefulWidget {
-  const BookListPage({super.key});
+  BookListPage({super.key, required this.changeTheme, required this.darkTheme});
+
+  final VoidCallback changeTheme;
+  bool darkTheme;
 
   @override
   State<StatefulWidget> createState() => BookListPageState();
@@ -39,13 +42,22 @@ class BookListPageState extends State<BookListPage> {
         body: Column(
           children: [
             Container(
-                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                child: SearchBar(
-                  padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
-                  leading: const Icon(Icons.search),
-                  hintText: "Search for books here...",
-                  onSubmitted: searchBooks,
-                )),
+              margin: const EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  Flexible(
+                      child: SearchBar(
+                        padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
+                        leading: const Icon(Icons.search),
+                        hintText: "Search for books here...",
+                        onSubmitted: searchBooks,
+                      )
+                  ),
+                  IconButton(onPressed: widget.changeTheme
+                      , icon: Icon(widget.darkTheme ? Icons.light_mode : Icons.dark_mode))
+                ],
+              ),
+            ),
             const FilterBar(),
             BookList(books: books,),
           ],
