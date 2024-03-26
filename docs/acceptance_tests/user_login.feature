@@ -5,7 +5,8 @@ proper authentication.
 
     Scenario: User login
     Given a user is registered
-    When the user inputs the correct username and password
+    When the user inputs the correct username
+    And the user inputs the correct password
     And the user presses login
     Then login should occur
 

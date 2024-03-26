@@ -16,6 +16,13 @@ Admins should be able to remove books as they see fit.
     Then the books matching the filters should be listed
     But the books not matching the filters should not be listed
 
+    # Book search
+    Scenario: User searches book name
+    When a user writes a string in the search bar
+    And the user presses search
+    Then books matching the string should appear
+    But books not matching the string should not appear
+
     # Add books to the list
     Scenario: User adds book to the list
     When the user puts a book up for rent

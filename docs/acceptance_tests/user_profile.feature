@@ -32,11 +32,13 @@ Each user has a profile with its own page and details. This enables them to rent
 
     Scenario: User comments on profile
     Given that a user is logged in
+    And the user is in another users profile page
     When a user writes a comment
     And clicks the comment button
     Then the comment should be sent
 
     Scenario: User reports profile
     Given that a user is logged in
+    And the user is in another users profile page
     When the user presses the report button
     Then a report should be sent
