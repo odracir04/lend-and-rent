@@ -124,4 +124,14 @@ You can find below information and references related with the project managemen
 * Sprint planning and retrospectives: 
   * plans: screenshots of Github Projects board at begin and end of each iteration;
   * retrospectives: meeting notes in a document in the repository;
+
+ ---
+
+ ## Sprint 0
+
+ **Sprint Planning**
+ 
+<p align="center" justify="center">
+  <img src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/blob/main/docs/backlog/sprint0.png"/>
+</p>
  
