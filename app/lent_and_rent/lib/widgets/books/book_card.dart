@@ -14,13 +14,13 @@ class BookCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       color: Theme.of(context).cardColor,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Stack(
+      child: Stack(
           children: [
-            Image.asset(
-              imagePath, fit: BoxFit.cover
-            ),
+            ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                imagePath, fit: BoxFit.cover
+            )),
             Positioned(
                   bottom: 8,
                   left: 8,
@@ -30,14 +30,30 @@ class BookCard extends StatelessWidget {
                   children: [
                     Row(
                     children: [
-                      const UserIcon(),
+                        Container(
+                          margin: const EdgeInsets.only(right: 30),
+                          constraints: const BoxConstraints(maxHeight: 75, maxWidth: 100),
+                          child: const UserIcon(),
+                        ),
                       Expanded(
                         child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(location),
-                          Text(bookName, textAlign: TextAlign.left,),
-                          Text(authorName),
+                          Text(location,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),),
+                          Text(bookName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                          ),),
+                          Text(authorName,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w300,
+                            ),),
                         ],
                       )),
                     ],
@@ -47,6 +63,6 @@ class BookCard extends StatelessWidget {
             ),
           ],
       )
-    ));
+    );
   }
 }

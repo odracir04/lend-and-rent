@@ -14,7 +14,8 @@ class UserIconState extends State<UserIcon> {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: null,
-      icon: Image.asset("assets/images/profile.png", height: 30, width: 30,)
+      icon: ClipOval(
+              child: Image.asset("assets/images/profile.png"))
     );
   }
 
