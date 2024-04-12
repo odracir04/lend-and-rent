@@ -37,21 +37,33 @@ class AppState extends State<App> {
     // Define your navigation destinations
     List<Menu> destinations = [
       Menu(
-        icon: Icon(FontAwesomeIcons.book),
+        icon: FontAwesomeIcons.house,
         label: 'Books',
         destination: BookListPage(changeTheme: changeTheme, darkTheme: widget.darkTheme),
       ),
       Menu(
-        icon: Icon(FontAwesomeIcons.user),
+        icon: FontAwesomeIcons.user,
         label: 'Profile',
         destination: ProfilePage(changeTheme: changeTheme, darkTheme: widget.darkTheme),
-      )
+      ),
+      // Two Examples to remove later
+    Menu(
+        icon: FontAwesomeIcons.heart,
+        label: 'Favorites',
+        destination: null,
+      ),
+      Menu(
+        icon: FontAwesomeIcons.magnifyingGlass,
+        label: 'Search',
+        destination: null,
+      ),
       // Add more destinations as needed
     ];
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: Themes.getTheme(widget.darkTheme),
-      home: MenuBarNav(destinations: destinations), // Use the NavigationBar widget
+      home: MenuNavBarController(changeTheme: changeTheme, darkTheme: widget.darkTheme,destinations: destinations), // Use the NavigationBar widget
       title: "Lend and Rent (Prototype)",
     );
   }
