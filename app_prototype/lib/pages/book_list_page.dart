@@ -1,4 +1,5 @@
 import 'package:app_prototype/database/books.dart';
+import 'package:app_prototype/pages/search_page.dart';
 import 'package:app_prototype/widgets/books/book_list.dart';
 import 'package:app_prototype/widgets/filter_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,17 +19,6 @@ class BookListPage extends StatefulWidget {
 class BookListPageState extends State<BookListPage> {
 
   late Future<List<DocumentSnapshot>> books;
-
-  void searchBooks(String string) {
-    setState(() {
-      if (string.isEmpty) {
-        books = getBooks(20);
-      }
-      else {
-        books = getBooksSearch(string);
-      }
-    });
-  }
 
   @override
   void initState() {
@@ -50,7 +40,7 @@ class BookListPageState extends State<BookListPage> {
                         padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
                         leading: const Icon(Icons.search),
                         hintText: "Search for books here...",
-                        onSubmitted: searchBooks,
+                        onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));},
                       )
                   ),
                   IconButton(onPressed: widget.changeTheme
