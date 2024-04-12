@@ -15,9 +15,16 @@ class SearchPageState extends State<SearchPage> {
   late Future<List<DocumentSnapshot>> books;
 
   void searchBooks(String string) {
+    if (string.isEmpty) return;
     setState(() {
       books = getBooksSearch(string);
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    books = Future<List<DocumentSnapshot>>.value([]);
   }
 
   @override
@@ -29,11 +36,13 @@ class SearchPageState extends State<SearchPage> {
               margin: const EdgeInsets.all(8),
               child: Row(
                 children: [
-                  IconButton(onPressed: () {Navigator.pop(context);}, icon: Icon(Icons.arrow_back),),
+                  IconButton(onPressed: () {Navigator.pop(context); FocusManager.instance.primaryFocus?.unfocus();}, icon: Icon(Icons.arrow_back),),
                   Flexible(
                       child: SearchBar(
+                        autoFocus: true,
                         padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
-                        leading: const Icon(Icons.search),
+                        leading: IconButton(onPressed: null, icon: Icon(Icons.filter_list),),
+                        trailing: [const Icon(Icons.search)],
                         hintText: "Search for books here...",
                         onSubmitted: searchBooks,
                       )
@@ -41,6 +50,8 @@ class SearchPageState extends State<SearchPage> {
                 ],
               ),
             ),
+            const FilterBar(),
+            BookList(books: books,),
           ],
         )
     );

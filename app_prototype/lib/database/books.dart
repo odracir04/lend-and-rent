@@ -49,6 +49,5 @@ Future<List<DocumentSnapshot>> getBooksSearch(String string) async {
   for (DocumentSnapshot book in books.docs) {
     result.add(book);
   }
-  print("Length: " + result.length.toString());
   return result;
 }
