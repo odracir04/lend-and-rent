@@ -1,3 +1,4 @@
+import 'package:app_prototype/widgets/filter_button.dart';
 import 'package:flutter/material.dart';
 
 class FilterBar extends StatelessWidget {
@@ -8,43 +9,12 @@ class FilterBar extends StatelessWidget {
     return const Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        ElevatedButton(
-            onPressed: null,
-            style: ButtonStyle(
-              textStyle: MaterialStatePropertyAll(
-                  TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black12)
-              ),
-            ),
-            child: Text("Filter 1")),
+        FilterButton(text: "Filter 1"),
         SizedBox(width: 10,),
-        ElevatedButton(
-            onPressed: null,
-            style: ButtonStyle(
-              textStyle: MaterialStatePropertyAll(
-                  TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black12),
-              ),
-            ),
-            child: Text("Filter 2")),
+        FilterButton(text: "Filter 2"),
         SizedBox(width: 10,),
-        ElevatedButton(
-            onPressed: null,
-            style: ButtonStyle(
-              textStyle: MaterialStatePropertyAll(
-                  TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black12),
-              ),
-            ),
-            child: Text("Other Filters"))
+        FilterButton(text: "Other Filters")
       ],
     );
   }
-
 }
