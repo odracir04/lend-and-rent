@@ -1,29 +1,30 @@
-import 'package:app_prototype/database/books.dart';
-import 'package:app_prototype/pages/search_page.dart';
-import 'package:app_prototype/widgets/books/book_list.dart';
-import 'package:app_prototype/widgets/filter_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../database/books.dart';
+import '../widgets/books/book_list.dart';
+import '../widgets/filter_bar.dart';
 
-class BookListPage extends StatefulWidget {
-  BookListPage({super.key, required this.changeTheme, required this.darkTheme});
-
-  final VoidCallback changeTheme;
-  bool darkTheme;
-
+class SearchPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => BookListPageState();
+  State<StatefulWidget> createState() => SearchPageState();
 }
 
-class BookListPageState extends State<BookListPage> {
+class SearchPageState extends State<SearchPage> {
 
   late Future<List<DocumentSnapshot>> books;
+
+  void searchBooks(String string) {
+    if (string.isEmpty) return;
+    setState(() {
+      books = getBooksSearch(string);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    books = getBooks(20);
+    books = Future<List<DocumentSnapshot>>.value([]);
   }
 
   @override
@@ -35,18 +36,17 @@ class BookListPageState extends State<BookListPage> {
               margin: const EdgeInsets.all(8),
               child: Row(
                 children: [
+                  IconButton(onPressed: () {Navigator.pop(context); FocusManager.instance.primaryFocus?.unfocus();}, icon: Icon(Icons.arrow_back),),
                   Flexible(
                       child: SearchBar(
-                        keyboardType: TextInputType.none,
+                        autoFocus: true,
                         padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
-                        leading: const Icon(Icons.filter_list),
+                        leading: IconButton(onPressed: null, icon: Icon(Icons.filter_list),),
                         trailing: [const Icon(Icons.search)],
                         hintText: "Search for books here...",
-                        onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));},
+                        onSubmitted: searchBooks,
                       )
                   ),
-                  IconButton(onPressed: widget.changeTheme
-                      , icon: Icon(widget.darkTheme ? Icons.light_mode : Icons.dark_mode))
                 ],
               ),
             ),
