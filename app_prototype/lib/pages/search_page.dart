@@ -39,7 +39,7 @@ class SearchPageState extends State<SearchPage> {
                   IconButton(onPressed: () {Navigator.pop(context); FocusManager.instance.primaryFocus?.unfocus();}, icon: Icon(Icons.arrow_back),),
                   Flexible(
                       child: SearchBar(
-                        // autoFocus: true,
+                        autoFocus: true,
                         padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
                         leading: const IconButton(onPressed: null, icon: Icon(Icons.filter_list),),
                         trailing: const [Icon(Icons.search)],
