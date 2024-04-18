@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -7,8 +7,23 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final TextEditingController email = TextEditingController();
-  final TextEditingController password = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> _signInWithEmailAndPassword() async {
+    try {
+      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      // If sign in is successful, navigate to home page or perform other actions.
+      print('User signed in: ${userCredential.user!.uid}');
+    } catch (e) {
+      // Handle sign-in errors here.
+      print('Failed to sign in: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,68 +43,24 @@ class _SignInPageState extends State<SignInPage> {
             ),
             SizedBox(height: 20),
             TextFormField(
-              controller: email,
+              controller: emailController,
               decoration: InputDecoration(
                 labelText: 'Email',
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xFF474747), // Original: FlutterFlowTheme.of(context).alternate,
-                    width: 2,
-                  ),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 2,
-                  ),
-                ),
-                errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 2,
-                  ),
-                ),
-                focusedErrorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 2,
-                  ),
-                ),
               ),
             ),
             SizedBox(height: 10),
             TextFormField(
-              controller: password,
+              controller: passwordController,
               obscureText: true,
               decoration: InputDecoration(
                 labelText: 'Password',
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xFF474747), // Original: FlutterFlowTheme.of(context).alternate,
-                    width: 2,
-                  ),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 2,
-                  ),
-                ),
-                errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 2,
-                  ),
-                ),
-                focusedErrorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 2,
-                  ),
-                ),
               ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                print('Sign in button pressed');
-              },
+              onPressed: _signInWithEmailAndPassword,
               style: ElevatedButton.styleFrom(
-                primary: Color(0xFF474747), // Original: Color(0xFF474747),
+                primary: Color(0xFF474747),
               ),
               child: Text(
                 'Sign in',
@@ -110,7 +81,7 @@ class _SignInPageState extends State<SignInPage> {
                 print('Sign up button pressed');
               },
               style: ElevatedButton.styleFrom(
-                primary: Color(0xFF474747), // Original: Color(0xFF474747),
+                primary: Color(0xFF474747),
               ),
               child: Text(
                 'Sign up',
@@ -122,5 +93,4 @@ class _SignInPageState extends State<SignInPage> {
       ),
     );
   }
-
 }
