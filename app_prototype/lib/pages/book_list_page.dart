@@ -40,7 +40,7 @@ class BookListPageState extends State<BookListPage> {
                         keyboardType: TextInputType.none,
                         padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
                         leading: const Icon(Icons.filter_list),
-                        trailing: [const Icon(Icons.search)],
+                        trailing: const [Icon(Icons.search)],
                         hintText: "Search for books here...",
                         onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));},
                       )
