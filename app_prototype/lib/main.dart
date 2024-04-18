@@ -42,7 +42,11 @@ class AppState extends State<App> {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: Themes.getTheme(widget.darkTheme),
-        home: SignInPage(),
+        home: SignInPage(onSignIn: () {
+          setState(() {
+            logedIn = true;
+          });
+        }),
         title: "Lend and Rent (Prototype)",
       );
     }

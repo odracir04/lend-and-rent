@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInPage extends StatefulWidget {
+  final VoidCallback onSignIn;
+
+  SignInPage({required this.onSignIn});
+
   @override
   State<SignInPage> createState() => _SignInPageState();
 }
@@ -17,10 +21,9 @@ class _SignInPageState extends State<SignInPage> {
         email: emailController.text,
         password: passwordController.text,
       );
-      // If sign in is successful, navigate to home page or perform other actions.
+      widget.onSignIn();
       print('User signed in: ${userCredential.user!.uid}');
     } catch (e) {
-      // Handle sign-in errors here.
       print('Failed to sign in: $e');
     }
   }
