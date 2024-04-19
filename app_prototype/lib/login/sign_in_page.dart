@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -11,9 +13,15 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  Color changeColor(bool b) {
+    if (b) return Colors.red;
+    else return Color(0xFF474747);
+  }
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool wrong = false;
 
   Future<void> _signInWithEmailAndPassword() async {
     try {
@@ -25,6 +33,9 @@ class _SignInPageState extends State<SignInPage> {
       print('User signed in: ${userCredential.user!.uid}');
     } catch (e) {
       print('Failed to sign in: $e');
+      setState(() {
+        wrong = true;
+      });
     }
   }
 
@@ -47,16 +58,50 @@ class _SignInPageState extends State<SignInPage> {
             const SizedBox(height: 20),
             TextFormField(
               controller: emailController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Email',
+                labelStyle: TextStyle(
+                    color: changeColor(wrong)
+                ),
+                hintText: 'Enter your email',
+                hintStyle: TextStyle(
+                    color: changeColor(wrong)
+                ),
+                fillColor: Colors.white,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: changeColor(wrong),
+                    width: 2.0,
+                  ),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: changeColor(wrong),),
+                ),
               ),
             ),
             const SizedBox(height: 10),
             TextFormField(
               controller: passwordController,
               obscureText: true,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Password',
+                labelStyle: TextStyle(
+                    color: changeColor(wrong)
+                ),
+                hintText: 'Enter your password',
+                hintStyle: TextStyle(
+                    color: changeColor(wrong)
+                ),
+                fillColor: Colors.white,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: changeColor(wrong),
+                    width: 2.0,
+                  ),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: changeColor(wrong),),
+                ),
               ),
             ),
             const SizedBox(height: 20),
