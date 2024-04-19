@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../database/books.dart';
 import '../widgets/books/book_list.dart';
-import '../widgets/filter_bar.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -140,7 +139,6 @@ class SearchPageState extends State<SearchPage> {
                   ],
                 ),
             ),
-            //const FilterBar(),
             BookList(books: books,),
           ],
         )

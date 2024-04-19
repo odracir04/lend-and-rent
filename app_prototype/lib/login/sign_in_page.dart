@@ -108,7 +108,7 @@ class _SignInPageState extends State<SignInPage> {
             ElevatedButton(
               onPressed: _signInWithEmailAndPassword,
               style: ElevatedButton.styleFrom(
-                primary: const Color(0xFF474747),
+                backgroundColor: const Color(0xFF474747),
               ),
               child: const Text(
                 'Sign in',
@@ -129,7 +129,7 @@ class _SignInPageState extends State<SignInPage> {
                 print('Sign up button pressed');
               },
               style: ElevatedButton.styleFrom(
-                primary: const Color(0xFF474747),
+                backgroundColor: const Color(0xFF474747),
               ),
               child: const Text(
                 'Sign up',

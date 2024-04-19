@@ -1,7 +1,6 @@
 import 'package:app_prototype/database/books.dart';
 import 'package:app_prototype/pages/search_page.dart';
 import 'package:app_prototype/widgets/books/book_list.dart';
-import 'package:app_prototype/widgets/filter_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +53,6 @@ class BookListPageState extends State<BookListPage> {
                   ],
                 ),
               ),
-              //const FilterBar(),
               BookList(books: books,),
             ],
           )
