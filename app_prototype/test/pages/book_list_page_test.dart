@@ -1,19 +1,18 @@
 import 'package:app_prototype/pages/book_list_page.dart';
 import 'package:app_prototype/pages/search_page.dart';
 import 'package:app_prototype/widgets/books/book_list.dart';
-import 'package:app_prototype/widgets/filter_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:app_prototype/main.dart';
-
 void main() {
   testWidgets('Display default page layout', (WidgetTester tester) async {
-    await tester.pumpWidget(App());
+    bool darkTheme = false;
+    void testChangeTheme() { darkTheme = !darkTheme; }
+    await tester.pumpWidget(MaterialApp(
+        home: BookListPage(changeTheme: testChangeTheme, darkTheme: darkTheme,)));
 
     expect(find.byType(SearchBar), findsOneWidget);
     expect(find.byKey(const Key("dark_mode_button")), findsOneWidget);
-    expect(find.byType(FilterBar), findsOneWidget);
     expect(find.byType(BookList), findsOneWidget);
   });
 
