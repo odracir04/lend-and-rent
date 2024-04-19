@@ -29,30 +29,35 @@ class BookListPageState extends State<BookListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Flexible(
-                      child: SearchBar(
-                        //keyboardType: TextInputType.none,
-                        padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
-                        leading: const Icon(Icons.filter_list),
-                        trailing: [const Icon(Icons.search)],
-                        hintText: "Search for books here...",
-                        onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));},
-                      )
-                  ),
-                  IconButton(onPressed: widget.changeTheme
-                      , icon: Icon(widget.darkTheme ? Icons.light_mode : Icons.dark_mode))
-                ],
+        body: Padding(
+          padding: const EdgeInsets.all(25),
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    Flexible(
+                        child: SearchBar(
+                          //keyboardType: TextInputType.none,
+                          padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
+                          leading: const Icon(Icons.filter_list),
+                          trailing: const [Icon(Icons.search)],
+                          hintText: "Search for books here...",
+                          onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));},
+                        )
+                    ),
+                    IconButton(
+                        key: const Key("dark_mode_button"),
+                        onPressed: widget.changeTheme
+                        , icon: Icon(widget.darkTheme ? Icons.light_mode : Icons.dark_mode))
+                  ],
+                ),
               ),
-            ),
-            const FilterBar(),
-            BookList(books: books,),
-          ],
+              //const FilterBar(),
+              BookList(books: books,),
+            ],
+          )
         )
     );
   }

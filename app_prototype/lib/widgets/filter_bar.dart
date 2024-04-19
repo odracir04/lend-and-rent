@@ -1,3 +1,4 @@
+import 'package:app_prototype/widgets/filter_button.dart';
 import 'package:flutter/material.dart';
 
 class FilterBar extends StatelessWidget {
@@ -6,13 +7,14 @@ class FilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ElevatedButton(onPressed: null, child: Text("Most Recent")),
-        ElevatedButton(onPressed: null, child: Text("Most Popular")),
-        ElevatedButton(onPressed: null, child: Text("Other Filters"))
-      ],
-    );
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          FilterButton(text: "Filter 1"),
+          SizedBox(width: 10,),
+          FilterButton(text: "Filter 2"),
+          SizedBox(width: 10,),
+          FilterButton(text: "Other Filters")
+        ],
+      );
   }
-
 }

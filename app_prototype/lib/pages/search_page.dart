@@ -13,16 +13,49 @@ class SearchPage extends StatefulWidget {
 class SearchPageState extends State<SearchPage> {
 
   late Future<List<DocumentSnapshot>> books;
+  bool toggle = false;
+  List<String> genres = ['All genres', 'Action', 'Fantasy', 'Comedy'];
+  String query = '';
+  String genreSelected = 'All genres';
+  String author = '';
 
   void searchBooks(String string) {
-    if (string.isEmpty) return;
     setState(() {
-      books = getBooksSearch(string);
+      if (author.isEmpty) {
+        if (genreSelected == 'All genres') {
+          if (query.isNotEmpty) {
+            books = getBooksSearch(query);
+          }
+          else {
+            books = getBooks(20);
+          }
+        }
+        else if (query.isEmpty) {
+          books = getBooksSearchGenre(genreSelected);
+        }
+        else {
+          books = getBooksSearchQueryGenre(query, genreSelected);
+        }
+      }
+      else if (genreSelected == 'All genres') {
+        if (query.isEmpty) {
+          books = getBooksSearchAuthor(author);
+        } else {
+          books = getBooksSearchQueryAuthor(query, author);
+        }
+      }
+      else if (query.isEmpty) {
+        books = getBooksSearchGenreAuthor(genreSelected, author);
+      }
+      else {
+        books = getBooksSearchAll(query, genreSelected, author);
+      }
     });
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   @override
-  void initState() {
+  initState() {
     super.initState();
     books = Future<List<DocumentSnapshot>>.value([]);
   }
@@ -41,16 +74,73 @@ class SearchPageState extends State<SearchPage> {
                       child: SearchBar(
                         //autoFocus: true,
                         padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
-                        leading: IconButton(onPressed: null, icon: Icon(Icons.filter_list),),
-                        trailing: [const Icon(Icons.search)],
+                        leading: IconButton(onPressed: (){setState(() {
+                          toggle = !toggle;
+                        });}, icon: toggle ? const Icon(Icons.keyboard_arrow_up) : const Icon(Icons.filter_list),),
+                        trailing: const [Icon(Icons.search)],
                         hintText: "Search for books here...",
+                        onChanged: (String string){query = string;},
                         onSubmitted: searchBooks,
                       )
                   ),
                 ],
               ),
             ),
-            const FilterBar(),
+            if (toggle) Container(
+                width: 0.90 * MediaQuery.of(context).size.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Filters',
+                            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                        ]
+                    ),
+                    const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Genre',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ]
+                    ),
+                    DropdownMenu<String>(
+                      width: 0.90 * MediaQuery.of(context).size.width,
+                      initialSelection: genres.first,
+                      onSelected: (String? value) {
+                        genreSelected = value!;
+                        searchBooks(value);
+                      },
+                      dropdownMenuEntries: genres.map<DropdownMenuEntry<String>>((String value) {
+                        return DropdownMenuEntry<String>(value: value, label: value);
+                      }).toList(),
+                    ),
+                    const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Author',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ]
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Any author'
+                      ),
+                      onChanged: (String string){author = string;},
+                      onSubmitted: searchBooks,
+                    )
+                  ],
+                ),
+            ),
+            //const FilterBar(),
             BookList(books: books,),
           ],
         )

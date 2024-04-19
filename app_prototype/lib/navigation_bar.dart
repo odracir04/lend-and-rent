@@ -54,12 +54,12 @@ class _MenuBarNavState extends State<MenuNavBarController> {
               child: Container(
                 color: widget.darkTheme ? Colors.grey.shade900 : Colors.white,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 13.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 13.0),
                   child: GNav(
                     gap: 12,
                     iconSize: 20,
                     textSize: 25,
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     backgroundColor:
                     widget.darkTheme ? Colors.grey.shade900 : Colors.white,
                     color: widget.darkTheme ? Colors.white : Colors.black,
