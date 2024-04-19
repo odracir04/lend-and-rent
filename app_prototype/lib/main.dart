@@ -1,3 +1,4 @@
+import 'package:app_prototype/login/sign_in_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -25,6 +26,8 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
+  bool logedIn = false;
+  
   void changeTheme() {
     setState(() {
       widget.darkTheme = !widget.darkTheme;
@@ -34,6 +37,20 @@ class AppState extends State<App> {
   /// Navbar
   @override
   Widget build(BuildContext context) {
+
+    if (!logedIn) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: Themes.getTheme(widget.darkTheme),
+        home: SignInPage(onSignIn: () {
+          setState(() {
+            logedIn = true;
+          });
+        }),
+        title: "Lend and Rent (Prototype)",
+      );
+    }
+
     // Define your navigation destinations
     List<Menu> destinations = [
       Menu(
