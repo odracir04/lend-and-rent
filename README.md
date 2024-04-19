@@ -162,4 +162,4 @@ No corrections were made during this iteration of the project.
  ### Sprint Retrospective and Observations
 In regards to the development of the app itself, all but one of the planned features where implemented, although only one included the respective tests.
 
-Thus far, our team was faced with lack of communication and problems regarding the organization of the project, issues that lead our performance as a team to overall fall below expected.
+Thus far, our team was faced with lack of communication and problems regarding the organization of the project, issues that lead our performance as a team to overall fall below expected. As such, we're looking forward to improve on those regards until the next sprint.
