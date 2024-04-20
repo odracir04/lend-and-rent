@@ -29,11 +29,16 @@ class BookListPageState extends State<BookListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(25),
+          padding: const EdgeInsets.only(
+              top: 60,
+              left: 25,
+              right: 25,
+              bottom: 80
+          ),
           child: Column(
             children: [
               Container(
-                margin: const EdgeInsets.all(8),
+                margin: const EdgeInsets.only(bottom: 10),
                 child: Row(
                   children: [
                     Flexible(
