@@ -1,3 +1,4 @@
+import 'package:app_prototype/pages/add_book_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -79,6 +80,22 @@ class _MenuBarNavState extends State<MenuNavBarController> {
               ),
             ),
           ),
+          Positioned(
+              left: 0.79 * MediaQuery.of(context).size.width,
+              top: 0.79 * MediaQuery.of(context).size.height,
+              child: Container(
+                height: 60,
+                width: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: widget.darkTheme ? Colors.grey.shade900 : Colors.white,
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.add, color: Colors.black,),
+                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => AddBookPage()));}
+                ),
+              )
+          )
         ],
       ),
     );
