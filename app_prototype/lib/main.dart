@@ -1,4 +1,5 @@
 import 'package:app_prototype/login/sign_in_page.dart';
+import 'package:app_prototype/pages/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -65,9 +66,9 @@ class AppState extends State<App> {
       ),
       // Two Examples to remove later
     Menu(
-        icon: FontAwesomeIcons.heart,
-        label: 'Favorites',
-        destination: null,
+        icon: FontAwesomeIcons.message,
+        label: 'Chat',
+        destination: const ChatPage(userEmail: "test@gmail.com",),
       ),
       Menu(
         icon: FontAwesomeIcons.magnifyingGlass,
