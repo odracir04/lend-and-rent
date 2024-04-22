@@ -33,10 +33,23 @@ class ChatPageState extends State<ChatPage> {
                     ],
                   ),
                 ),
-                body: const Column(
+                body: Column(
                   children: [
-                    MessageCard(sender: true, text: "Hello! How are you?"),
-                    MessageCard(sender: false, text: "I'm doing good!"),
+                    Expanded(
+                      child: ListView(
+                          children: const [
+                            MessageCard(sender: true, text: "Hello! How are you?"),
+                            MessageCard(sender: false, text: "I'm doing good!"),
+                          ]),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(10, 10, 10, 100),
+                      child: TextField(decoration: InputDecoration(
+                          hintText: "Send a message",
+                          border: OutlineInputBorder()
+                      ),
+                      ),
+                    )
                   ],
                 ),
             );
