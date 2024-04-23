@@ -32,6 +32,7 @@ class MenuNavBarController extends StatefulWidget {
 
 class _MenuBarNavState extends State<MenuNavBarController> {
   int _selectedIndex = 0;
+  bool addedBook = false;
 
   @override
   Widget build(BuildContext context) {
@@ -87,12 +88,44 @@ class _MenuBarNavState extends State<MenuNavBarController> {
                 height: 60,
                 width: 60,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                   color: widget.darkTheme ? Colors.grey.shade900 : Colors.white,
                 ),
                 child: IconButton(
                   icon: Icon(Icons.add, color: Colors.black,),
-                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => AddBookPage()));}
+                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => AddBookPage()))
+                    .then((value) {
+                      setState(() {
+                        addedBook = true;
+                      });
+                      Future.delayed(const Duration(seconds: 2), () {
+                        setState(() {
+                          addedBook = false;
+                        });
+                      });
+                    });
+                  }
+                ),
+              )
+          ),
+          if (addedBook) Positioned(
+              top: 100,
+              width: 0.90 * MediaQuery.of(context).size.width,
+              height: 50,
+              left: 20,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                child: const Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Book added successfully',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ]
                 ),
               )
           )

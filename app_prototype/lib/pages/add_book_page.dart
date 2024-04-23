@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class AddBookPage extends StatefulWidget {
@@ -10,6 +11,7 @@ class AddBookPageState extends State<AddBookPage> {
   String title = '';
   List<String> genresSelected = [];
   String author = '';
+  String location = '';
 
   void selectValue(String? string) {
     setState(() {
@@ -23,9 +25,24 @@ class AddBookPageState extends State<AddBookPage> {
     });
   }
 
+  void addBook() {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    final book = {
+      "author": author,
+      "title": title,
+      "title_lowercase": title.toLowerCase(),
+      "location": location,
+      "imagePath": "assets/images/book.jpg",
+      "genres": genresSelected,
+    };
+    db.collection('books').doc().set(book);
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset : false,
         body: Padding(
           padding: const EdgeInsets.only(
             top: 100,
@@ -47,7 +64,8 @@ class AddBookPageState extends State<AddBookPage> {
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                 ),
-                onChanged: (String string){author = string;},
+                onChanged: (String string){title = string;},
+                textInputAction: TextInputAction.next
               ),
               const Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,6 +115,46 @@ class AddBookPageState extends State<AddBookPage> {
                     border: OutlineInputBorder(),
                 ),
                 onChanged: (String string){author = string;},
+                textInputAction: TextInputAction.next
+              ),
+              const Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Location',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ]
+              ),
+              TextField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (String string){location = string;},
+                textInputAction: TextInputAction.done
+              ),
+              const SizedBox(height: 30),
+              SizedBox(
+                  width: 0.90 * MediaQuery.of(context).size.width,
+                  height: 50,
+                  child: (title.isEmpty || genresSelected.isEmpty || author.isEmpty || location.isEmpty) ? TextButton(
+                    onPressed: null,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                        return Colors.grey;
+                      })
+                    ),
+                    child: const Text('Add book'),
+                  )
+                  : TextButton(
+                    onPressed: addBook,
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                          return Colors.red;
+                        })
+                    ),
+                    child: const Text('Add book'),
+                  )
               )
             ],
           ),
