@@ -36,128 +36,146 @@ class AddBookPageState extends State<AddBookPage> {
       "genres": genresSelected,
     };
     db.collection('books').doc().set(book);
-    Navigator.pop(context);
+    Navigator.pop(context, "addedBook");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset : false,
-        body: Padding(
-          padding: const EdgeInsets.only(
-            top: 100,
-            left: 25,
-            right: 25
-          ),
+        resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
           child: Column(
             children: [
-              const Row(
+              const SizedBox(height: 50),
+              Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Title',
-                      style: TextStyle(fontSize: 20),
-                    ),
+                    const SizedBox(width: 10),
+                    IconButton(
+                        onPressed: () {Navigator.pop(context);},
+                        icon: const Icon(Icons.arrow_back, size: 30,)
+                    )
                   ]
               ),
-              TextField(
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+              Padding(
+                padding: EdgeInsets.only(
+                    left: 25,
+                    right: 25,
+                    bottom: MediaQuery.of(context).viewInsets.bottom
                 ),
-                onChanged: (String string){title = string;},
-                textInputAction: TextInputAction.next
-              ),
-              const Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
                   children: [
-                    Text(
-                      'Genres',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ]
-              ),
-              Autocomplete<String>(
-                onSelected: (String? value) {
-                  selectValue(value);
-                  value = '';
-                },
-                optionsBuilder: (TextEditingValue textEditingValue) {
-                  return genres.where((String option) {return option.toLowerCase().contains(textEditingValue.text.toLowerCase());});
-                }
-              ),
-              if (genresSelected.isNotEmpty) Row(
-                  children: [
-                    for (String string in genresSelected) Container(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        color: Colors.red,
-                      ),
-                      child: Row(
+                    const SizedBox(height: 100,),
+                    const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(string),
-                          IconButton(onPressed: (){removeValue(string);}, icon: Icon(Icons.close))
-                        ],
-                      ),
+                          Text(
+                            'Title',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ]
+                    ),
+                    TextField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (String string){title = string;},
+                        textInputAction: TextInputAction.next
+                    ),
+                    const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Genres',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ]
+                    ),
+                    Autocomplete<String>(
+                        onSelected: (String? value) {
+                          selectValue(value);
+                          value = '';
+                        },
+                        optionsBuilder: (TextEditingValue textEditingValue) {
+                          return genres.where((String option) {return option.toLowerCase().contains(textEditingValue.text.toLowerCase());});
+                        }
+                    ),
+                    if (genresSelected.isNotEmpty) Row(
+                      children: [
+                        for (String string in genresSelected) Container(
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            color: Colors.red,
+                          ),
+                          child: Row(
+                            children: [
+                              Text(string),
+                              IconButton(onPressed: (){removeValue(string);}, icon: Icon(Icons.close))
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                    const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Author',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ]
+                    ),
+                    TextField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (String string){author = string;},
+                        textInputAction: TextInputAction.next
+                    ),
+                    const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Location',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ]
+                    ),
+                    TextField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (String string){location = string;},
+                        textInputAction: TextInputAction.done,
+                    ),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                        width: 0.90 * MediaQuery.of(context).size.width,
+                        height: 50,
+                        child: (title.isEmpty || genresSelected.isEmpty || author.isEmpty || location.isEmpty) ? TextButton(
+                          onPressed: null,
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                                return Colors.grey;
+                              })
+                          ),
+                          child: const Text('Add book'),
+                        )
+                            : TextButton(
+                              onPressed: addBook,
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                                    return Colors.red;
+                                  })
+                              ),
+                              child: const Text('Add book'),
+                            )
                     )
                   ],
-              ),
-              const Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Author',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ]
-              ),
-              TextField(
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
                 ),
-                onChanged: (String string){author = string;},
-                textInputAction: TextInputAction.next
-              ),
-              const Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Location',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ]
-              ),
-              TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (String string){location = string;},
-                textInputAction: TextInputAction.done
-              ),
-              const SizedBox(height: 30),
-              SizedBox(
-                  width: 0.90 * MediaQuery.of(context).size.width,
-                  height: 50,
-                  child: (title.isEmpty || genresSelected.isEmpty || author.isEmpty || location.isEmpty) ? TextButton(
-                    onPressed: null,
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                        return Colors.grey;
-                      })
-                    ),
-                    child: const Text('Add book'),
-                  )
-                  : TextButton(
-                    onPressed: addBook,
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                          return Colors.red;
-                        })
-                    ),
-                    child: const Text('Add book'),
-                  )
               )
             ],
-          ),
+          )
         )
     );
   }

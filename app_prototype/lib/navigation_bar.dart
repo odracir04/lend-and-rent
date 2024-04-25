@@ -93,8 +93,9 @@ class _MenuBarNavState extends State<MenuNavBarController> {
                 ),
                 child: IconButton(
                   icon: Icon(Icons.add, color: Colors.black,),
-                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => AddBookPage()))
-                    .then((value) {
+                  onPressed: () async {
+                    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddBookPage()));
+                    if (context.mounted && "addedBook" == result) {
                       setState(() {
                         addedBook = true;
                       });
@@ -103,10 +104,9 @@ class _MenuBarNavState extends State<MenuNavBarController> {
                           addedBook = false;
                         });
                       });
-                    });
-                  }
-                ),
-              )
+                    }
+                  })
+              ),
           ),
           if (addedBook) Positioned(
               top: 100,
@@ -121,6 +121,7 @@ class _MenuBarNavState extends State<MenuNavBarController> {
                 child: const Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Icon(Icons.check, color: Colors.white),
                       Text(
                         'Book added successfully',
                         style: TextStyle(fontSize: 20, color: Colors.white),
