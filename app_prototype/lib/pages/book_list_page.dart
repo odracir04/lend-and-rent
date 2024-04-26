@@ -22,7 +22,7 @@ class BookListPageState extends State<BookListPage> {
   @override
   void initState() {
     super.initState();
-    books = getBooks(20);
+    books = getBooksSearch('');
   }
 
   @override
@@ -38,7 +38,7 @@ class BookListPageState extends State<BookListPage> {
                   children: [
                     Flexible(
                         child: SearchBar(
-                          //keyboardType: TextInputType.none,
+                          keyboardType: TextInputType.none,
                           padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
                           leading: const Icon(Icons.filter_list),
                           trailing: const [Icon(Icons.search)],

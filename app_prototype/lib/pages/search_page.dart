@@ -26,7 +26,7 @@ class SearchPageState extends State<SearchPage> {
             books = getBooksSearch(query);
           }
           else {
-            books = getBooks(20);
+            books = getBooksSearch('');
           }
         }
         else if (query.isEmpty) {
