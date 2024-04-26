@@ -73,7 +73,7 @@ class AppState extends State<App> {
       Menu(
         icon: FontAwesomeIcons.plus,
         label: 'Search',
-        destination: AddBookPage(),
+        destination: AddBookPage(darkTheme: widget.darkTheme,),
       ),
       // Add more destinations as needed
     ];

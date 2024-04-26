@@ -13,7 +13,17 @@ class SearchPageState extends State<SearchPage> {
 
   late Future<List<DocumentSnapshot>> books;
   bool toggle = false;
-  List<String> genres = ['All genres', 'Action', 'Fantasy', 'Comedy'];
+  List<String> genres = ['All genres',
+    'Action',
+    'Adventure',
+    'Comedy',
+    'Crime',
+    'Fantasy',
+    'Horror',
+    'Mystery',
+    'Romance',
+    'Sci-fi'
+  ];
   String query = '';
   String genreSelected = 'All genres';
   String author = '';

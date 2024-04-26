@@ -1,13 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AddBookPage extends StatefulWidget {
+  AddBookPage({super.key, required this.darkTheme});
+
+  bool darkTheme;
+
   @override
   State<StatefulWidget> createState() => AddBookPageState();
 }
 
 class AddBookPageState extends State<AddBookPage> {
-  List<String> genres = ['Action', 'Fantasy', 'Comedy'];
+  List<String> genres = ['Action',
+    'Adventure',
+    'Comedy',
+    'Crime',
+    'Fantasy',
+    'Horror',
+    'Mystery',
+    'Romance',
+    'Sci-fi'
+  ];
   String title = '';
   List<String> genresSelected = [];
   String author = '';
@@ -16,18 +30,22 @@ class AddBookPageState extends State<AddBookPage> {
   void selectValue(String? string) {
     setState(() {
       genresSelected.add(string!);
+      genres.remove(string);
     });
   }
 
   void removeValue(String? string) {
     setState(() {
       genresSelected.remove(string);
+      genres.add(string!);
+      genres.sort();
     });
   }
 
   void addBook() {
     FirebaseFirestore db = FirebaseFirestore.instance;
     final book = {
+      "user": FirebaseAuth.instance.currentUser?.email,
       "author": author,
       "title": title,
       "title_lowercase": title.toLowerCase(),
@@ -65,7 +83,7 @@ class AddBookPageState extends State<AddBookPage> {
                 ),
                 child: Column(
                   children: [
-                    const SizedBox(height: 100,),
+                    const SizedBox(height: 50,),
                     const Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -79,9 +97,12 @@ class AddBookPageState extends State<AddBookPage> {
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                         ),
-                        onChanged: (String string){title = string;},
+                        onChanged: (String string){setState(() {
+                          title = string;
+                        });},
                         textInputAction: TextInputAction.next
                     ),
+                    const SizedBox(height: 10),
                     const Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -94,28 +115,43 @@ class AddBookPageState extends State<AddBookPage> {
                     Autocomplete<String>(
                         onSelected: (String? value) {
                           selectValue(value);
-                          value = '';
                         },
                         optionsBuilder: (TextEditingValue textEditingValue) {
                           return genres.where((String option) {return option.toLowerCase().contains(textEditingValue.text.toLowerCase());});
                         }
                     ),
-                    if (genresSelected.isNotEmpty) Row(
+                    if (genresSelected.isNotEmpty) Column(
                       children: [
-                        for (String string in genresSelected) Container(
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            color: Colors.red,
-                          ),
-                          child: Row(
-                            children: [
-                              Text(string),
-                              IconButton(onPressed: (){removeValue(string);}, icon: Icon(Icons.close))
-                            ],
-                          ),
-                        )
-                      ],
+                        for (int i = 0; i < genresSelected.length; i += 3) Row(
+                          children: [
+                            for (int j = i; j < i + 3 && j < genresSelected.length; j++) Column(
+                              children: [
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(Radius.circular(20)),
+                                          color: widget.darkTheme ? Colors.white : Colors.grey.shade900,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            const SizedBox(width: 9),
+                                            Text(genresSelected[j], style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white70),),
+                                            IconButton(onPressed: (){removeValue(genresSelected[j]);}, icon: Icon(Icons.close, color: widget.darkTheme ? Colors.black : Colors.white70,))
+                                          ],
+                                        )
+                                    ),
+                                    if (j % 3 != 2) const SizedBox(width: 5)
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ]
                     ),
+                    const SizedBox(height: 10),
                     const Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -129,9 +165,12 @@ class AddBookPageState extends State<AddBookPage> {
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                         ),
-                        onChanged: (String string){author = string;},
+                        onChanged: (String string){setState(() {
+                          author = string;
+                        });},
                         textInputAction: TextInputAction.next
                     ),
+                    const SizedBox(height: 10),
                     const Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -145,7 +184,9 @@ class AddBookPageState extends State<AddBookPage> {
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                         ),
-                        onChanged: (String string){location = string;},
+                        onChanged: (String string){setState(() {
+                          location = string;
+                        });},
                         textInputAction: TextInputAction.done,
                     ),
                     const SizedBox(height: 30),
@@ -165,10 +206,10 @@ class AddBookPageState extends State<AddBookPage> {
                               onPressed: addBook,
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                                    return Colors.red;
+                                    return widget.darkTheme ? Colors.white : Colors.grey.shade900;
                                   })
                               ),
-                              child: const Text('Add book'),
+                              child: Text('Add book', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white70),),
                             )
                     )
                   ],

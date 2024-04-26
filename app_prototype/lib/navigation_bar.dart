@@ -92,9 +92,9 @@ class _MenuBarNavState extends State<MenuNavBarController> {
                   color: widget.darkTheme ? Colors.grey.shade900 : Colors.white,
                 ),
                 child: IconButton(
-                  icon: Icon(Icons.add, color: Colors.black,),
+                  icon: const Icon(Icons.add),
                   onPressed: () async {
-                    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddBookPage()));
+                    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddBookPage(darkTheme: widget.darkTheme)));
                     if (context.mounted && "addedBook" == result) {
                       setState(() {
                         addedBook = true;
@@ -121,7 +121,9 @@ class _MenuBarNavState extends State<MenuNavBarController> {
                 child: const Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      SizedBox(width: 10),
                       Icon(Icons.check, color: Colors.white),
+                      SizedBox(width: 10),
                       Text(
                         'Book added successfully',
                         style: TextStyle(fontSize: 20, color: Colors.white),
