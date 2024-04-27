@@ -23,31 +23,31 @@ class SearchPageState extends State<SearchPage> {
       if (author.isEmpty) {
         if (genreSelected == 'All genres') {
           if (query.isNotEmpty) {
-            books = getBooksSearch(query);
+            books = getBooksSearch(query, FirebaseFirestore.instance);
           }
           else {
             books = getBooks(20);
           }
         }
         else if (query.isEmpty) {
-          books = getBooksSearchGenre(genreSelected);
+          books = getBooksSearchGenre(genreSelected, FirebaseFirestore.instance);
         }
         else {
-          books = getBooksSearchQueryGenre(query, genreSelected);
+          books = getBooksSearchQueryGenre(query, genreSelected, FirebaseFirestore.instance);
         }
       }
       else if (genreSelected == 'All genres') {
         if (query.isEmpty) {
-          books = getBooksSearchAuthor(author);
+          books = getBooksSearchAuthor(author, FirebaseFirestore.instance);
         } else {
-          books = getBooksSearchQueryAuthor(query, author);
+          books = getBooksSearchQueryAuthor(query, author, FirebaseFirestore.instance);
         }
       }
       else if (query.isEmpty) {
-        books = getBooksSearchGenreAuthor(genreSelected, author);
+        books = getBooksSearchGenreAuthor(genreSelected, author, FirebaseFirestore.instance);
       }
       else {
-        books = getBooksSearchAll(query, genreSelected, author);
+        books = getBooksSearchAll(query, genreSelected, author, FirebaseFirestore.instance);
       }
     });
     FocusManager.instance.primaryFocus?.unfocus();
