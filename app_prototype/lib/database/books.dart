@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 void populateDB() {
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -43,8 +40,7 @@ Future<List<DocumentSnapshot>> getBooks(int n) async {
   return result;
 }
 
-Future<List<DocumentSnapshot>> getBooksSearch(String string) async {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<List<DocumentSnapshot>> getBooksSearch(String string, FirebaseFirestore db) async {
   string =  string.toLowerCase();
   QuerySnapshot books = await db.collection('books')
       .where('title_lowercase', isGreaterThanOrEqualTo: string).where('title_lowercase', isLessThanOrEqualTo: "$string\uf7ff").get();
@@ -55,8 +51,7 @@ Future<List<DocumentSnapshot>> getBooksSearch(String string) async {
   return result;
 }
 
-Future<List<DocumentSnapshot>> getBooksSearchGenre(String string) async {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<List<DocumentSnapshot>> getBooksSearchGenre(String string, FirebaseFirestore db) async {
   QuerySnapshot books = await db.collection('books')
       .where('genres', arrayContains: string).get();
   List<DocumentSnapshot> result = [];
@@ -66,8 +61,7 @@ Future<List<DocumentSnapshot>> getBooksSearchGenre(String string) async {
   return result;
 }
 
-Future<List<DocumentSnapshot>> getBooksSearchAuthor(String string) async {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<List<DocumentSnapshot>> getBooksSearchAuthor(String string, FirebaseFirestore db) async {
   QuerySnapshot books = await db.collection('books').where('author', isEqualTo: string).get();
   List<DocumentSnapshot> result = [];
   for (DocumentSnapshot book in books.docs) {
@@ -76,8 +70,7 @@ Future<List<DocumentSnapshot>> getBooksSearchAuthor(String string) async {
   return result;
 }
 
-Future<List<DocumentSnapshot>> getBooksSearchQueryGenre(String query, String genre) async {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<List<DocumentSnapshot>> getBooksSearchQueryGenre(String query, String genre, FirebaseFirestore db) async {
   query =  query.toLowerCase();
   QuerySnapshot books = await db.collection('books')
       .where('title_lowercase', isGreaterThanOrEqualTo: query).where('title_lowercase', isLessThanOrEqualTo: "$query\uf7ff")
@@ -89,8 +82,7 @@ Future<List<DocumentSnapshot>> getBooksSearchQueryGenre(String query, String gen
   return result;
 }
 
-Future<List<DocumentSnapshot>> getBooksSearchQueryAuthor(String query, String author) async {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<List<DocumentSnapshot>> getBooksSearchQueryAuthor(String query, String author, FirebaseFirestore db) async {
   query =  query.toLowerCase();
   QuerySnapshot books = await db.collection('books')
       .where('title_lowercase', isGreaterThanOrEqualTo: query).where('title_lowercase', isLessThanOrEqualTo: "$query\uf7ff")
@@ -102,8 +94,7 @@ Future<List<DocumentSnapshot>> getBooksSearchQueryAuthor(String query, String au
   return result;
 }
 
-Future<List<DocumentSnapshot>> getBooksSearchGenreAuthor(String genre, String author) async {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<List<DocumentSnapshot>> getBooksSearchGenreAuthor(String genre, String author, FirebaseFirestore db) async {
   QuerySnapshot books = await db.collection('books')
       .where('genres', arrayContains: genre).where('author', isEqualTo: author).get();
   List<DocumentSnapshot> result = [];
@@ -113,8 +104,7 @@ Future<List<DocumentSnapshot>> getBooksSearchGenreAuthor(String genre, String au
   return result;
 }
 
-Future<List<DocumentSnapshot>> getBooksSearchAll(String query, String genre, String author) async {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<List<DocumentSnapshot>> getBooksSearchAll(String query, String genre, String author, FirebaseFirestore db) async {
   query =  query.toLowerCase();
   QuerySnapshot books = await db.collection('books')
       .where('title_lowercase', isGreaterThanOrEqualTo: query).where('title_lowercase', isLessThanOrEqualTo: "$query\uf7ff")
@@ -126,20 +116,6 @@ Future<List<DocumentSnapshot>> getBooksSearchAll(String query, String genre, Str
   return result;
 }
 
-Future<void> addBook(FirebaseStorage storage, FirebaseFirestore db, String pictureUrl, String? email, String author, String title, String location, List<String> genresSelected) async {
-  Reference ref = storage.ref().child('books/${DateTime.now()}.jpg');
-  UploadTask uploadTask = ref.putFile(File(pictureUrl));
-  await uploadTask.whenComplete(() async {
-    String url = await ref.getDownloadURL();
-    final book = {
-      "user": email,
-      "author": author,
-      "title": title,
-      "title_lowercase": title.toLowerCase(),
-      "location": location,
-      "imagePath": url,
-      "genres": genresSelected,
-    };
-    db.collection('books').doc().set(book);
-  });
+Future<void> addBook(FirebaseFirestore db, final book) async {
+  db.collection('books').doc().set(book);
 }

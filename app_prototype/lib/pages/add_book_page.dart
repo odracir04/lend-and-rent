@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -51,8 +50,23 @@ class AddBookPageState extends State<AddBookPage> {
   }
 
   Future<void> _addBook() async {
-    addBook(FirebaseStorage.instance, FirebaseFirestore.instance, pictureUrl, FirebaseAuth.instance.currentUser?.email, author, title, location, genresSelected);
-    Navigator.pop(context, "addedBook");
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference ref = storage.ref().child('books/${DateTime.now()}.jpg');
+    UploadTask uploadTask = ref.putFile(File(pictureUrl));
+    await uploadTask.whenComplete(() async {
+      String url = await ref.getDownloadURL();
+      final book = {
+        "user": FirebaseAuth.instance.currentUser?.email,
+        "author": author,
+        "title": title,
+        "title_lowercase": title.toLowerCase(),
+        "location": location,
+        "imagePath": url,
+        "genres": genresSelected,
+      };
+      addBook(FirebaseFirestore.instance, book);
+      Navigator.pop(context, "addedBook");
+    });
   }
 
   Future<void> pickImage() async {
