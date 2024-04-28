@@ -11,7 +11,7 @@ class MessageWriteBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 100),
+      padding: const EdgeInsets.all(8),
       child: Row(
         children: [
           Expanded(

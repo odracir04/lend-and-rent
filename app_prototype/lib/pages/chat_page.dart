@@ -46,6 +46,7 @@ class ChatPageState extends State<ChatPage> {
           else {
             List<String?> data = snapshot.data ?? [];
             return Scaffold(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 appBar: AppBar(
                   title: Column(
                     children: [

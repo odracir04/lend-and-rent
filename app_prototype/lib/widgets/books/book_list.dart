@@ -32,13 +32,11 @@ class BookListState extends State<BookList> {
               itemCount: books.length,
               itemBuilder: (BuildContext context, int index) {
                 Map<String, dynamic> bookData = books[index].data() as Map<String, dynamic>;
-                return GestureDetector(
-                  onTap: null,
-                  child: BookCard(bookName: "${bookData['title']}",
+                return BookCard(bookName: "${bookData['title']}",
                       authorName: "${bookData['author']}",
                       imagePath: "${bookData['imagePath']}",
-                      location: "${bookData['location']}",),
-                );
+                      location: "${bookData['location']}",
+                      renter: "${bookData['renter']}");
               },
             ));
           }
