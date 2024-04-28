@@ -68,7 +68,7 @@ class AppState extends State<App> {
     Menu(
         icon: FontAwesomeIcons.message,
         label: 'Chat',
-        destination: const ChatPage(userEmail: "test@gmail.com",),
+        destination: const ChatPage(userEmail: "test@gmail.com", receiverEmail: "email@example.org",),
       ),
       Menu(
         icon: FontAwesomeIcons.magnifyingGlass,
