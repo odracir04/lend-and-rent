@@ -39,7 +39,7 @@ Future<Set<String>> getChats(String email) async {
   email = email.toLowerCase();
   
   QuerySnapshot chats = await db.collection('chats')
-  .where('sender', isEqualTo: email).get();
+  .where('sender', isEqualTo: email).orderBy('datetime', descending: true).get();
 
   Set<String> result = {};
   

@@ -1,8 +1,7 @@
 import 'package:app_prototype/database/chats.dart';
+import 'package:app_prototype/widgets/chat/chat_list_item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'chat_page.dart';
 
 class ChatListPage extends StatefulWidget {
   ChatListPage({super.key});
@@ -17,9 +16,18 @@ class ChatListPageState extends State<ChatListPage> {
 
   late Future<Set<String>> chats;
 
-  @override void initState() {
+  @override
+  void initState() {
     super.initState();
     chats = getChats(widget.userEmail);
+  }
+
+  @override
+  void didUpdateWidget(covariant ChatListPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      chats = getChats(widget.userEmail);
+    });
   }
 
   @override
@@ -40,17 +48,15 @@ class ChatListPageState extends State<ChatListPage> {
                 leading: const Icon(Icons.chat),
                 title: const Text("Chats"),
               ),
-              body: ListView.builder(
+              body: ListView.separated(
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 8);
+                },
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
                 itemCount: messages.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(messages[index]),
-                    onTap: () {Navigator.push(context,
-                        MaterialPageRoute(builder: (context)
-                        => ChatPage(receiverEmail: messages[index])));},
-                  );
+                  return ChatListItem(receiverEmail: messages[index]);
                 },
               ),
             );

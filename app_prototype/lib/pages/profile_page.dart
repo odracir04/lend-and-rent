@@ -38,7 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: <Widget>[
             CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage('assets/profile_pic.jpg'), // You can use your actual profile picture here
+              backgroundImage: AssetImage('assets/images/profile.png'), // You can use your actual profile picture here
             ),
             SizedBox(height: 20),
             Text(

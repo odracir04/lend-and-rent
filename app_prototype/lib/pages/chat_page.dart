@@ -1,6 +1,8 @@
 import 'package:app_prototype/database/chats.dart';
+import 'package:app_prototype/widgets/chat/chat_app_bar.dart';
 import 'package:app_prototype/widgets/chat/message_list.dart';
 import 'package:app_prototype/widgets/chat/message_write_bar.dart';
+import 'package:app_prototype/widgets/users/user_icon.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -48,14 +50,7 @@ class ChatPageState extends State<ChatPage> {
             List<String?> data = snapshot.data ?? [];
             return Scaffold(
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                appBar: AppBar(
-                  title: Column(
-                    children: [
-                      Text(data[0] ?? ""),
-                      Text(data[1] ?? ""),
-                    ],
-                  ),
-                ),
+                appBar: ChatAppBar(userName: data[0] ?? "", userLocation: data[1] ?? "",),
                 body:
                     Column(
                       children: [
