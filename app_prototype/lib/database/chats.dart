@@ -33,3 +33,26 @@ void writeMessage(String sender, String receiver, String text) {
         'datetime': Timestamp.now()
       });
 }
+
+Future<Set<String>> getChats(String email) async {
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  email = email.toLowerCase();
+  
+  QuerySnapshot chats = await db.collection('chats')
+  .where('sender', isEqualTo: email).get();
+
+  Set<String> result = {};
+  
+  for (DocumentSnapshot chat in chats.docs) {
+    result.add(chat['receiver']);
+  }
+
+  chats = await db.collection('chats')
+      .where('receiver', isEqualTo: email).get();
+
+  for (DocumentSnapshot chat in chats.docs) {
+    result.add(chat['sender']);
+  }
+
+  return result;
+}

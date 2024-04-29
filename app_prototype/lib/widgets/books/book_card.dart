@@ -15,7 +15,7 @@ class BookCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {Navigator.push(context,
           MaterialPageRoute(builder: (context)
-          => ChatPage(userEmail: "test@gmail.com", receiverEmail: renter)));},
+          => ChatPage(receiverEmail: renter)));},
       child: Card(
           margin: const EdgeInsets.only(bottom: 20),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

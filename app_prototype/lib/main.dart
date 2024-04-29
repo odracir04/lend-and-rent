@@ -1,4 +1,5 @@
 import 'package:app_prototype/login/sign_in_page.dart';
+import 'package:app_prototype/pages/chat_list_page.dart';
 import 'package:app_prototype/pages/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -68,7 +69,7 @@ class AppState extends State<App> {
     Menu(
         icon: FontAwesomeIcons.message,
         label: 'Chat',
-        destination: null,
+        destination: ChatListPage(),
       ),
       Menu(
         icon: FontAwesomeIcons.magnifyingGlass,

@@ -1,15 +1,16 @@
 import 'package:app_prototype/database/chats.dart';
 import 'package:app_prototype/widgets/chat/message_list.dart';
 import 'package:app_prototype/widgets/chat/message_write_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../database/users.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key, required this.userEmail, required this.receiverEmail});
+  ChatPage({super.key, required this.receiverEmail});
 
-  final String userEmail;
+  final String userEmail = FirebaseAuth.instance.currentUser!.email ?? "";
   final String receiverEmail;
 
   @override
@@ -38,7 +39,7 @@ class ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Future.wait([getName(widget.userEmail), getLocation(widget.userEmail),]),
+        future: Future.wait([getName(widget.receiverEmail), getLocation(widget.receiverEmail),]),
         builder: (builder, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
