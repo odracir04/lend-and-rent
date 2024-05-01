@@ -26,7 +26,7 @@ class SearchPageState extends State<SearchPage> {
             books = getBooksSearch(query, FirebaseFirestore.instance);
           }
           else {
-            books = getBooksSearch('', FirebaseFirestore.instance);
+            books = getBooks(20);
           }
         }
         else if (query.isEmpty) {
