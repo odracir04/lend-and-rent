@@ -39,6 +39,8 @@ dependencies:
   firebase_core: ^2.27.0
   firebase_auth: ^4.17.7
   firebase_database: ^10.4.9
+  firebase_storage: ^11.7.4
+  image_picker: ^1.1.0
   cloud_firestore: ^4.15.8
   dot_navigation_bar: ^1.0.2
   google_nav_bar: '>=5.0.6'

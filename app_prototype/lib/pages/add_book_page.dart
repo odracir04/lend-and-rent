@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddBookPage extends StatefulWidget {
   AddBookPage({super.key, required this.darkTheme});
@@ -26,6 +31,7 @@ class AddBookPageState extends State<AddBookPage> {
   List<String> genresSelected = [];
   String author = '';
   String location = '';
+  String pictureUrl = '';
 
   void selectValue(String? string) {
     setState(() {
@@ -42,19 +48,68 @@ class AddBookPageState extends State<AddBookPage> {
     });
   }
 
-  void addBook() {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    final book = {
-      "user": FirebaseAuth.instance.currentUser?.email,
-      "author": author,
-      "title": title,
-      "title_lowercase": title.toLowerCase(),
-      "location": location,
-      "imagePath": "assets/images/book.jpg",
-      "genres": genresSelected,
-    };
-    db.collection('books').doc().set(book);
-    Navigator.pop(context, "addedBook");
+  Future<void> addBook() async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference ref = storage.ref().child('books/${DateTime.now()}.jpg');
+    UploadTask uploadTask = ref.putFile(File(pictureUrl));
+    await uploadTask.whenComplete(() async {
+      String url = await ref.getDownloadURL();
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      final book = {
+        "user": FirebaseAuth.instance.currentUser?.email,
+        "author": author,
+        "title": title,
+        "title_lowercase": title.toLowerCase(),
+        "location": location,
+        "imagePath": url,
+        "genres": genresSelected,
+      };
+      db.collection('books').doc().set(book);
+      Navigator.pop(context, "addedBook");
+    });
+  }
+
+  Future<void> pickImage() async {
+    final bool? isCamera = await showModalBottomSheet<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          color: Colors.white,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.camera_alt,color: Colors.black),
+                title: Text('Camera',),
+                onTap: () {
+                  Navigator.pop(context, true);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library,color: Colors.black),
+                title: Text('Gallery',),
+                onTap: () {
+                  Navigator.pop(context, false);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (isCamera == null) return;
+
+    final XFile? pickedImage = await ImagePicker().pickImage(
+      source: isCamera ? ImageSource.camera : ImageSource.gallery,
+    );
+
+    if (pickedImage != null) {
+      setState(() {
+        pictureUrl = pickedImage.path;
+      });
+    }
   }
 
   @override
@@ -84,6 +139,38 @@ class AddBookPageState extends State<AddBookPage> {
                 child: Column(
                   children: [
                     const SizedBox(height: 50,),
+                    if (pictureUrl.isNotEmpty) Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                  child: Image.file(File(pictureUrl))
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                        ]
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 0.87 * MediaQuery.of(context).size.width,
+                          height: 50,
+                          child: TextButton(
+                            onPressed: pickImage,
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                                  return widget.darkTheme ? Colors.white : Colors.grey.shade900;
+                                })
+                            ),
+                            child: Text('Select Image', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white70),),
+                          )
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 10),
                     const Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -193,7 +280,7 @@ class AddBookPageState extends State<AddBookPage> {
                     SizedBox(
                         width: 0.90 * MediaQuery.of(context).size.width,
                         height: 50,
-                        child: (title.isEmpty || genresSelected.isEmpty || author.isEmpty || location.isEmpty) ? TextButton(
+                        child: (title.isEmpty || genresSelected.isEmpty || author.isEmpty || location.isEmpty || pictureUrl.isEmpty) ? TextButton(
                           onPressed: null,
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
@@ -211,7 +298,8 @@ class AddBookPageState extends State<AddBookPage> {
                               ),
                               child: Text('Add book', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white70),),
                             )
-                    )
+                    ),
+                    const SizedBox(height: 50),
                   ],
                 ),
               )
