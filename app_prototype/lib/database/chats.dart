@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-Future<List<DocumentSnapshot>> getChatMessages(String email1, String email2) async {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<List<DocumentSnapshot>> getChatMessages(FirebaseFirestore db, String email1, String email2) async {
   email1 = email1.toLowerCase();
   email2 = email2.toLowerCase();
 
@@ -23,9 +22,7 @@ Future<List<DocumentSnapshot>> getChatMessages(String email1, String email2) asy
   return result;
 }
 
-void writeMessage(String sender, String receiver, String text) {
-  FirebaseFirestore db = FirebaseFirestore.instance;
-
+void writeMessage(FirebaseFirestore db, String sender, String receiver, String text) {
   db.collection('chats').add(
       { 'sender': sender,
         'receiver': receiver,
@@ -34,8 +31,7 @@ void writeMessage(String sender, String receiver, String text) {
       });
 }
 
-Future<Set<String>> getChats(String email) async {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<Set<String>> getChats(FirebaseFirestore db, String email) async {
   email = email.toLowerCase();
   
   QuerySnapshot chats = await db.collection('chats')

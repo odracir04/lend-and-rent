@@ -2,7 +2,6 @@ import 'package:app_prototype/database/chats.dart';
 import 'package:app_prototype/widgets/chat/chat_app_bar.dart';
 import 'package:app_prototype/widgets/chat/message_list.dart';
 import 'package:app_prototype/widgets/chat/message_write_bar.dart';
-import 'package:app_prototype/widgets/users/user_icon.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,13 +26,13 @@ class ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     super.initState();
-    messages = getChatMessages(widget.userEmail, widget.receiverEmail);
+    messages = getChatMessages(FirebaseFirestore.instance, widget.userEmail, widget.receiverEmail);
   }
   
   void _onPressed() {
     setState(() {
-      messages = getChatMessages(widget.userEmail, widget.receiverEmail);
-      writeMessage(widget.userEmail, widget.receiverEmail, controller.text);
+      messages = getChatMessages(FirebaseFirestore.instance, widget.userEmail, widget.receiverEmail);
+      writeMessage(FirebaseFirestore.instance, widget.userEmail, widget.receiverEmail, controller.text);
       controller.clear();
     });
   }

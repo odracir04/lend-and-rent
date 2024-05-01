@@ -1,5 +1,6 @@
 import 'package:app_prototype/database/chats.dart';
 import 'package:app_prototype/widgets/chat/chat_list_item.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -19,14 +20,14 @@ class ChatListPageState extends State<ChatListPage> {
   @override
   void initState() {
     super.initState();
-    chats = getChats(widget.userEmail);
+    chats = getChats(FirebaseFirestore.instance, widget.userEmail);
   }
 
   @override
   void didUpdateWidget(covariant ChatListPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     setState(() {
-      chats = getChats(widget.userEmail);
+      chats = getChats(FirebaseFirestore.instance, widget.userEmail);
     });
   }
 
