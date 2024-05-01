@@ -28,5 +28,4 @@ class MessageWriteBar extends StatelessWidget {
       )
     );
   }
-
 }

@@ -1,5 +1,7 @@
 import 'package:app_prototype/database/users.dart';
 import 'package:app_prototype/widgets/users/user_icon.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../pages/chat_page.dart';
@@ -39,7 +41,11 @@ class ChatListItemState extends State<ChatListItem> {
               title: Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
               onTap: () {Navigator.push(context,
                   MaterialPageRoute(builder: (context)
-                  => ChatPage(receiverEmail: widget.receiverEmail)));},
+                  => ChatPage(
+                      receiverEmail: widget.receiverEmail,
+                      db: FirebaseFirestore.instance,
+                      userEmail: FirebaseAuth.instance.currentUser!.email ?? ""
+                  )));},
             );
           }
         });

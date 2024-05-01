@@ -1,13 +1,13 @@
 import 'package:app_prototype/database/chats.dart';
 import 'package:app_prototype/widgets/chat/chat_list_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChatListPage extends StatefulWidget {
-  ChatListPage({super.key});
+  ChatListPage({super.key, required this.userEmail, required this.db});
 
-  final String userEmail = FirebaseAuth.instance.currentUser!.email ?? "";
+  final String userEmail;
+  final FirebaseFirestore db;
 
   @override
   State<StatefulWidget> createState() => ChatListPageState();
@@ -20,15 +20,7 @@ class ChatListPageState extends State<ChatListPage> {
   @override
   void initState() {
     super.initState();
-    chats = getChats(FirebaseFirestore.instance, widget.userEmail);
-  }
-
-  @override
-  void didUpdateWidget(covariant ChatListPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    setState(() {
-      chats = getChats(FirebaseFirestore.instance, widget.userEmail);
-    });
+    chats = getChats(widget.db, widget.userEmail);
   }
 
   @override

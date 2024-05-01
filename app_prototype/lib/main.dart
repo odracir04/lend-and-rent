@@ -1,6 +1,8 @@
 import 'package:app_prototype/login/sign_in_page.dart';
 import 'package:app_prototype/pages/chat_list_page.dart';
 import 'package:app_prototype/pages/chat_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -69,7 +71,7 @@ class AppState extends State<App> {
     Menu(
         icon: FontAwesomeIcons.message,
         label: 'Chat',
-        destination: ChatListPage(),
+        destination: ChatListPage(userEmail: FirebaseAuth.instance.currentUser!.email!, db: FirebaseFirestore.instance),
       ),
       Menu(
         icon: FontAwesomeIcons.magnifyingGlass,

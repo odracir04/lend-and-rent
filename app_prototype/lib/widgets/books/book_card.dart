@@ -1,4 +1,6 @@
 import 'package:app_prototype/pages/chat_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '/widgets/users/user_icon.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +17,11 @@ class BookCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {Navigator.push(context,
           MaterialPageRoute(builder: (context)
-          => ChatPage(receiverEmail: renter)));},
+          => ChatPage(
+            receiverEmail: renter,
+            userEmail: FirebaseAuth.instance.currentUser!.email ?? "",
+            db: FirebaseFirestore.instance,
+          )));},
       child: Card(
           margin: const EdgeInsets.only(bottom: 20),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

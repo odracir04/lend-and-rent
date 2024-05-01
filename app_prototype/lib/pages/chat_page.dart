@@ -2,17 +2,18 @@ import 'package:app_prototype/database/chats.dart';
 import 'package:app_prototype/widgets/chat/chat_app_bar.dart';
 import 'package:app_prototype/widgets/chat/message_list.dart';
 import 'package:app_prototype/widgets/chat/message_write_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../database/users.dart';
 
 class ChatPage extends StatefulWidget {
-  ChatPage({super.key, required this.receiverEmail});
+  ChatPage({super.key, required this.receiverEmail, required this.db,
+            required this.userEmail});
 
-  final String userEmail = FirebaseAuth.instance.currentUser!.email ?? "";
+  final String userEmail;
   final String receiverEmail;
+  final FirebaseFirestore db;
 
   @override
   State<StatefulWidget> createState() => ChatPageState();
@@ -26,13 +27,13 @@ class ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     super.initState();
-    messages = getChatMessages(FirebaseFirestore.instance, widget.userEmail, widget.receiverEmail);
+    messages = getChatMessages(widget.db, widget.userEmail, widget.receiverEmail);
   }
   
   void _onPressed() {
     setState(() {
-      messages = getChatMessages(FirebaseFirestore.instance, widget.userEmail, widget.receiverEmail);
-      writeMessage(FirebaseFirestore.instance, widget.userEmail, widget.receiverEmail, controller.text);
+      messages = getChatMessages(widget.db, widget.userEmail, widget.receiverEmail);
+      writeMessage(widget.db, widget.userEmail, widget.receiverEmail, controller.text);
       controller.clear();
     });
   }
