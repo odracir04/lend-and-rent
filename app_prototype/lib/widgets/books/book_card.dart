@@ -28,11 +28,13 @@ class BookCard extends StatelessWidget {
           color: Theme.of(context).cardColor,
           child: Stack(
             children: [
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                      imagePath, fit: BoxFit.cover
-                  )),
+          ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: imagePath == "assets/images/book.jpg" ? Image.asset(
+          imagePath, fit: BoxFit.cover)
+            : Image.network(
+          imagePath, fit: BoxFit.cover
+          )),
               Positioned(
                   bottom: 8,
                   left: 8,
@@ -74,8 +76,7 @@ class BookCard extends StatelessWidget {
                   )
               ),
             ],
-          )
-      ),
+          ))
     );
   }
 }
