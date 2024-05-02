@@ -56,7 +56,7 @@ class AddBookPageState extends State<AddBookPage> {
     await uploadTask.whenComplete(() async {
       String url = await ref.getDownloadURL();
       final book = {
-        "user": FirebaseAuth.instance.currentUser?.email,
+        "renter": FirebaseAuth.instance.currentUser?.email,
         "author": author,
         "title": title,
         "title_lowercase": title.toLowerCase(),
