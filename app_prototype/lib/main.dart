@@ -5,11 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:app_prototype/pages/book_list_page.dart'; // Import your book list page
+import 'package:app_prototype/pages/book_list_page.dart';
 import 'package:app_prototype/themes/theme.dart';
 import 'firebase_options.dart';
-import 'navigation_bar.dart'; // Import the NavigationBar widget
-import 'package:app_prototype/pages/profile_page.dart'; // Import the Profile widget
+import 'navigation_bar.dart';
+import 'package:app_prototype/pages/profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +37,12 @@ class AppState extends State<App> {
     });
   }
 
+  void handleSignIn() {
+    setState(() {
+      logedIn = true;
+    });
+  }
+
   /// Navbar
   @override
   Widget build(BuildContext context) {
@@ -46,9 +52,7 @@ class AppState extends State<App> {
         debugShowCheckedModeBanner: false,
         theme: Themes.getTheme(widget.darkTheme),
         home: SignInPage(onSignIn: () {
-          setState(() {
-            logedIn = true;
-          });
+          handleSignIn();
         }),
         title: "Lend and Rent (Prototype)",
       );
