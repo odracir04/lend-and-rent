@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 void populateDB() {
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -121,4 +124,22 @@ Future<List<DocumentSnapshot>> getBooksSearchAll(String query, String genre, Str
     result.add(book);
   }
   return result;
+}
+
+Future<void> addBook(FirebaseStorage storage, FirebaseFirestore db, String pictureUrl, String? email, String author, String title, String location, List<String> genresSelected) async {
+  Reference ref = storage.ref().child('books/${DateTime.now()}.jpg');
+  UploadTask uploadTask = ref.putFile(File(pictureUrl));
+  await uploadTask.whenComplete(() async {
+    String url = await ref.getDownloadURL();
+    final book = {
+      "user": email,
+      "author": author,
+      "title": title,
+      "title_lowercase": title.toLowerCase(),
+      "location": location,
+      "imagePath": url,
+      "genres": genresSelected,
+    };
+    db.collection('books').doc().set(book);
+  });
 }

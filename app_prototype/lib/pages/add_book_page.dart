@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../database/books.dart';
+
 class AddBookPage extends StatefulWidget {
   AddBookPage({super.key, required this.darkTheme});
 
@@ -48,25 +50,9 @@ class AddBookPageState extends State<AddBookPage> {
     });
   }
 
-  Future<void> addBook() async {
-    FirebaseStorage storage = FirebaseStorage.instance;
-    Reference ref = storage.ref().child('books/${DateTime.now()}.jpg');
-    UploadTask uploadTask = ref.putFile(File(pictureUrl));
-    await uploadTask.whenComplete(() async {
-      String url = await ref.getDownloadURL();
-      FirebaseFirestore db = FirebaseFirestore.instance;
-      final book = {
-        "user": FirebaseAuth.instance.currentUser?.email,
-        "author": author,
-        "title": title,
-        "title_lowercase": title.toLowerCase(),
-        "location": location,
-        "imagePath": url,
-        "genres": genresSelected,
-      };
-      db.collection('books').doc().set(book);
-      Navigator.pop(context, "addedBook");
-    });
+  Future<void> _addBook() async {
+    addBook(FirebaseStorage.instance, FirebaseFirestore.instance, pictureUrl, FirebaseAuth.instance.currentUser?.email, author, title, location, genresSelected);
+    Navigator.pop(context, "addedBook");
   }
 
   Future<void> pickImage() async {
@@ -290,7 +276,7 @@ class AddBookPageState extends State<AddBookPage> {
                           child: const Text('Add book'),
                         )
                             : TextButton(
-                              onPressed: addBook,
+                              onPressed: _addBook,
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
                                     return widget.darkTheme ? Colors.white : Colors.grey.shade900;
