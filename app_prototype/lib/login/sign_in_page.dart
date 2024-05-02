@@ -45,98 +45,110 @@ class _SignInPageState extends State<SignInPage> {
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/images/book.jpg",
-              width: 300,
-              height: 200,
-              fit: BoxFit.contain,
+        child: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: MediaQuery.of(context).size.width,
+              minHeight: MediaQuery.of(context).size.height,
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: emailController,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                labelStyle: TextStyle(
-                    color: changeColor(wrong)
-                ),
-                hintText: 'Enter your email',
-                hintStyle: TextStyle(
-                    color: changeColor(wrong)
-                ),
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: changeColor(wrong),
-                    width: 2.0,
+            child: IntrinsicHeight(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                      Image.asset(
+                        "assets/images/book.jpg",
+                        width: 300,
+                        height: 200,
+                        fit: BoxFit.contain,
+                      ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      labelStyle: TextStyle(
+                          color: changeColor(wrong)
+                      ),
+                      hintText: 'Enter your email',
+                      hintStyle: TextStyle(
+                          color: changeColor(wrong)
+                      ),
+                      fillColor: Colors.white,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: changeColor(wrong),
+                          width: 2.0,
+                        ),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: changeColor(wrong),),
+                      ),
+                    ),
                   ),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: changeColor(wrong),),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                labelStyle: TextStyle(
-                    color: changeColor(wrong)
-                ),
-                hintText: 'Enter your password',
-                hintStyle: TextStyle(
-                    color: changeColor(wrong)
-                ),
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: changeColor(wrong),
-                    width: 2.0,
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      labelStyle: TextStyle(
+                          color: changeColor(wrong)
+                      ),
+                      hintText: 'Enter your password',
+                      hintStyle: TextStyle(
+                          color: changeColor(wrong)
+                      ),
+                      fillColor: Colors.white,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: changeColor(wrong),
+                          width: 2.0,
+                        ),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: changeColor(wrong),),
+                      ),
+                    ),
                   ),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: changeColor(wrong),),
-                ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _signInWithEmailAndPassword,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF474747),
+                    ),
+                    child: const Text(
+                      'Sign in',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Don\'t have an account?',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      print('Sign up button pressed');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF474747),
+                    ),
+                    child: const Text(
+                      'Sign up',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _signInWithEmailAndPassword,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF474747),
-              ),
-              child: const Text(
-                'Sign in',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'Don\'t have an account?',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                print('Sign up button pressed');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF474747),
-              ),
-              child: const Text(
-                'Sign up',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
