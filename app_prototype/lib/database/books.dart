@@ -115,3 +115,7 @@ Future<List<DocumentSnapshot>> getBooksSearchAll(String query, String genre, Str
   }
   return result;
 }
+
+Future<void> addBook(FirebaseFirestore db, final book) async {
+  db.collection('books').doc().set(book);
+}

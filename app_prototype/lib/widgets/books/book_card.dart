@@ -30,7 +30,10 @@ class BookCard extends StatelessWidget {
             children: [
               ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
+                  child: imagePath == "assets/images/book.jpg" ? Image.asset(
+                      imagePath, fit: BoxFit.cover
+                  )
+                      : Image.network(
                       imagePath, fit: BoxFit.cover
                   )),
               Positioned(
