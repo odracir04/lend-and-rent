@@ -72,7 +72,7 @@ class _SignInPageState extends State<SignInPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
-              "assets/images/book.jpg",
+              "assets/images/LendAndRentLogo1.jpg",
               width: 300,
               height: 200,
               fit: BoxFit.contain,
