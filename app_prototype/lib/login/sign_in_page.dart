@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_prototype/login/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -31,8 +32,29 @@ class _SignInPageState extends State<SignInPage> {
       );
       widget.onSignIn();
       print('User signed in: ${userCredential.user!.uid}');
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
     } catch (e) {
-      print('Failed to sign in: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to sign in: Wrong email or password. Please try again.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
       setState(() {
         wrong = true;
       });
@@ -59,7 +81,7 @@ class _SignInPageState extends State<SignInPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                       Image.asset(
-                        "assets/images/book.jpg",
+                        "assets/images/LendAndRentLogo1.jpg",
                         width: 300,
                         height: 200,
                         fit: BoxFit.contain,
@@ -146,11 +168,10 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                 ],
-              ),
-            ),
-          ),
         ),
       ),
-    );
+    ))));
   }
 }
+
+
