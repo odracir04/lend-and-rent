@@ -7,7 +7,7 @@ void main() {
   testWidgets("Basic BookCard structure", (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(home:
     BookCard(bookName: 'name', authorName: 'author',
-      imagePath: 'assets/images/book.jpg', location: 'Gaia',),));
+      imagePath: 'assets/images/book.jpg', location: 'Gaia', renter: "email@example.org",),));
 
     expect(find.byType(Stack), findsOneWidget);
     expect(find.byType(Card), findsOneWidget);
@@ -22,7 +22,7 @@ void main() {
   testWidgets("BookCard text", (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(home:
     BookCard(bookName: 'name', authorName: 'author',
-      imagePath: 'assets/images/book.jpg', location: 'Gaia',),));
+      imagePath: 'assets/images/book.jpg', location: 'Gaia', renter: "email@example.org",),));
 
     expect(find.text("name"), findsOneWidget);
     expect(find.text("author"), findsOneWidget);
