@@ -34,6 +34,12 @@ class AppState extends State<App> {
     });
   }
 
+  void handleSignIn() {
+    setState(() {
+      logedIn = true;
+    });
+  }
+
   /// Navbar
   @override
   Widget build(BuildContext context) {
@@ -43,9 +49,7 @@ class AppState extends State<App> {
         debugShowCheckedModeBanner: false,
         theme: Themes.getTheme(widget.darkTheme),
         home: SignInPage(onSignIn: () {
-          setState(() {
-            logedIn = true;
-          });
+          handleSignIn();
         }),
         title: "Lend and Rent (Prototype)",
       );

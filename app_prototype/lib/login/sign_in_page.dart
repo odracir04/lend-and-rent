@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_prototype/login/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -31,6 +32,11 @@ class _SignInPageState extends State<SignInPage> {
       );
       widget.onSignIn();
       print('User signed in: ${userCredential.user!.uid}');
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
     } catch (e) {
       print('Failed to sign in: $e');
       setState(() {
@@ -126,7 +132,10 @@ class _SignInPageState extends State<SignInPage> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                print('Sign up button pressed');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignUpPage()), // Replace SignInPage() with your actual sign-in page widget
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF474747),
@@ -142,3 +151,5 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 }
+
+
