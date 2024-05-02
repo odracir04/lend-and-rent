@@ -82,9 +82,9 @@ class _MenuBarNavState extends State<MenuNavBarController> {
             ),
           ),
           Positioned(
-              left: 0.79 * MediaQuery.of(context).size.width,
-              top: 0.79 * MediaQuery.of(context).size.height,
-              child: Container(
+            left: 0.79 * MediaQuery.of(context).size.width,
+            top: 0.79 * MediaQuery.of(context).size.height,
+            child: Container(
                 height: 60,
                 width: 60,
                 decoration: BoxDecoration(
@@ -92,21 +92,21 @@ class _MenuBarNavState extends State<MenuNavBarController> {
                   color: widget.darkTheme ? Colors.grey.shade900 : Colors.white,
                 ),
                 child: IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () async {
-                    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddBookPage(darkTheme: widget.darkTheme)));
-                    if (context.mounted && "addedBook" == result) {
-                      setState(() {
-                        addedBook = true;
-                      });
-                      Future.delayed(const Duration(seconds: 2), () {
+                    icon: const Icon(Icons.add),
+                    onPressed: () async {
+                      final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddBookPage(darkTheme: widget.darkTheme)));
+                      if (context.mounted && "addedBook" == result) {
                         setState(() {
-                          addedBook = false;
+                          addedBook = true;
                         });
-                      });
-                    }
-                  })
-              ),
+                        Future.delayed(const Duration(seconds: 2), () {
+                          setState(() {
+                            addedBook = false;
+                          });
+                        });
+                      }
+                    })
+            ),
           ),
           if (addedBook) Positioned(
               top: 100,

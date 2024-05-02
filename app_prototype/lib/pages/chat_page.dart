@@ -20,7 +20,6 @@ class ChatPage extends StatefulWidget {
 }
 
 class ChatPageState extends State<ChatPage> {
-
   late Future<List<DocumentSnapshot>> messages;
   final TextEditingController controller = TextEditingController();
 
@@ -38,10 +37,11 @@ class ChatPageState extends State<ChatPage> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Future.wait([getName(widget.receiverEmail), getLocation(widget.receiverEmail),]),
+        future: Future.wait([getReceiverName(widget.receiverEmail), getReceiverLocation(widget.receiverEmail),]),
         builder: (builder, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
