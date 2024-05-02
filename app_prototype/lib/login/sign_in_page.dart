@@ -1,8 +1,10 @@
 import 'dart:async';
 
-import 'package:app_prototype/login/sign_up_page.dart';
+import 'package:app_prototype/login/recover_password.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../pages/edit_profile.dart';
 
 class SignInPage extends StatefulWidget {
   final VoidCallback onSignIn;
@@ -164,6 +166,23 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                     child: const Text(
                       'Sign up',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      print('Recover password button pressed');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RecoverPassword()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF474747),
+                    ),
+                    child: const Text(
+                      'Recover password',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
