@@ -1,6 +1,6 @@
 import 'package:app_prototype/database/books.dart';
+import 'package:app_prototype/pages/search_page.dart';
 import 'package:app_prototype/widgets/books/book_list.dart';
-import 'package:app_prototype/widgets/filter_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -19,17 +19,6 @@ class BookListPageState extends State<BookListPage> {
 
   late Future<List<DocumentSnapshot>> books;
 
-  void searchBooks(String string) {
-    setState(() {
-      if (string.isEmpty) {
-        books = getBooks(20);
-      }
-      else {
-        books = getBooksSearch(string);
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -39,28 +28,39 @@ class BookListPageState extends State<BookListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Flexible(
-                      child: SearchBar(
-                        padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
-                        leading: const Icon(Icons.search),
-                        hintText: "Search for books here...",
-                        onSubmitted: searchBooks,
-                      )
-                  ),
-                  IconButton(onPressed: widget.changeTheme
-                      , icon: Icon(widget.darkTheme ? Icons.light_mode : Icons.dark_mode))
-                ],
+        body: Padding(
+          padding: const EdgeInsets.only(
+              top: 60,
+              left: 25,
+              right: 25,
+              bottom: 80
+          ),
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  children: [
+                    Flexible(
+                        child: SearchBar(
+                          keyboardType: TextInputType.none,
+                          padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
+                          leading: const Icon(Icons.filter_list),
+                          trailing: const [Icon(Icons.search)],
+                          hintText: "Search for books here...",
+                          onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));},
+                        )
+                    ),
+                    IconButton(
+                        key: const Key("dark_mode_button"),
+                        onPressed: widget.changeTheme
+                        , icon: Icon(widget.darkTheme ? Icons.light_mode : Icons.dark_mode))
+                  ],
+                ),
               ),
-            ),
-            const FilterBar(),
-            BookList(books: books,),
-          ],
+              BookList(books: books,),
+            ],
+          )
         )
     );
   }

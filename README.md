@@ -124,4 +124,42 @@ You can find below information and references related with the project managemen
 * Sprint planning and retrospectives: 
   * plans: screenshots of Github Projects board at begin and end of each iteration;
   * retrospectives: meeting notes in a document in the repository;
+
+ ---
+
+ ## Sprint 1
+
+ ### Implemented Features
+
+**Sign In** - The user must now sign in at start up in order to access the app fully.
+
+**Home page** - The user now has access to all books available, listed in the home page.
+
+**Search engine and respective filters** - Either by setting up filters or simply inputting the name of the wanted book, the user can now search through all the available books with ease with the newly implemented search bar on the top of the home page.
+
+**Navigation bar** - In order to switch through the various pages of the app swiftly, a new navigation bar was added at the bottom section of the app. Users can currenty only explore the home and profile pages, with more options coming in the future.
+
+**Profile page** - An early prototype of they're profile page is now available to the user.
+
+ ### Bug fixes
+
+No corrections were made during this iteration of the project.
+
+ ### Sprint Planning
+
+**Project at start of Sprint 1:**
  
+<p align="center" justify="center">
+  <img src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/blob/main/docs/backlog/sprint0.png"/>
+</p>
+
+**Project at end of Sprint 1:**
+
+<p align="center" justify="center">
+  <img src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/blob/main/docs/backlog/sprint1.png"/>
+</p>
+
+ ### Sprint Retrospective and Observations
+In regards to the development of the app itself, all but one of the planned features where implemented, although only one included the respective tests.
+
+Thus far, our team was faced with lack of communication and problems regarding the organization of the project, issues that lead our performance as a team to overall fall below expected. As such, we're looking forward to improve on those regards until the next sprint.
