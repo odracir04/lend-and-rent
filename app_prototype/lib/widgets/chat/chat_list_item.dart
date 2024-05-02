@@ -22,8 +22,10 @@ class ChatListItemState extends State<ChatListItem> {
   @override
   void initState() {
     super.initState();
-    receiverName = getName(widget.receiverEmail);
+    receiverName = getReceiverName(widget.receiverEmail);
   }
+
+
 
   @override
   Widget build(BuildContext context) {

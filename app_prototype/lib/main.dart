@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:app_prototype/pages/book_list_page.dart';
 import 'package:app_prototype/themes/theme.dart';
 import 'firebase_options.dart';
@@ -18,7 +17,6 @@ void main() async {
   );
   runApp(App());
 }
-
 class App extends StatefulWidget {
   App({Key? key});
 
@@ -29,8 +27,9 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-  bool logedIn = false;
-  
+  bool loggedIn = false;
+  User? user;
+
   void changeTheme() {
     setState(() {
       widget.darkTheme = !widget.darkTheme;
@@ -39,15 +38,14 @@ class AppState extends State<App> {
 
   void handleSignIn() {
     setState(() {
-      logedIn = true;
+      loggedIn = true;
     });
   }
 
   /// Navbar
   @override
   Widget build(BuildContext context) {
-
-    if (!logedIn) {
+    if (!loggedIn) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: Themes.getTheme(widget.darkTheme),
@@ -58,36 +56,44 @@ class AppState extends State<App> {
       );
     }
 
-    // Define your navigation destinations
     List<Menu> destinations = [
       Menu(
-        icon: FontAwesomeIcons.house,
+        icon: Icons.house,
         label: 'Books',
-        destination: BookListPage(changeTheme: changeTheme, darkTheme: widget.darkTheme),
+        destination: BookListPage(
+          changeTheme: changeTheme,
+          darkTheme: widget.darkTheme,
+        ),
       ),
       Menu(
-        icon: FontAwesomeIcons.user,
+        icon: Icons.person,
         label: 'Profile',
-        destination: ProfilePage(changeTheme: changeTheme, darkTheme: widget.darkTheme),
+        destination: ProfilePage(
+          changeTheme: changeTheme,
+          darkTheme: widget.darkTheme,
+          userEmail: FirebaseAuth.instance.currentUser!.email!,
+        ),
       ),
       // Two Examples to remove later
     Menu(
-        icon: FontAwesomeIcons.message,
+        icon: Icons.message,
         label: 'Chat',
         destination: ChatListPage(userEmail: FirebaseAuth.instance.currentUser!.email!, db: FirebaseFirestore.instance),
       ),
-      Menu(
-        icon: FontAwesomeIcons.plus,
-        label: 'Search',
-        destination: null,
-      ),
+
       // Add more destinations as needed
     ];
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      debugShowMaterialGrid: false,
+
       theme: Themes.getTheme(widget.darkTheme),
-      home: MenuNavBarController(changeTheme: changeTheme, darkTheme: widget.darkTheme,destinations: destinations), // Use the NavigationBar widget
+      home: MenuNavBarController(
+        changeTheme: changeTheme,
+        darkTheme: widget.darkTheme,
+        destinations: destinations,
+      ),
       title: "Lend and Rent (Prototype)",
     );
   }
