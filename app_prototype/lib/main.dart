@@ -1,12 +1,15 @@
 import 'package:app_prototype/login/sign_in_page.dart';
+import 'package:app_prototype/pages/chat_list_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:app_prototype/pages/book_list_page.dart'; // Import your book list page
+import 'package:app_prototype/pages/book_list_page.dart';
 import 'package:app_prototype/themes/theme.dart';
 import 'firebase_options.dart';
-import 'navigation_bar.dart'; // Import the NavigationBar widget
-import 'package:app_prototype/pages/profile_page.dart'; // Import the Profile widget
+import 'navigation_bar.dart';
+import 'package:app_prototype/pages/profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -69,12 +72,12 @@ class AppState extends State<App> {
       ),
       // Two Examples to remove later
     Menu(
-        icon: FontAwesomeIcons.heart,
-        label: 'Favorites',
-        destination: null,
+        icon: FontAwesomeIcons.message,
+        label: 'Chat',
+        destination: ChatListPage(userEmail: FirebaseAuth.instance.currentUser!.email!, db: FirebaseFirestore.instance),
       ),
       Menu(
-        icon: FontAwesomeIcons.magnifyingGlass,
+        icon: FontAwesomeIcons.plus,
         label: 'Search',
         destination: null,
       ),

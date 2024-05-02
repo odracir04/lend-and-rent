@@ -1,3 +1,4 @@
+import 'package:app_prototype/pages/add_book_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -31,6 +32,7 @@ class MenuNavBarController extends StatefulWidget {
 
 class _MenuBarNavState extends State<MenuNavBarController> {
   int _selectedIndex = 0;
+  bool addedBook = false;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +81,57 @@ class _MenuBarNavState extends State<MenuNavBarController> {
               ),
             ),
           ),
+          Positioned(
+              left: 0.79 * MediaQuery.of(context).size.width,
+              top: 0.79 * MediaQuery.of(context).size.height,
+              child: Container(
+                height: 60,
+                width: 60,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  color: widget.darkTheme ? Colors.grey.shade900 : Colors.white,
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () async {
+                    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddBookPage(darkTheme: widget.darkTheme)));
+                    if (context.mounted && "addedBook" == result) {
+                      setState(() {
+                        addedBook = true;
+                      });
+                      Future.delayed(const Duration(seconds: 2), () {
+                        setState(() {
+                          addedBook = false;
+                        });
+                      });
+                    }
+                  })
+              ),
+          ),
+          if (addedBook) Positioned(
+              top: 100,
+              width: 0.90 * MediaQuery.of(context).size.width,
+              height: 50,
+              left: 20,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                child: const Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(width: 10),
+                      Icon(Icons.check, color: Colors.white),
+                      SizedBox(width: 10),
+                      Text(
+                        'Book added successfully',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ]
+                ),
+              )
+          )
         ],
       ),
     );
