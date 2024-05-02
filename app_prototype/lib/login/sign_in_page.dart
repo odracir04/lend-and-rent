@@ -38,7 +38,23 @@ class _SignInPageState extends State<SignInPage> {
       );
 
     } catch (e) {
-      print('Failed to sign in: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to sign in: Wrong email or password. Please try again.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
       setState(() {
         wrong = true;
       });

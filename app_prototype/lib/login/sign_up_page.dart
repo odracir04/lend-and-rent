@@ -17,10 +17,78 @@ class _SignUpPageState extends State<SignUpPage> {
   late TextEditingController _emailController = TextEditingController();
   late TextEditingController _passwordController = TextEditingController();
   late TextEditingController _confirmPasswordController = TextEditingController();
-  bool? _checkboxValue = false;
+  bool? _termsOfService = false;
   bool wrong1 = false, wrong2 = false, wrong3 = false, wrong4 = false, wrong5 = false;
 
   Future<void> _signUp(BuildContext context) async {
+    wrong1 = false;
+    wrong2 = false;
+    wrong3 = false;
+    wrong4 = false;
+    wrong5 = false;
+    if (_firstNameController.text.isEmpty && _lastNameController.text.isEmpty && _emailController.text.isEmpty && _passwordController.text.isEmpty && _confirmPasswordController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to sign up: One or more fields are empty.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to sign up: \'Password\' and \'Confirm Password\' fields do not match.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
+    if (!_termsOfService!) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to sign up: Please accept the Terms of Service and Privacy Policy.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
     try {
       final UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text,
@@ -28,8 +96,45 @@ class _SignUpPageState extends State<SignUpPage> {
       );
       print('User signed up: ${userCredential.user!.uid}');
       Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Sign Up Successful'),
+            content: Text('Your sign in was successful, please log in to enjoy the ap fully :>'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('yippee'),
+              ),
+            ],
+          );
+        },
+      );
     } catch (error) {
       print('Error signing up: $error');
+      if (error.hashCode == 136609402) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Failed to sign up: Email already in use.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        return;
+      }
     }
   }
 
@@ -184,9 +289,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Checkbox(
-                        value: _checkboxValue ?? true,
+                        value: _termsOfService ?? true,
                         onChanged: (newValue) {
-                          setState(() => _checkboxValue = newValue);
+                          setState(() => _termsOfService = newValue);
                         },
                       ),
                       Text(
