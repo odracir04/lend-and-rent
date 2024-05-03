@@ -114,6 +114,7 @@ Future<String?> getProfilePicture(FirebaseFirestore db, String? email) async{
 
 /// Update user password.
 Future<bool> updatePassword(String? email, String? newPassword) async {
+  newPassword = newPassword?.trim();
   try {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -153,9 +154,11 @@ Future<bool> checkIfEmailExists(FirebaseFirestore db, String? email) async{
 }
 
 /// Create a new record for a user in the database.
-Future<bool> createUserRecord({required String? email,required String? password, required String? firstName, required String? lastName, required String? location,}) async {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<bool> createUserRecord(FirebaseFirestore db, String? email, String? firstName,String? lastName) async {
   email = email?.trim();
+  firstName = firstName?.trim();
+  lastName = lastName?.trim();
+
   try {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await db
         .collection('users')
@@ -166,18 +169,16 @@ Future<bool> createUserRecord({required String? email,required String? password,
       print("Email already exists");
       return false;
     }
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email!,
-      password: password!,
-    );
+
     await db.collection('users').add({
       'email': email!.toLowerCase(),
       'first_name': firstName!,
       'last_name': lastName!,
-      'location': location!,
-      'display_email': true,
+      'location': "Porto",
+      'display_email': false,
       'profile_url': 'assets/images/profile.jpg'
     });
+
     print('User record created successfully');
     return true;
   } catch (e) {
@@ -200,7 +201,7 @@ Future<bool> updateUserFirstName(FirebaseFirestore db, String? email, String? ne
 
     if (userQuerySnapshot.docs.isNotEmpty) {
       final userId = userQuerySnapshot.docs.first.id;
-
+      newFirstName = newFirstName?.trim();
       await db
           .collection('users')
           .doc(userId)
@@ -233,7 +234,7 @@ Future<bool> updateUserLastName(FirebaseFirestore db,String? email, String? newL
         .get();
 
     if (userQuerySnapshot.docs.isNotEmpty) {
-
+      newLastName = newLastName?.trim();
       final userId = userQuerySnapshot.docs.first.id;
       await db
           .collection('users')
@@ -269,7 +270,7 @@ Future<bool> updateUserLocation(FirebaseFirestore db,String? email, String? newL
 
     if (userQuerySnapshot.docs.isNotEmpty) {
       final userId = userQuerySnapshot.docs.first.id;
-
+      newLocation = newLocation?.trim();
       await db
           .collection('users')
           .doc(userId)

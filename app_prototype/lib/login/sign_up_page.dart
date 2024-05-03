@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:app_prototype/database/users.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -94,25 +96,49 @@ class _SignUpPageState extends State<SignUpPage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      print('User signed up: ${userCredential.user!.uid}');
-      Navigator.pop(context);
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Sign Up Successful'),
-            content: Text('Your sign in was successful, please log in to enjoy the ap fully :>'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('yippee'),
-              ),
-            ],
-          );
-        },
-      );
+      Future<bool> createUserInFirestore = createUserRecord(FirebaseFirestore.instance, _emailController.text,_firstNameController.text, _lastNameController.text);
+      bool checkFirestore = await createUserInFirestore;
+      if (checkFirestore) {
+        print('User signed up: ${userCredential.user!.uid}');
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Sign Up Successful'),
+              content: Text(
+                  'Your sign in was successful, please log in to enjoy the ap fully :>'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('yippee'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+      else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Failed to sign up.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
     } catch (error) {
       print('Error signing up: $error');
       if (error.hashCode == 136609402) {
@@ -141,6 +167,21 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
       return Scaffold(
+          appBar:AppBar(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                size: 18,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ),
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Padding(
@@ -308,7 +349,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       backgroundColor: const Color(0xFF474747),
                     ),
                     child: const Text(
-                      'Sign in',
+                      'Sign up',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
