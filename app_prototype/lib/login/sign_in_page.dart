@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app_prototype/login/recover_password.dart';
+import 'package:app_prototype/login/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -158,6 +159,10 @@ class _SignInPageState extends State<SignInPage> {
                   const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUpPage()),
+                      );
                       print('Sign up button pressed');
                     },
                     style: ElevatedButton.styleFrom(
