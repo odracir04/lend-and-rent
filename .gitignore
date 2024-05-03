@@ -1,1 +1,2 @@
-.idea
+.idea/*
+app_prototype/pubspec.lock
