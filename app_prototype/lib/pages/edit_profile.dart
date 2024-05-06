@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../database/users.dart';
+import '../main.dart';
 
 class EditProfilePage extends StatefulWidget {
   EditProfilePage({super.key, required this.changeTheme, required this.darkTheme, required this.userEmail});
@@ -385,6 +386,56 @@ class _EditProfilePage extends State<EditProfilePage> {
                           ],
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                autofocus: true,
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(Color(0xFF700000)),
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  showDialog(context: context, builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text("Delete Profile"),
+                                      content: const Text("Are you sure you want to delete your profile?"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () { Navigator.of(context).pop(true); },
+                                            child: const Text("Yes")
+                                        ),
+                                        TextButton(
+                                            onPressed: () { Navigator.of(context).pop(false); } ,
+                                            child: const Text("No"))
+                                      ],
+                                    );
+                                  }).then((value) {
+                                    if (value) deleteProfile();
+                                  });
+                                },
+                                child: const SizedBox(
+                                  width: double.infinity,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Text(
+                                      'Delete Profile',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -530,5 +581,11 @@ class _EditProfilePage extends State<EditProfilePage> {
       );
 
     }
+  }
+
+  void deleteProfile() async {
+    FirebaseAuth.instance.signOut();
+    deleteUser(FirebaseFirestore.instance, widget.userEmail);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => App()));
   }
 }

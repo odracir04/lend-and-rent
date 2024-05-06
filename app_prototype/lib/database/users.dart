@@ -382,3 +382,12 @@ String? assembleName(String? userFirstName, String? userLastName) {
   String name = '$userFirstName $userLastName';
   return name;
 }
+
+void deleteUser(FirebaseFirestore db, String userEmail) async {
+  QuerySnapshot snapshot = await db.collection('users').where('email', isEqualTo: userEmail).get();
+
+  for (DocumentSnapshot document in snapshot.docs) {
+    DocumentReference reference = db.collection('users').doc(document.id);
+    await reference.delete();
+  }
+}
