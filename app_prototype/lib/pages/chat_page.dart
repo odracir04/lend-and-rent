@@ -20,18 +20,15 @@ class ChatPage extends StatefulWidget {
 }
 
 class ChatPageState extends State<ChatPage> {
-  late Future<List<DocumentSnapshot>> messages;
   final TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    messages = getChatMessages(widget.db, widget.userEmail, widget.receiverEmail);
   }
   
   void _onPressed() {
     setState(() {
-      messages = getChatMessages(widget.db, widget.userEmail, widget.receiverEmail);
       writeMessage(widget.db, widget.userEmail, widget.receiverEmail, controller.text);
       controller.clear();
     });
@@ -54,7 +51,7 @@ class ChatPageState extends State<ChatPage> {
                 body:
                     Column(
                       children: [
-                        MessageList(messages: messages, userEmail: widget.userEmail),
+                        MessageList(receiverEmail: widget.receiverEmail, userEmail: widget.userEmail, db: widget.db,),
                         MessageWriteBar(onPressed: _onPressed, controller: controller,)
                       ],
                     )

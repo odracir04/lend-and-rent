@@ -1,25 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-Future<List<DocumentSnapshot>> getChatMessages(FirebaseFirestore db, String email1, String email2) async {
+Stream<QuerySnapshot<Map<String, dynamic>>> getChatMessages(FirebaseFirestore db, String email1, String email2) {
   email1 = email1.toLowerCase();
   email2 = email2.toLowerCase();
 
 
-  QuerySnapshot messages = await db.collection('chats')
+  Stream<QuerySnapshot<Map<String, dynamic>>> messages = db.collection('chats')
       .where(
       Filter.or(
       Filter.and(Filter('sender', isEqualTo: email1), Filter('receiver', isEqualTo: email2)),
       Filter.and(Filter('sender', isEqualTo: email2), Filter('receiver', isEqualTo: email1))
       ))
-      .orderBy('datetime').get();
+      .orderBy('datetime').snapshots();
 
-  List<DocumentSnapshot> result = [];
-
-  for (DocumentSnapshot message in messages.docs) {
-    result.add(message);
-  }
-
-  return result;
+  return messages;
 }
 
 void writeMessage(FirebaseFirestore db, String sender, String receiver, String text) {
