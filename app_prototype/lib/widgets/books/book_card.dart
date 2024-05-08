@@ -1,6 +1,4 @@
-import 'package:app_prototype/pages/chat_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:app_prototype/pages/book_page.dart';
 
 import '/widgets/users/user_icon.dart';
 import 'package:flutter/material.dart';
@@ -8,20 +6,19 @@ import 'package:flutter/material.dart';
 class BookCard extends StatelessWidget {
   const BookCard({super.key,
     required this.bookName, required this.authorName,
-    required this.location, required this.imagePath, required this.renter});
+    required this.location, required this.imagePath, required this.renter,
+    required this.genres, required this.darkTheme});
 
   final String bookName, authorName, location, imagePath, renter;
+  final List<dynamic> genres;
+  final bool darkTheme;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {Navigator.push(context,
           MaterialPageRoute(builder: (context)
-          => ChatPage(
-            receiverEmail: renter,
-            userEmail: FirebaseAuth.instance.currentUser!.email ?? "",
-            db: FirebaseFirestore.instance,
-          )));},
+          => BookPage(bookName: bookName, authorName: authorName, location: location, imagePath: imagePath, renter: renter, genres: genres, darkTheme: darkTheme,)));},
       child: Card(
           margin: const EdgeInsets.only(bottom: 20),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

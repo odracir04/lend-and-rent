@@ -11,7 +11,7 @@ import '../database/books.dart';
 class AddBookPage extends StatefulWidget {
   AddBookPage({super.key, required this.darkTheme});
 
-  bool darkTheme;
+  final bool darkTheme;
 
   @override
   State<StatefulWidget> createState() => AddBookPageState();
@@ -81,14 +81,20 @@ class AddBookPageState extends State<AddBookPage> {
             children: <Widget>[
               ListTile(
                 leading: const Icon(Icons.camera_alt,color: Colors.black),
-                title: Text('Camera',),
+                title: const Text('Camera', style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20)),
                 onTap: () {
                   Navigator.pop(context, true);
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library,color: Colors.black),
-                title: Text('Gallery',),
+                title: const Text('Gallery', style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20)),
                 onTap: () {
                   Navigator.pop(context, false);
                 },
@@ -160,11 +166,6 @@ class AddBookPageState extends State<AddBookPage> {
                           height: 50,
                           child: TextButton(
                             onPressed: pickImage,
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                                  return widget.darkTheme ? Colors.white : Colors.grey.shade900;
-                                })
-                            ),
                             child: Text('Select Image', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white70),),
                           )
                         )
@@ -291,11 +292,6 @@ class AddBookPageState extends State<AddBookPage> {
                         )
                             : TextButton(
                               onPressed: _addBook,
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                                    return widget.darkTheme ? Colors.white : Colors.grey.shade900;
-                                  })
-                              ),
                               child: Text('Add book', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white70),),
                             )
                     ),

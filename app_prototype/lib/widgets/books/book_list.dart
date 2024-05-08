@@ -3,9 +3,10 @@ import 'book_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BookList extends StatefulWidget {
-  BookList({super.key, required this.books});
+  BookList({super.key, required this.books, required this.darkTheme});
 
   late Future<List<DocumentSnapshot>> books;
+  final bool darkTheme;
 
   @override
   State<StatefulWidget> createState() => BookListState();
@@ -36,7 +37,9 @@ class BookListState extends State<BookList> {
                       authorName: "${bookData['author']}",
                       imagePath: "${bookData['imagePath']}",
                       location: "${bookData['location']}",
-                      renter: "${bookData['renter']}");
+                      renter: "${bookData['renter']}",
+                      genres: bookData['genres'],
+                      darkTheme: widget.darkTheme,);
               },
             ));
           }
