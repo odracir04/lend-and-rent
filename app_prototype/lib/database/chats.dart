@@ -4,7 +4,6 @@ Stream<QuerySnapshot<Map<String, dynamic>>> getChatMessages(FirebaseFirestore db
   email1 = email1.toLowerCase();
   email2 = email2.toLowerCase();
 
-
   Stream<QuerySnapshot<Map<String, dynamic>>> messages = db.collection('chats')
       .where(
       Filter.or(

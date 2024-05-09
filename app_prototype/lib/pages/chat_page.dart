@@ -38,7 +38,8 @@ class ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Future.wait([getReceiverName(widget.receiverEmail), getReceiverLocation(widget.receiverEmail),]),
+        future: Future.wait([getReceiverName(widget.db, widget.receiverEmail),
+                            getReceiverLocation(widget.db, widget.receiverEmail),]),
         builder: (builder, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();

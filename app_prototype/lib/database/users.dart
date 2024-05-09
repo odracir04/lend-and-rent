@@ -5,8 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-Future<String?> getReceiverName(String? email) async {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<String?> getReceiverName(FirebaseFirestore db, String? email) async {
   email = email?.toLowerCase();
   try {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await db
@@ -28,8 +27,7 @@ Future<String?> getReceiverName(String? email) async {
   }
 }
 
-Future<String?> getReceiverLocation(String? email) async{
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<String?> getReceiverLocation(FirebaseFirestore db, String? email) async {
   email = email?.toLowerCase();
   try {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await db
