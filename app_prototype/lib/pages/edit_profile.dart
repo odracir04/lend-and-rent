@@ -8,11 +8,15 @@ import '../database/users.dart';
 import '../main.dart';
 
 class EditProfilePage extends StatefulWidget {
-  EditProfilePage({super.key, required this.changeTheme, required this.darkTheme, required this.userEmail});
+  EditProfilePage({super.key, required this.changeTheme, required this.darkTheme, required this.userEmail, required this.db,
+                    required this.auth});
 
   final String userEmail;
   final VoidCallback changeTheme;
+  final FirebaseFirestore db;
+  final FirebaseAuth auth;
   bool darkTheme;
+
   final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
   @override
   _EditProfilePage createState() => _EditProfilePage();
@@ -30,11 +34,11 @@ class _EditProfilePage extends State<EditProfilePage> {
 
   Future<bool> setUserData() async {
     if (!init) {
-      Future<String?> firstName = getFirstName(FirebaseFirestore.instance,widget.userEmail);
-      Future<String?> lastName = getLastName(FirebaseFirestore.instance,widget.userEmail);
-      Future<String?> location = getLocation(FirebaseFirestore.instance,widget.userEmail);
-      Future<bool?> displayEmail = getDisplayEmail(FirebaseFirestore.instance,widget.userEmail);
-      Future<String?> profilePicture = getProfilePicture(FirebaseFirestore.instance,widget.userEmail);
+      Future<String?> firstName = getFirstName(widget.db,widget.userEmail);
+      Future<String?> lastName = getLastName(widget.db,widget.userEmail);
+      Future<String?> location = getLocation(widget.db,widget.userEmail);
+      Future<bool?> displayEmail = getDisplayEmail(widget.db,widget.userEmail);
+      Future<String?> profilePicture = getProfilePicture(widget.db,widget.userEmail);
       emailController?.text = widget.userEmail;
       firstNameController?.text = (await (firstName))!;
       lastNameController?.text = (await (lastName))!;
@@ -392,6 +396,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                           children: [
                             Expanded(
                               child: ElevatedButton(
+                                key: const Key("delete_profile_button"),
                                 autofocus: true,
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(Color(0xFF700000)),
@@ -515,11 +520,11 @@ class _EditProfilePage extends State<EditProfilePage> {
   }
 
   void saveChangesController() async {
-    Future<String?> firstNameFuture = getFirstName(FirebaseFirestore.instance,widget.userEmail);
-    Future<String?> lastNameFuture = getLastName(FirebaseFirestore.instance,widget.userEmail);
-    Future<String?> locationFuture = getLocation(FirebaseFirestore.instance,widget.userEmail);
-    Future<bool?> displayEmailFuture = getDisplayEmail(FirebaseFirestore.instance,widget.userEmail);
-    Future<String?> displayProfilePicture = getProfilePicture(FirebaseFirestore.instance,widget.userEmail);
+    Future<String?> firstNameFuture = getFirstName(widget.db,widget.userEmail);
+    Future<String?> lastNameFuture = getLastName(widget.db,widget.userEmail);
+    Future<String?> locationFuture = getLocation(widget.db,widget.userEmail);
+    Future<bool?> displayEmailFuture = getDisplayEmail(widget.db,widget.userEmail);
+    Future<String?> displayProfilePicture = getProfilePicture(widget.db,widget.userEmail);
 
     String? newFirstName = firstNameController!.text;
     String? newLastName = lastNameController!.text;
@@ -542,16 +547,16 @@ class _EditProfilePage extends State<EditProfilePage> {
     bool displayProfilePictureUpdated = currentProfilePicture != newProfilePicture;
 
     if (firstNameUpdated) {
-      await updateUserFirstName(FirebaseFirestore.instance,widget.userEmail, newFirstName);
+      await updateUserFirstName(widget.db,widget.userEmail, newFirstName);
     }
     if (lastNameUpdated) {
-      await updateUserLastName(FirebaseFirestore.instance,widget.userEmail, newLastName);
+      await updateUserLastName(widget.db,widget.userEmail, newLastName);
     }
     if (locationUpdated) {
-      await updateUserLocation(FirebaseFirestore.instance,widget.userEmail, newLocation);
+      await updateUserLocation(widget.db,widget.userEmail, newLocation);
     }
     if (displayEmailUpdated) {
-      await updateDisplayEmail(FirebaseFirestore.instance,widget.userEmail, newDisplayEmail);
+      await updateDisplayEmail(widget.db,widget.userEmail, newDisplayEmail);
     }
     if (newPassword != ""){
       await updatePassword(widget.userEmail, newPassword);
@@ -562,7 +567,7 @@ class _EditProfilePage extends State<EditProfilePage> {
     }
 
    if (displayProfilePictureUpdated) {
-      await updateProfilePicture(FirebaseFirestore.instance,widget.userEmail, newProfilePicture);
+      await updateProfilePicture(widget.db,widget.userEmail, newProfilePicture);
     }
 
     if (firstNameUpdated || lastNameUpdated || locationUpdated || passwordUpdated || displayEmailUpdated || displayProfilePictureUpdated) {
@@ -584,8 +589,8 @@ class _EditProfilePage extends State<EditProfilePage> {
   }
 
   void deleteProfile() async {
-    FirebaseAuth.instance.signOut();
-    deleteUser(FirebaseFirestore.instance, widget.userEmail);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => App()));
+    widget.auth.signOut();
+    deleteUser(widget.db, widget.userEmail);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => App(db: widget.db, auth: widget.auth,)));
   }
 }

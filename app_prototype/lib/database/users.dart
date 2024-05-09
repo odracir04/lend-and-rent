@@ -8,7 +8,6 @@ import 'package:flutter/widgets.dart';
 Future<String?> getReceiverName(String? email) async {
   FirebaseFirestore db = FirebaseFirestore.instance;
   email = email?.toLowerCase();
-  print(email);
   try {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await db
         .collection('users')

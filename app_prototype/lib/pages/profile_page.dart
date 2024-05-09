@@ -1,5 +1,6 @@
 import 'package:app_prototype/pages/edit_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app_prototype/database/users.dart';
 
@@ -81,6 +82,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   changeTheme: widget.changeTheme,
                                   darkTheme: widget.darkTheme,
                                   userEmail: widget.userEmail,
+                                  db: FirebaseFirestore.instance,
+                                  auth: FirebaseAuth.instance,
                                 ),
                               ),
                             ).then((result) {
