@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 void populateDB() {
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -121,5 +122,8 @@ Future<void> addBook(FirebaseFirestore db, final book) async {
 }
 
 Future<void> deleteBook(FirebaseFirestore db, final book) async {
+  FirebaseStorage storage = FirebaseStorage.instance;
+  Reference ref = storage.refFromURL(book['imagePath']);
+  ref.delete();
   db.collection('books').doc(book['id']).delete();
 }
