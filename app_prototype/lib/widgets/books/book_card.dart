@@ -4,13 +4,9 @@ import '/widgets/users/user_icon.dart';
 import 'package:flutter/material.dart';
 
 class BookCard extends StatelessWidget {
-  const BookCard({super.key,
-    required this.bookName, required this.authorName,
-    required this.location, required this.imagePath, required this.renter,
-    required this.genres, required this.darkTheme});
+  BookCard({super.key, required this.book, required this.darkTheme});
 
-  final String bookName, authorName, location, imagePath, renter;
-  final List<dynamic> genres;
+  Map<String, dynamic> book;
   final bool darkTheme;
 
   @override
@@ -18,7 +14,7 @@ class BookCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {Navigator.push(context,
           MaterialPageRoute(builder: (context)
-          => BookPage(bookName: bookName, authorName: authorName, location: location, imagePath: imagePath, renter: renter, genres: genres, darkTheme: darkTheme,)));},
+          => BookPage(book: book, darkTheme: darkTheme,)));},
       child: Card(
           margin: const EdgeInsets.only(bottom: 20),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -27,11 +23,11 @@ class BookCard extends StatelessWidget {
             children: [
               ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: imagePath == "assets/images/book.jpg" ? Image.asset(
-                      imagePath, fit: BoxFit.cover
+                  child: book['imagePath'] == "assets/images/book.jpg" ? Image.asset(
+                      book['imagePath'], fit: BoxFit.cover
                   )
                       : Image.network(
-                      imagePath, fit: BoxFit.cover
+                      book['imagePath'], fit: BoxFit.cover
                   )),
               Positioned(
                   bottom: 8,
@@ -51,17 +47,17 @@ class BookCard extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(location,
+                                  Text(book['location'],
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
                                     ),),
-                                  Text(bookName,
+                                  Text(book['title'],
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w900,
                                     ),),
-                                  Text(authorName,
+                                  Text(book['author'],
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w300,

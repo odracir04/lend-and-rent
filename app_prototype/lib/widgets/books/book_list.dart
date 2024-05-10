@@ -33,13 +33,8 @@ class BookListState extends State<BookList> {
               itemCount: books.length,
               itemBuilder: (BuildContext context, int index) {
                 Map<String, dynamic> bookData = books[index].data() as Map<String, dynamic>;
-                return BookCard(bookName: "${bookData['title']}",
-                      authorName: "${bookData['author']}",
-                      imagePath: "${bookData['imagePath']}",
-                      location: "${bookData['location']}",
-                      renter: "${bookData['renter']}",
-                      genres: bookData['genres'],
-                      darkTheme: widget.darkTheme,);
+                bookData['id'] = books[index].id;
+                return BookCard(book: bookData, darkTheme: widget.darkTheme,);
               },
             ));
           }

@@ -28,40 +28,49 @@ class BookListPageState extends State<BookListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.only(
-              top: 60,
-              left: 25,
-              right: 25,
-              bottom: 80
-          ),
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  children: [
-                    Flexible(
-                        child: SearchBar(
-                          keyboardType: TextInputType.none,
-                          padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
-                          leading: const Icon(Icons.filter_list),
-                          trailing: const [Icon(Icons.search)],
-                          hintText: "Search for books here...",
-                          onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(darkTheme: widget.darkTheme,)));},
-                        )
-                    ),
-                    IconButton(
-                        key: const Key("dark_mode_button"),
-                        onPressed: widget.changeTheme
-                        , icon: Icon(widget.darkTheme ? Icons.light_mode : Icons.dark_mode))
-                  ],
-                ),
+        body: RefreshIndicator(
+          onRefresh: () {
+            setState(() {
+              books = getBooks(20);
+            });
+            return Future<void>.delayed(const Duration(seconds: 0));
+          },
+          child: Padding(
+              padding: const EdgeInsets.only(
+                  top: 60,
+                  left: 25,
+                  right: 25,
+                  bottom: 80
               ),
-              BookList(books: books, darkTheme: widget.darkTheme,),
-            ],
-          )
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      children: [
+                        Flexible(
+                            child: SearchBar(
+                              keyboardType: TextInputType.none,
+                              padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
+                              leading: const Icon(Icons.filter_list),
+                              trailing: const [Icon(Icons.search)],
+                              hintText: "Search for books here...",
+                              onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(darkTheme: widget.darkTheme,)));},
+                            )
+                        ),
+                        IconButton(
+                            key: const Key("dark_mode_button"),
+                            onPressed: widget.changeTheme
+                            , icon: Icon(widget.darkTheme ? Icons.light_mode : Icons.dark_mode))
+                      ],
+                    ),
+                  ),
+                  BookList(books: books, darkTheme: widget.darkTheme,),
+                ],
+              )
+          ),
         )
+
     );
   }
 }
