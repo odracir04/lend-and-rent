@@ -1,6 +1,7 @@
 import 'package:app_prototype/database/books.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../database/users.dart';
@@ -31,6 +32,9 @@ class BookPageState extends State<BookPage> {
           height: 80,
           child: (widget.book['renter'] == FirebaseAuth.instance.currentUser!.email) ? TextButton(
                   onPressed: () {
+                    FirebaseStorage storage = FirebaseStorage.instance;
+                    Reference ref = storage.refFromURL(widget.book['imagePath']);
+                    ref.delete();
                     deleteBook(FirebaseFirestore.instance, widget.book);
                     Navigator.pop(context);
                   },
