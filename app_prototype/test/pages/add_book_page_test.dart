@@ -39,7 +39,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: AddBookPage(darkTheme: darkTheme,)));
 
-    await tester.tap(find.text('Add book'));
+    await tester.tap(find.byKey(Key('addButton')));
     expect(find.byType(AddBookPage), findsOneWidget);
   });
 

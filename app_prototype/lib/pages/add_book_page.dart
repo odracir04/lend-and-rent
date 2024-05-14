@@ -279,6 +279,7 @@ class AddBookPageState extends State<AddBookPage> {
                         width: 0.90 * MediaQuery.of(context).size.width,
                         height: 50,
                         child: (title.isEmpty || genresSelected.isEmpty || author.isEmpty || location.isEmpty || pictureUrl.isEmpty) ? TextButton(
+                          key: const Key('addButton'),
                           onPressed: null,
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
@@ -288,6 +289,7 @@ class AddBookPageState extends State<AddBookPage> {
                           child: const Text('Add book'),
                         )
                             : TextButton(
+                              key: const Key('addButton'),
                               onPressed: _addBook,
                               child: Text('Add book', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white70),),
                             )
