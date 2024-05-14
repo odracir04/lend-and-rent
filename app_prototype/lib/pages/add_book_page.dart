@@ -121,21 +121,18 @@ class AddBookPageState extends State<AddBookPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {Navigator.pop(context);},
+              icon: const Icon(Icons.arrow_back, size: 30,)
+          ),
+          title: const Text('Add book'),
+        ),
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 50),
-              Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: 10),
-                    IconButton(
-                        onPressed: () {Navigator.pop(context);},
-                        icon: const Icon(Icons.arrow_back, size: 30,)
-                    )
-                  ]
-              ),
+              const SizedBox(height: 20),
               Padding(
                 padding: EdgeInsets.only(
                     left: 25,

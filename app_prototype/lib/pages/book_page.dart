@@ -81,10 +81,14 @@ class BookPageState extends State<BookPage> {
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Title: ${widget.book['title']}',
-                              style: const TextStyle(fontSize: 20),
+                            const Text(
+                              'Title: ',
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
+                            Text(
+                                widget.book['title'],
+                                style: const TextStyle(fontSize: 20)
+                            )
                           ]
                       ),
                       const SizedBox(height: 10),
@@ -93,7 +97,7 @@ class BookPageState extends State<BookPage> {
                           children: [
                             const Text(
                               'Genres: ',
-                              style: TextStyle(fontSize: 20),
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             for (int i = 0; i < 2 && i < widget.book['genres'].length; i++)
                               if (i != widget.book['genres'].length - 1) Text(
@@ -131,18 +135,26 @@ class BookPageState extends State<BookPage> {
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Author: ${widget.book['author']}',
-                              style: const TextStyle(fontSize: 20),
+                            const Text(
+                              'Author: ',
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
+                            Text(
+                              widget.book['author'],
+                              style: const TextStyle(fontSize: 20),
+                            )
                           ]
                       ),
                       const SizedBox(height: 10),
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const Text(
+                              'Location: ',
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
                             Text(
-                              'Location: ${widget.book['location']}',
+                              widget.book['location'],
                               style: const TextStyle(fontSize: 20),
                             ),
                           ]
@@ -153,7 +165,7 @@ class BookPageState extends State<BookPage> {
                           children: [
                             const Text(
                               'Renter: ',
-                              style: TextStyle(fontSize: 20),
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             FutureBuilder(
                                 future: Future.wait([getReceiverName(widget.book['renter'])]),
