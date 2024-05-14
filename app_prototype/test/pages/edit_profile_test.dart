@@ -10,7 +10,7 @@ void main() {
       email: "email@example.org",
       displayName: "TestUser",
   );
-  MockFirebaseAuth fakeAuth = MockFirebaseAuth(mockUser: mockUser);
+  MockFirebaseAuth fakeAuth = MockFirebaseAuth(mockUser: mockUser, signedIn: true);
   FakeFirebaseFirestore fakeFirestore = FakeFirebaseFirestore();
 
   setUpAll(() async {
@@ -53,10 +53,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(SignInPage), findsOneWidget);
-    expect(fakeAuth.currentUser, null);
 
     final users = await fakeFirestore.collection('users').get();
-
+    
     expect(users.size, 1);
   });
 

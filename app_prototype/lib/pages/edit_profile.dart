@@ -589,7 +589,7 @@ class _EditProfilePage extends State<EditProfilePage> {
   }
 
   void deleteProfile() async {
-    widget.auth.signOut();
+    await widget.auth.currentUser!.delete();
     deleteUser(widget.db, widget.userEmail);
     Navigator.push(context, MaterialPageRoute(builder: (context) => App(db: widget.db, auth: widget.auth,)));
   }
