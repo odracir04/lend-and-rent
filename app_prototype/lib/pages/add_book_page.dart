@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import '../database/books.dart';
 
 class AddBookPage extends StatefulWidget {
-  AddBookPage({super.key, required this.darkTheme});
+  const AddBookPage({super.key, required this.darkTheme});
 
   final bool darkTheme;
 

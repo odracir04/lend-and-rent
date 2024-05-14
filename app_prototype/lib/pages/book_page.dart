@@ -8,9 +8,9 @@ import '../database/users.dart';
 import 'chat_page.dart';
 
 class BookPage extends StatefulWidget {
-  BookPage({super.key, required this.book, required this.darkTheme});
+  const BookPage({super.key, required this.book, required this.darkTheme});
 
-  Map<String, dynamic> book;
+  final Map<String, dynamic> book;
   final bool darkTheme;
 
   @override
