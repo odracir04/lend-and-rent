@@ -33,6 +33,7 @@ class AddBookPageState extends State<AddBookPage> {
   String author = '';
   String location = '';
   String pictureUrl = '';
+  late TextEditingController textEditingController;
 
   void selectValue(String? string) {
     setState(() {
@@ -200,9 +201,19 @@ class AddBookPageState extends State<AddBookPage> {
                     Autocomplete<String>(
                         onSelected: (String? value) {
                           selectValue(value);
+                          textEditingController.text = '';
+                          FocusManager.instance.primaryFocus?.unfocus();
                         },
                         optionsBuilder: (TextEditingValue textEditingValue) {
                           return genres.where((String option) {return option.toLowerCase().contains(textEditingValue.text.toLowerCase());});
+                        },
+                        fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController,
+                            FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
+                          textEditingController = fieldTextEditingController;
+                          return TextField(
+                            controller: fieldTextEditingController,
+                            focusNode: fieldFocusNode,
+                          );
                         }
                     ),
                     if (genresSelected.isNotEmpty) Column(
@@ -221,9 +232,19 @@ class AddBookPageState extends State<AddBookPage> {
                                         ),
                                         child: Row(
                                           children: [
-                                            const SizedBox(width: 9),
+                                            const SizedBox(width: 10),
                                             Text(genresSelected[j], style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white70),),
-                                            IconButton(onPressed: (){removeValue(genresSelected[j]);}, icon: Icon(Icons.close, color: widget.darkTheme ? Colors.black : Colors.white70,))
+                                            IconButton(
+                                                onPressed: (){removeValue(genresSelected[j]);},
+                                                icon: Icon(Icons.close, color: widget.darkTheme ? Colors.black : Colors.white70,),
+                                                constraints: const BoxConstraints(
+                                                    minWidth: 30,
+                                                    minHeight: 45
+                                                ),
+                                                style: const ButtonStyle(
+                                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                ),
+                                            )
                                           ],
                                         )
                                     ),
