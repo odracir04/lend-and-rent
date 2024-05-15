@@ -71,14 +71,14 @@ class AppState extends State<App> {
         destination: ProfilePage(
           changeTheme: changeTheme,
           darkTheme: widget.darkTheme,
-          userEmail: FirebaseAuth.instance.currentUser!.email!,
+          profileEmail: FirebaseAuth.instance.currentUser!.email!
         ),
       ),
       // Two Examples to remove later
     Menu(
         icon: Icons.message,
         label: 'Chat',
-        destination: ChatListPage(userEmail: FirebaseAuth.instance.currentUser!.email!, db: FirebaseFirestore.instance),
+        destination: ChatListPage(changeTheme: changeTheme, darkTheme: widget.darkTheme, userEmail: FirebaseAuth.instance.currentUser!.email!, db: FirebaseFirestore.instance),
       ),
 
       // Add more destinations as needed

@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,13 +21,14 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePage extends State<EditProfilePage> {
   bool displayEmailInProfile = false;
-  String profilePictureUrl = "";
   TextEditingController? emailController = TextEditingController();
   TextEditingController? firstNameController = TextEditingController();
   TextEditingController? lastNameController = TextEditingController();
   TextEditingController? locationController = TextEditingController();
   TextEditingController? passwordController = TextEditingController();
   bool init = false;
+  String? profile_url;
+  dynamic profile_picture;
 
   Future<bool> setUserData() async {
     if (!init) {
@@ -33,13 +36,18 @@ class _EditProfilePage extends State<EditProfilePage> {
       Future<String?> lastName = getLastName(FirebaseFirestore.instance,widget.userEmail);
       Future<String?> location = getLocation(FirebaseFirestore.instance,widget.userEmail);
       Future<bool?> displayEmail = getDisplayEmail(FirebaseFirestore.instance,widget.userEmail);
-      Future<String?> profilePicture = getProfilePicture(FirebaseFirestore.instance,widget.userEmail);
+      profile_url = await (getPictureUrl(FirebaseFirestore.instance,widget.userEmail));
+      if (profile_url == "assets/images/profile.png"){
+        profile_picture = AssetImage(profile_url!);
+      }
+      else{
+        profile_picture = NetworkImage(profile_url!);
+      }
       emailController?.text = widget.userEmail;
       firstNameController?.text = (await (firstName))!;
       lastNameController?.text = (await (lastName))!;
       locationController?.text = (await (location))!;
       displayEmailInProfile = (await (displayEmail))!;
-      profilePictureUrl = (await (profilePicture))!;
       init = true;
       return true;
     }
@@ -97,7 +105,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                               onTap: _pickProfileImage,
                               child: CircleAvatar(
                                 radius: 60.0,
-                                backgroundImage: getProfilePictureFile(profilePictureUrl),
+                                backgroundImage: profile_picture,
                               ),
                             ),
                           ],
@@ -448,47 +456,57 @@ class _EditProfilePage extends State<EditProfilePage> {
         source: isCamera! ? ImageSource.camera : ImageSource.gallery,
       );
       if (pickedImage != null) {
-        setState(() {
-          profilePictureUrl = pickedImage.path;
-        });
+        String email = widget.userEmail;
+        Reference storageRef = FirebaseStorage.instance.ref();
+        File file = File(pickedImage.path);
+        var snapshot = (await storageRef.child("profiles/$email/picture").putFile(file));
+        var downloadUrl = await (snapshot.ref.getDownloadURL());
+        bool update = await updateProfilePicture(FirebaseFirestore.instance, email, downloadUrl);
+        if (update) {
+          setState(() {
+            profile_url = downloadUrl;
+            profile_picture = NetworkImage(profile_url!);
+          });
+        }
       }
     }
     else{
-      pickedImage = "assets/images/profile.jpg";
-      if (pickedImage != null) {
+      pickedImage = "assets/images/profile.png";
+      bool update = await updateProfilePicture(FirebaseFirestore.instance, widget.userEmail, pickedImage);
+      if (update) {
         setState(() {
-          profilePictureUrl = pickedImage;
+          profile_picture = AssetImage(pickedImage);
         });
       }
+
     }
   }
 
+
   void saveChangesController() async {
+
     Future<String?> firstNameFuture = getFirstName(FirebaseFirestore.instance,widget.userEmail);
     Future<String?> lastNameFuture = getLastName(FirebaseFirestore.instance,widget.userEmail);
     Future<String?> locationFuture = getLocation(FirebaseFirestore.instance,widget.userEmail);
     Future<bool?> displayEmailFuture = getDisplayEmail(FirebaseFirestore.instance,widget.userEmail);
-    Future<String?> displayProfilePicture = getProfilePicture(FirebaseFirestore.instance,widget.userEmail);
 
     String? newFirstName = firstNameController!.text;
     String? newLastName = lastNameController!.text;
     String? newLocation = locationController!.text;
     String? newPassword = passwordController!.text;
     bool? newDisplayEmail = displayEmailInProfile;
-    String? newProfilePicture = profilePictureUrl;
 
     String? currentFirstName = await firstNameFuture;
     String? currentLastName = await lastNameFuture;
     String? currentLocation = await locationFuture;
     bool? currentDisplayEmail = await displayEmailFuture;
-    String? currentProfilePicture = await displayProfilePicture;
 
     bool firstNameUpdated = currentFirstName != newFirstName;
     bool lastNameUpdated = currentLastName != newLastName;
     bool locationUpdated = currentLocation != newLocation;
     bool passwordUpdated;
     bool displayEmailUpdated = currentDisplayEmail != newDisplayEmail;
-    bool displayProfilePictureUpdated = currentProfilePicture != newProfilePicture;
+
 
     if (firstNameUpdated) {
       await updateUserFirstName(FirebaseFirestore.instance,widget.userEmail, newFirstName);
@@ -510,11 +528,7 @@ class _EditProfilePage extends State<EditProfilePage> {
       passwordUpdated = false;
     }
 
-   if (displayProfilePictureUpdated) {
-      await updateProfilePicture(FirebaseFirestore.instance,widget.userEmail, newProfilePicture);
-    }
-
-    if (firstNameUpdated || lastNameUpdated || locationUpdated || passwordUpdated || displayEmailUpdated || displayProfilePictureUpdated) {
+    if (firstNameUpdated || lastNameUpdated || locationUpdated || passwordUpdated || displayEmailUpdated) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Success updating profile!', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white)),

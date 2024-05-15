@@ -3,10 +3,10 @@ import 'book_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BookList extends StatefulWidget {
-  BookList({super.key, required this.books});
-
+  BookList({super.key, required this.changeTheme, required this.darkTheme, required this.books});
   late Future<List<DocumentSnapshot>> books;
-
+  final VoidCallback changeTheme;
+  final bool darkTheme;
   @override
   State<StatefulWidget> createState() => BookListState();
 }
@@ -32,7 +32,7 @@ class BookListState extends State<BookList> {
               itemCount: books.length,
               itemBuilder: (BuildContext context, int index) {
                 Map<String, dynamic> bookData = books[index].data() as Map<String, dynamic>;
-                return BookCard(bookName: "${bookData['title']}",
+                return BookCard(changeTheme: widget.changeTheme, darkTheme: widget.darkTheme,bookName: "${bookData['title']}",
                       authorName: "${bookData['author']}",
                       imagePath: "${bookData['imagePath']}",
                       location: "${bookData['location']}",

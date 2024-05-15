@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:app_prototype/database/books.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
@@ -13,7 +15,8 @@ void main() {
       "title_lowercase": "the amazing saga vol.1",
       "location": "Paranhos, Porto",
       "imagePath": "assets/images/book.jpg",
-      "genres": ["Action", "Adventure"]
+      "genres": ["Action", "Adventure"],
+      "renter": "test2@email.com"
     });
 
     await fakeFirestore.collection('books').add({
@@ -22,7 +25,8 @@ void main() {
       "title_lowercase": "the amazing saga vol.2",
       "location": "Paranhos, Porto",
       "imagePath": "assets/images/book.jpg",
-      "genres": ["Action"]
+      "genres": ["Action"],
+      "renter": "test1@email.com"
     });
 
     await fakeFirestore.collection('books').add({
@@ -31,7 +35,17 @@ void main() {
       "title_lowercase": "an amazing saga",
       "location": "Paranhos, Porto",
       "imagePath": "assets/images/book.jpg",
-      "genres": ["Action", "Adventure"]
+      "genres": ["Action", "Adventure"],
+      "renter": "test@email.com"
+    });
+    await fakeFirestore.collection('books').add({
+      "author": "Jack Smith",
+      "title": "An Amazing Saga",
+      "title_lowercase": "an amazing saga",
+      "location": "Paranhos, Porto",
+      "imagePath": "assets/images/book.jpg",
+      "genres": ["Action", "Adventure"],
+      "renter": "test@email.com"
     });
   });
 
@@ -48,11 +62,11 @@ void main() {
   testWidgets("Searching books by genre", (WidgetTester tester) async {
     late Future<List<DocumentSnapshot>> futureBooks = getBooksSearchGenre('Action', fakeFirestore);
     List<DocumentSnapshot> books = await futureBooks;
-    expect(books.length, 3);
+    expect(books.length, 4);
 
     futureBooks = getBooksSearchGenre('Adventure', fakeFirestore);
     books = await futureBooks;
-    expect(books.length, 2);
+    expect(books.length, 3);
 
     futureBooks = getBooksSearchGenre('Fantasy', fakeFirestore);
     books = await futureBooks;
@@ -62,7 +76,7 @@ void main() {
   testWidgets("Searching books by author", (WidgetTester tester) async {
     late Future<List<DocumentSnapshot>> futureBooks = getBooksSearchAuthor('Jack Smith', fakeFirestore);
     List<DocumentSnapshot> books = await futureBooks;
-    expect(books.length, 2);
+    expect(books.length, 3);
 
     futureBooks = getBooksSearchGenre('something', fakeFirestore);
     books = await futureBooks;
@@ -128,4 +142,20 @@ void main() {
     books = await futureBooks;
     expect(books.length, 0);
   });
+
+  testWidgets("Get books for user", (WidgetTester tester) async{
+    late Future<List<DocumentSnapshot>> futureBooks = getBooksForUser(fakeFirestore, "test2@email.com");
+    List<DocumentSnapshot> books = await futureBooks;
+    expect(books.length,1);
+
+    futureBooks = getBooksForUser(fakeFirestore, "test@email.com");
+    books = await futureBooks;
+    expect(books.length,2);
+    
+    futureBooks = getBooksForUser(fakeFirestore, "test1@email.com");
+    books = await futureBooks;
+    expect(books.length,1);
+  });
+
+
 }

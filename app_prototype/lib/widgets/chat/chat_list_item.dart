@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import '../../pages/chat_page.dart';
 
 class ChatListItem extends StatefulWidget {
-  ChatListItem({super.key, required this.receiverEmail});
+  const ChatListItem({super.key, required this.changeTheme , required this.darkTheme, required this.receiverEmail});
 
   final String receiverEmail;
+  final VoidCallback changeTheme;
+  final bool darkTheme;
 
   @override
   State<StatefulWidget> createState() => ChatListItemState();
@@ -24,8 +26,6 @@ class ChatListItemState extends State<ChatListItem> {
     super.initState();
     receiverName = getReceiverName(widget.receiverEmail);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +44,8 @@ class ChatListItemState extends State<ChatListItem> {
               onTap: () {Navigator.push(context,
                   MaterialPageRoute(builder: (context)
                   => ChatPage(
+                      changeTheme: widget.changeTheme,
+                      darkTheme : widget.darkTheme,
                       receiverEmail: widget.receiverEmail,
                       db: FirebaseFirestore.instance,
                       userEmail: FirebaseAuth.instance.currentUser!.email ?? ""
