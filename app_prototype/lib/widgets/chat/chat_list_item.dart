@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 import '../../pages/chat_page.dart';
 
 class ChatListItem extends StatefulWidget {
-  ChatListItem({super.key, required this.receiverEmail});
+  ChatListItem({super.key, required this.receiverEmail, required this.db});
 
   final String receiverEmail;
+  final FirebaseFirestore db;
 
   @override
   State<StatefulWidget> createState() => ChatListItemState();
@@ -22,7 +23,7 @@ class ChatListItemState extends State<ChatListItem> {
   @override
   void initState() {
     super.initState();
-    receiverName = getReceiverName(widget.receiverEmail);
+    receiverName = getReceiverName(widget.db, widget.receiverEmail);
   }
 
 
