@@ -3,7 +3,6 @@ import 'package:app_prototype/widgets/users/user_icon.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../../pages/chat_page.dart';
 
 class ChatListItem extends StatefulWidget {
@@ -19,28 +18,28 @@ class ChatListItem extends StatefulWidget {
 }
 
 class ChatListItemState extends State<ChatListItem> {
-  late Future<String?> receiverName;
+  String? receiverName;
+  String? userPicture;
 
-  @override
-  void initState() {
-    super.initState();
-    receiverName = getReceiverName(widget.receiverEmail);
+  Future<void> setUserData() async{
+    receiverName = await (getReceiverName(widget.receiverEmail));
+    userPicture = await (getPictureUrl(FirebaseFirestore.instance, widget.receiverEmail));
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: receiverName,
+    return FutureBuilder<void>(
+        future: setUserData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           }
           else {
-            String name = snapshot.data ?? "";
             return ListTile(
               trailing: const Icon(Icons.send),
-              leading: const UserIcon(),
-              title: Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+              leading: UserIcon(userPicture: userPicture!),
+              title: Text(receiverName!, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
               onTap: () {Navigator.push(context,
                   MaterialPageRoute(builder: (context)
                   => ChatPage(

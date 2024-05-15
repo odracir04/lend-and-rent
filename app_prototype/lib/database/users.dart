@@ -1,14 +1,9 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
+
+/// Get receiver chat user name
 Future<String?> getReceiverName(String? email) async {
   FirebaseFirestore db = FirebaseFirestore.instance;
   email = email?.toLowerCase();
@@ -32,53 +27,7 @@ Future<String?> getReceiverName(String? email) async {
   }
 }
 
-/// Get reviews for a user email.
-Future<List<DocumentSnapshot>> getReviews(FirebaseFirestore? db, String? email) async {
-  QuerySnapshot reviewsSnapshot = await db!.collection('reviews').where('review_receiver', isEqualTo: email).get();
-  List<DocumentSnapshot> myReviews = [];
-  for (DocumentSnapshot review in reviewsSnapshot.docs) {
-    myReviews.add(review);
-  }
-  return myReviews;
-}
-
-/// Get reviews a user has in a profile.
-Future<List<DocumentSnapshot>?> getReviewsForProfile(FirebaseFirestore? db, String? profileEmail, String? receiverEmail) async {
-  QuerySnapshot reviewsSnapshot = await db!.collection('reviews')
-      .where('review_sender', isEqualTo: profileEmail)
-      .where('review_receiver', isEqualTo: receiverEmail)
-      .get();
-  List<DocumentSnapshot> myReviews = [];
-  for (DocumentSnapshot review in reviewsSnapshot.docs) {
-    myReviews.add(review);
-  }
-  // An user can only have one review for each profile.
-  if (myReviews.length > 1){
-    return null;
-  }
-  return myReviews;
-}
-
-/// Create a review on name of review_sender to review_receiver.
-/// If create review returns true, the function was successfully else an error happened.
-Future<bool> createReview(FirebaseFirestore? db, double? stars, String? reviewMessage, String? senderEmail, String? receiverEmail) async{
-  reviewMessage = reviewMessage?.trim();
-  try {
-    await db?.collection('reviews').add({
-      'review_receiver': receiverEmail,
-      'review_sender': senderEmail,
-      'review_message': reviewMessage,
-      'review_stars': stars,
-    });
-    print('Review sent successfully');
-    return true;
-  } catch (e) {
-    print('Error sending review: $e');
-    return false;
-  }
-}
-
-
+/// Get chat receiver location
 Future<String?> getReceiverLocation(String? email) async{
   FirebaseFirestore db = FirebaseFirestore.instance;
   email = email?.toLowerCase();
@@ -101,6 +50,37 @@ Future<String?> getReceiverLocation(String? email) async{
     return ' ';
   }
 }
+
+/// Get reviews for a user email.
+Future<List<DocumentSnapshot>> getReviews(FirebaseFirestore? db, String? email) async {
+  QuerySnapshot reviewsSnapshot = await db!.collection('reviews').where('review_receiver', isEqualTo: email).get();
+  List<DocumentSnapshot> myReviews = [];
+  for (DocumentSnapshot review in reviewsSnapshot.docs) {
+    myReviews.add(review);
+  }
+  return myReviews;
+}
+
+
+/// Create a review on name of review_sender to review_receiver.
+/// If create review returns true, the function was successfully else an error happened.
+Future<bool> createReview(FirebaseFirestore? db, double? stars, String? reviewMessage, String? senderEmail, String? receiverEmail) async{
+  reviewMessage = reviewMessage?.trim();
+  try {
+    await db?.collection('reviews').add({
+      'review_receiver': receiverEmail,
+      'review_sender': senderEmail,
+      'review_message': reviewMessage,
+      'review_stars': stars,
+    });
+    print('Review sent successfully');
+    return true;
+  } catch (e) {
+    print('Error sending review: $e');
+    return false;
+  }
+}
+
 
 /// Get one of the fields of user.
 /// First/last name, location, display_email, picture and email.
@@ -227,7 +207,7 @@ Future<bool> createUserRecord(FirebaseFirestore db, FirebaseStorage storage, Str
       'last_name': lastName!,
       'location': "Porto",
       'display_email': false,
-      'profile_url': "assets/images/profile.png", // Include profile URL in Firestore
+      'profile_url': "assets/images/profile.png",
     });
 
     print('User record created successfully');
@@ -235,38 +215,6 @@ Future<bool> createUserRecord(FirebaseFirestore db, FirebaseStorage storage, Str
   } catch (e) {
     print('Error creating user record: $e');
     return false;
-  }
-}
-
-/// Retrieve profile images.
-/// There is only one image for each profile.
-// Retrieve profile image file from Firebase Storage or default asset.
-Future<dynamic> retrieveProfileImageFile(FirebaseStorage storage, FirebaseFirestore db, String email) async {
-  try {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await db
-        .collection('users')
-        .where('email', isEqualTo: email)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      String profileUrl = querySnapshot.docs.first['profile_url'];
-
-      // If image is the default asset
-      if (profileUrl == "assets/images/profile.png") {
-        return const AssetImage("assets/images/profile.png");
-      }
-
-      Reference profileImgRef = storage.ref("profiles/$email/$profileUrl");
-      String downloadUrl = await profileImgRef.getDownloadURL();
-      return FileImage(File(downloadUrl));
-
-    } else {
-      print('No user found for email: $email');
-      return null;
-    }
-  } catch (e) {
-    print('Error retrieving profile image file: $e');
-    return null;
   }
 }
 

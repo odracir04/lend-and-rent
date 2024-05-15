@@ -71,7 +71,6 @@ flutter:
   assets:
     - assets/images/book.jpg
     - assets/images/profile.png
-    - assets/images/profile.jpg
     - assets/images/reset_password.jpg
     - assets/images/LendAndRentLogo1.jpg
 

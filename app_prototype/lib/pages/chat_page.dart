@@ -43,7 +43,7 @@ class ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Future.wait([getReceiverName(widget.receiverEmail), getReceiverLocation(widget.receiverEmail),]),
+        future: Future.wait([getReceiverName(widget.receiverEmail), getReceiverLocation(widget.receiverEmail),getPictureUrl(FirebaseFirestore.instance, widget.receiverEmail)]),
         builder: (builder, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
@@ -52,7 +52,7 @@ class ChatPageState extends State<ChatPage> {
             List<String?> data = snapshot.data ?? [];
             return Scaffold(
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                appBar: ChatAppBar(changeTheme: widget.changeTheme, darkTheme: widget.darkTheme, userName: data[0] ?? "", userLocation: data[1] ?? "", visitingEmail: widget.receiverEmail),
+                appBar: ChatAppBar(changeTheme: widget.changeTheme, darkTheme: widget.darkTheme, userName: data[0] ?? "", userLocation: data[1] ?? "", visitingEmail: widget.receiverEmail, userPicture: data[2] ?? "assets/images/profile.png"),
                 body:
                     Column(
                       children: [

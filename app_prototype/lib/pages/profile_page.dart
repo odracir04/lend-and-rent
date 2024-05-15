@@ -29,7 +29,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool? accessToFunctionalities;
+  bool accessToFunctionalities = false;
   int selectedTabIndex = 0;
   String? userEmail;
   String? _firstName;
@@ -37,8 +37,8 @@ class _ProfilePageState extends State<ProfilePage> {
   String? _location;
   bool? _displayEmail;
   String? userName;
-  String? profile_url;
-  dynamic profile_picture;
+  String? profileUrl;
+  dynamic profilePicture;
 
   Future<void> setUserData() async {
     userEmail = FirebaseAuth.instance.currentUser!.email!;
@@ -46,14 +46,14 @@ class _ProfilePageState extends State<ProfilePage> {
     Future<String?> lastName = getLastName(FirebaseFirestore.instance, widget.profileEmail);
     Future<String?> location = getLocation(FirebaseFirestore.instance, widget.profileEmail);
     Future<bool?> displayEmail = getDisplayEmail(FirebaseFirestore.instance, widget.profileEmail);
-    profile_url = await (getPictureUrl(FirebaseFirestore.instance,widget.profileEmail));
+    profileUrl = await (getPictureUrl(FirebaseFirestore.instance,widget.profileEmail));
 
 
-    if (profile_url == "assets/images/profile.png"){
-      profile_picture = AssetImage(profile_url!);
+    if (profileUrl == "assets/images/profile.png"){
+      profilePicture = AssetImage(profileUrl!);
     }
     else{
-      profile_picture = NetworkImage(profile_url!);
+      profilePicture = NetworkImage(profileUrl!);
     }
     // Get user parameters of the database
     _firstName = (await (firstName));
@@ -103,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       actions: [
-                        if (accessToFunctionalities!)
+                        if (accessToFunctionalities)
                           IconButton(
                             icon: Icon(
                               Icons.edit,
@@ -119,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   builder: (context) => EditProfilePage(
                                     changeTheme: widget.changeTheme,
                                     darkTheme: widget.darkTheme,
-                                    userEmail: userEmail!,
+                                    userEmail: userEmail ?? "default",
                                   ),
                                 ),
                               ).then((result) {
@@ -149,14 +149,14 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 CircleAvatar(
                                   radius: 60.0,
-                                  backgroundImage: profile_picture ?? AssetImage("assets/images/profile.png"),
+                                  backgroundImage: profilePicture ?? const AssetImage("assets/images/profile.png"),
                                 ),
                                 const SizedBox(height: 20.0),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      userName! ?? "defaultName",
+                                      userName ?? "default",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18.0,
@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 : Colors.black),
                                         const SizedBox(width: 5),
                                         Text(
-                                          _location! ?? "defaultLocation",
+                                          _location ?? "default",
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12.0,
@@ -191,7 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                       ],
                                     ),
-                                    if (_displayEmail!)
+                                    if (_displayEmail ?? false)
                                       Row(
                                         children: [
                                           const SizedBox(width: 20),
@@ -290,7 +290,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: widget.darkTheme ? Colors.black : Colors.white,
                   child: MyBookList(
                     visitingEmail: widget.profileEmail,
-                    userEmail: userEmail!,
+                    userEmail: userEmail ?? "default",
                     darkTheme: widget.darkTheme,
                     changeTheme: widget.changeTheme,
                   ),
@@ -300,7 +300,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: widget.darkTheme ? Colors.black : Colors.white,
                   child: MyReviewList(
                     visitingEmail: widget.profileEmail,
-                    userEmail: userEmail!,
+                    userEmail: userEmail ?? "default",
                     darkTheme: widget.darkTheme,
                     changeTheme: widget.changeTheme,
                   )

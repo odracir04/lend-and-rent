@@ -1,23 +1,20 @@
 import 'package:app_prototype/database/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 
 class RecoverPassword extends StatefulWidget {
-  RecoverPassword({Key? key}) : super(key: key);
+  const RecoverPassword({super.key});
 
   @override
-  _RecoverPasswordState createState() => _RecoverPasswordState();
+  State<RecoverPassword> createState() => _RecoverPasswordState();
 }
 
 class _RecoverPasswordState extends State<RecoverPassword> {
   TextEditingController? emailController = TextEditingController();
-  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
-  GlobalKey<ScaffoldMessengerState>();
-
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +184,7 @@ class _RecoverPasswordState extends State<RecoverPassword> {
     try {
       bool emailExists = await checkIfEmailExists(FirebaseFirestore.instance,emailResetPassword);
       if (emailExists) {
-        await FirebaseAuth.instance.sendPasswordResetEmail(email: emailResetPassword!);
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: emailResetPassword);
         _scaffoldMessengerKey.currentState!.showSnackBar(
           const SnackBar(
             content: Text('Password reset email sent successfully!'),

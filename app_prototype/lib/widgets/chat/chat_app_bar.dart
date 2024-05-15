@@ -6,15 +6,16 @@ import '../users/user_icon.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ChatAppBar({
-    Key? key,
+    super.key,
     required this.visitingEmail,
     required this.changeTheme,
     required this.darkTheme,
     required this.userName,
     required this.userLocation,
-  }) : super(key: key);
+    required this.userPicture,
+  });
 
-  final String userName, userLocation, visitingEmail;
+  final String userName, userLocation, visitingEmail,userPicture;
   final VoidCallback changeTheme;
   final bool darkTheme;
 
@@ -57,7 +58,8 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Container(
                   height: 70,
                   width: 70,
-                  child: const UserIcon(),
+                  child: UserIcon( userPicture: userPicture,
+                  ),
                 ),
               ),
             )

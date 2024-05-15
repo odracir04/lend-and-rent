@@ -7,17 +7,18 @@ import '/widgets/users/user_icon.dart';
 
 class BookCard extends StatelessWidget {
   const BookCard({
-    Key? key,
+    super.key,
     required this.changeTheme,
     required this.darkTheme,
     required this.bookName,
     required this.authorName,
     required this.location,
     required this.imagePath,
+    required this.userPicture,
     required this.renter,
-  }) : super(key: key);
+  });
 
-  final String bookName, authorName, location, imagePath, renter;
+  final String bookName, authorName, location, imagePath, renter,userPicture;
   final VoidCallback changeTheme;
   final bool darkTheme;
 
@@ -70,7 +71,7 @@ class BookCard extends StatelessWidget {
                         maxHeight: 75,
                         maxWidth: 100,
                       ),
-                      child: const UserIcon(),
+                      child: UserIcon(userPicture: userPicture),
                     ),
                     Expanded(
                       child: Column(

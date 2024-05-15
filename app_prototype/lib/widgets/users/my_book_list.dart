@@ -1,4 +1,5 @@
 import 'package:app_prototype/database/books.dart';
+import 'package:app_prototype/database/users.dart';
 import 'package:app_prototype/widgets/books/book_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class MyBookList extends StatefulWidget {
 class _MyBookListState extends State<MyBookList> {
   bool? accessToFunctionalities;
   List<DocumentSnapshot>? myBooks;
+  String? userPicture;
 
   Future<void> setData() async {
     if (widget.visitingEmail == widget.userEmail) {
@@ -31,9 +33,12 @@ class _MyBookListState extends State<MyBookList> {
     } else {
       accessToFunctionalities = false;
     }
-    final List<DocumentSnapshot> futureBooks =
-    await getBooksForUser(FirebaseFirestore.instance, widget.visitingEmail);
+    final List<DocumentSnapshot> futureBooks = await getBooksForUser(FirebaseFirestore.instance, widget.visitingEmail);
     myBooks = futureBooks;
+
+    userPicture = await getPictureUrl(FirebaseFirestore.instance, widget.userEmail);
+
+
   }
 
   @override
@@ -45,11 +50,11 @@ class _MyBookListState extends State<MyBookList> {
           return const Center(child: CircularProgressIndicator());
         } else {
           if (myBooks == null || myBooks!.isEmpty) {
-            return const Center(
+            return Center(
               child: Text(
                 "This user is not selling books yet.",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: widget.darkTheme? Colors.white : Colors.white),
               ),
             );
           } else {
@@ -75,6 +80,7 @@ class _MyBookListState extends State<MyBookList> {
                               imagePath: "${bookData['imagePath']}",
                               location: "${bookData['location']}",
                               renter: "${bookData['renter']}",
+                              userPicture: userPicture!,
                             ),
                             const SizedBox(height: 100.0)
                           ],

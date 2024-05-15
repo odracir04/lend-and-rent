@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 
 class UserIcon extends StatefulWidget {
-  const UserIcon({super.key});
+  const UserIcon({super.key, required this.userPicture});
+  final String userPicture;
 
   @override
   State<StatefulWidget> createState() => UserIconState();
@@ -16,7 +17,7 @@ class UserIconState extends State<UserIcon> {
     return IconButton(
         onPressed: null,
         icon: ClipOval(
-            child: Image.asset("assets/images/profile.png"))
+            child: widget.userPicture ==  "assets/images/profile.png" ? Image.asset("assets/images/profile.png") : Image.network(widget.userPicture))
     );
   }
 

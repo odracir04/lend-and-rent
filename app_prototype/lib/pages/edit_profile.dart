@@ -1,34 +1,41 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../database/users.dart';
 
+/// In this page, user can edit his profile including
+/// Picture, name, location, password, and displayEmail.
+/// Picture is automatically saved on picking image.
+/// For the others, it is necessary to click in save changes.
+
 class EditProfilePage extends StatefulWidget {
+
   EditProfilePage({super.key, required this.changeTheme, required this.darkTheme, required this.userEmail});
 
   final String userEmail;
   final VoidCallback changeTheme;
-  bool darkTheme;
+  final bool darkTheme;
   final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
+
   @override
-  _EditProfilePage createState() => _EditProfilePage();
+  State<EditProfilePage> createState() => _EditProfilePage();
 }
 
 class _EditProfilePage extends State<EditProfilePage> {
   bool displayEmailInProfile = false;
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   TextEditingController? emailController = TextEditingController();
   TextEditingController? firstNameController = TextEditingController();
   TextEditingController? lastNameController = TextEditingController();
   TextEditingController? locationController = TextEditingController();
   TextEditingController? passwordController = TextEditingController();
   bool init = false;
-  String? profile_url;
-  dynamic profile_picture;
+  String? profileUrl;
+  dynamic profilePicture;
 
   Future<bool> setUserData() async {
     if (!init) {
@@ -36,12 +43,14 @@ class _EditProfilePage extends State<EditProfilePage> {
       Future<String?> lastName = getLastName(FirebaseFirestore.instance,widget.userEmail);
       Future<String?> location = getLocation(FirebaseFirestore.instance,widget.userEmail);
       Future<bool?> displayEmail = getDisplayEmail(FirebaseFirestore.instance,widget.userEmail);
-      profile_url = await (getPictureUrl(FirebaseFirestore.instance,widget.userEmail));
-      if (profile_url == "assets/images/profile.png"){
-        profile_picture = AssetImage(profile_url!);
+      profileUrl = await (getPictureUrl(FirebaseFirestore.instance,widget.userEmail));
+      // If image is equal to the default
+      if (profileUrl == "assets/images/profile.png"){
+        profilePicture = AssetImage(profileUrl!);
       }
       else{
-        profile_picture = NetworkImage(profile_url!);
+        // Else pick downloaded image from database
+        profilePicture = NetworkImage(profileUrl!);
       }
       emailController?.text = widget.userEmail;
       firstNameController?.text = (await (firstName))!;
@@ -105,7 +114,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                               onTap: _pickProfileImage,
                               child: CircleAvatar(
                                 radius: 60.0,
-                                backgroundImage: profile_picture,
+                                backgroundImage: profilePicture,
                               ),
                             ),
                           ],
@@ -349,7 +358,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                                           displayEmailInProfile = newValue;
                                         });
                                       },
-                                      activeTrackColor: Color(0xFF474747),
+                                      activeTrackColor: const Color(0xFF474747),
                                       activeColor: Colors.white,
                                     ),
                                   )
@@ -367,7 +376,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                               child: ElevatedButton(
                                 autofocus: true,
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Color(0xFF474747)),
+                                  backgroundColor: MaterialStateProperty.all(const Color(0xFF474747)),
                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10.0),
@@ -404,6 +413,7 @@ class _EditProfilePage extends State<EditProfilePage> {
     );
   }
 
+  /// Pick image updates automatically the storage.
   Future<void> _pickProfileImage() async {
     final bool? isCamera = await showModalBottomSheet<bool>(
       context: context,
@@ -453,7 +463,7 @@ class _EditProfilePage extends State<EditProfilePage> {
     dynamic pickedImage;
     if (isCamera != null) {
       pickedImage = await ImagePicker().pickImage(
-        source: isCamera! ? ImageSource.camera : ImageSource.gallery,
+        source: isCamera ? ImageSource.camera : ImageSource.gallery,
       );
       if (pickedImage != null) {
         String email = widget.userEmail;
@@ -464,21 +474,22 @@ class _EditProfilePage extends State<EditProfilePage> {
         bool update = await updateProfilePicture(FirebaseFirestore.instance, email, downloadUrl);
         if (update) {
           setState(() {
-            profile_url = downloadUrl;
-            profile_picture = NetworkImage(profile_url!);
+            profileUrl = downloadUrl;
+            profilePicture = NetworkImage(profileUrl!);
           });
         }
       }
     }
     else{
+      // Remove image and set it to default.
       pickedImage = "assets/images/profile.png";
       bool update = await updateProfilePicture(FirebaseFirestore.instance, widget.userEmail, pickedImage);
       if (update) {
         setState(() {
-          profile_picture = AssetImage(pickedImage);
+          profileUrl = pickedImage;
+          profilePicture = AssetImage(pickedImage);
         });
       }
-
     }
   }
 
@@ -529,14 +540,14 @@ class _EditProfilePage extends State<EditProfilePage> {
     }
 
     if (firstNameUpdated || lastNameUpdated || locationUpdated || passwordUpdated || displayEmailUpdated) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      _scaffoldMessengerKey.currentState!.showSnackBar(
         const SnackBar(
             content: Text('Success updating profile!', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white)),
             backgroundColor: Colors.green
         ),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
+      _scaffoldMessengerKey.currentState!.showSnackBar(
         const SnackBar(
           content: Text('Error updating profile!', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white)),
             backgroundColor: Colors.red
