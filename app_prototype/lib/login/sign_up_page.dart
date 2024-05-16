@@ -110,13 +110,13 @@ class _SignUpPageState extends State<SignUpPage> {
             return AlertDialog(
               title: Text('Sign Up Successful'),
               content: Text(
-                  'Your sign in was successful, please log in to enjoy the ap fully :>'),
+                  'Your sign in was successful, please log in to enjoy the app fully.'),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('yippee'),
+                  child: Text('Ok'),
                 ),
               ],
             );
