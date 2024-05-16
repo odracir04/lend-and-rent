@@ -41,6 +41,7 @@ class _EditProfilePage extends State<EditProfilePage> {
   bool init = false;
   String? profileUrl;
   dynamic profilePicture;
+  bool showPassword = false;
 
   Future<bool> setUserData() async {
     if (!init) {
@@ -286,14 +287,24 @@ class _EditProfilePage extends State<EditProfilePage> {
                                   const SizedBox(width: 10),
                                   Expanded(
                                     child: TextFormField(
-                                      obscureText: true,
+                                      obscureText: !showPassword,
                                       controller: passwordController,
                                       style: TextStyle(fontSize: 16, color: widget.darkTheme ? Colors.white : Colors.black),
                                       cursorColor: Colors.white,
-                                      decoration: const InputDecoration(
+                                      decoration: InputDecoration(
                                         border: InputBorder.none,
                                         hintText: 'Enter a new password',
                                         hintStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            showPassword ? Icons.visibility : Icons.visibility_off,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              showPassword = !showPassword;
+                                            });
+                                          },
+                                        ),
                                       ),
                                     ),
                                   ),
