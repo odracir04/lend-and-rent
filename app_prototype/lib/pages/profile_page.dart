@@ -197,6 +197,75 @@ class _ProfilePageState extends State<ProfilePage> {
                                 );
                                 break;
                               case 'report':
+                                String reportReason = '';
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Report'),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Please provide a reason for the report:',
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(height: 10),
+                                          TextFormField(
+                                            onChanged: (value) {
+                                              reportReason = value;
+                                            },
+                                            maxLines: 3,
+                                            decoration: InputDecoration(
+                                              hintText: 'Enter reason here',
+                                              border: OutlineInputBorder(),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            foregroundColor: Colors.black,
+                                          ),
+                                          child: Text('Cancel'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            final user = FirebaseAuth.instance.currentUser;
+                                            final reportsCollection = FirebaseFirestore.instance.collection('reports');
+
+                                            reportsCollection.add({
+                                              'reportedUser': widget.profileEmail,
+                                              'reporterUserId': user!.email,
+                                              'reason': reportReason,
+                                              'timestamp': DateTime.now(),
+                                            }).then((_) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('Report submitted successfully')),
+                                              );
+                                            }).catchError((error) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('Failed to submit report: $error')),
+                                              );
+                                            });
+                                            Navigator.of(context).pop(); // Close the dialog
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.red,
+                                            foregroundColor: Colors.white,
+                                          ),
+                                          child: Text('Send'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                                 break;
                             }
                           },
