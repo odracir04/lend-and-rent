@@ -1,8 +1,8 @@
-# _Lend and Rent_ Development Report
+# _Lend & Rent_ Development Report
 
-Welcome to the documentation pages of the _Lend and Rent_!
+Welcome to the documentation pages of the _Lend & Rent_!
 
-You can find here details about the _Lend and Rent_, from a high-level vision to low-level implementation decisions, a kind of Software Development Report, organized by type of activities: 
+You can find here details about the _Lend & Rent_, from a high-level vision to low-level implementation decisions, a kind of Software Development Report, organized by type of activities: 
 
 * [Business modeling](#Business-Modelling) 
   * [Product Vision](#Product-Vision)
@@ -33,7 +33,7 @@ Thank you!
 ## Business Modelling
 
 ### Product Vision
-Lend and Rent envisions to facilitate the lives of our community, encouraging a connected community throught resource sharing.
+Lend & Rent envisions to facilitate the lives of our community, encouraging a connected community throught resource sharing.
 
 We believe that knowledge is power, and our mission is to empower users through our app, fostering connections and promoting sustainable practices one book at a time.
 
@@ -163,3 +163,46 @@ No corrections were made during this iteration of the project.
 In regards to the development of the app itself, all but one of the planned features where implemented, although only one included the respective tests.
 
 Thus far, our team was faced with lack of communication and problems regarding the organization of the project, issues that lead our performance as a team to overall fall below expected. As such, we're looking forward to improve on those regards until the next sprint.
+
+## Sprint 2
+
+### Implemented Features
+
+**New App Logo** - The _Lend & Rent_ app now displays new art, improving its identity and overall branding.
+
+**Sign Up** - The user can now sign up to the service in order to fully enjoy the app and all its features.
+
+**Recover Password** - A new option was included to the sign in page where users can request a password recovery when necessary.
+
+**Profile Page and Settings** - After weeks in development, the profile page is now mostly implemented. Users can now promptly check and alter they're account info as well.
+
+**Add Books** - Users can finally add their book postings to the app.
+
+**Chat** - In order to arrange an exchange, users can now make use of the new chat feature to send and receive messages form each other.
+
+### Bug fixes
+
+Opening the keyboard in the sign in page no longer causes the widgets to overflow.
+
+Elements at the top of the screen, such as the searchbar, are no longer hidden behind the front cameras and dynamic islands in some phone models.
+
+### Sprint Planning
+
+**Project at start of Sprint 2:**
+
+<p align="center" justify="center">
+  <img src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/blob/main/docs/backlog/sprint1.png"/>
+</p>
+
+**Project at end of Sprint 2:**
+
+<p align="center" justify="center">
+  <img src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/blob/main/docs/backlog/sprint2.png"/>
+</p>
+
+### Sprint Retrospective and Observations
+As a team, we are proud to say that our communication has improved, leading to a greater organization and overall performance during this sprint.
+
+Most of the planned features were implemented without issue, and all pre-existing bugs were fixed promptly. 
+
+Since this sprint had a bigger focus on implementing missing features, we expect the next one to be more aimed at testing and bug fixing, in order to prepare for the coming presentation and offer the user a more reliable and enjoyable experience.

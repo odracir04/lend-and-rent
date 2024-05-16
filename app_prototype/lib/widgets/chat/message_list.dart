@@ -1,12 +1,14 @@
+import 'package:app_prototype/database/chats.dart';
 import 'package:app_prototype/widgets/chat/message_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class MessageList extends StatefulWidget {
-  MessageList({super.key, required this.messages, required this.userEmail});
+  const MessageList({super.key, required this.receiverEmail, required this.userEmail,
+                required this.db});
 
-  final String userEmail;
-  late Future<List<DocumentSnapshot>> messages;
+  final String userEmail, receiverEmail;
+  final FirebaseFirestore db;
 
   @override
   State<StatefulWidget> createState() => MessageListState();
@@ -16,17 +18,13 @@ class MessageListState extends State<MessageList> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: widget.messages,
+    return StreamBuilder(
+        stream: getChatMessages(widget.db, widget.userEmail, widget.receiverEmail),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (!snapshot.hasData) {
             return const CircularProgressIndicator();
-          }
-          else if (snapshot.hasError) {
-            return Text("ERROR: ${snapshot.error}");
-          }
-          else {
-            List<DocumentSnapshot> messages = snapshot.data ?? [];
+          } else {
+            List<DocumentSnapshot> messages = snapshot.data!.docs ?? [];
             return Expanded(child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
@@ -37,7 +35,6 @@ class MessageListState extends State<MessageList> {
               },
             ));
           }
-        }
-    );
+        });
   }
 }
