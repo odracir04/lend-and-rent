@@ -74,6 +74,7 @@ class _MyBookListState extends State<MyBookList> {
                         child: Column (
                           children: [
                             BookCard(
+                              book: bookData,
                               changeTheme: widget.changeTheme,
                               darkTheme: widget.darkTheme,
                               bookName: "${bookData['title']}",

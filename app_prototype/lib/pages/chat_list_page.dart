@@ -51,7 +51,7 @@ class ChatListPageState extends State<ChatListPage> {
                 scrollDirection: Axis.vertical,
                 itemCount: messages.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ChatListItem(changeTheme : widget.changeTheme, darkTheme: widget.darkTheme, receiverEmail: messages[index]);
+                  return ChatListItem(changeTheme : widget.changeTheme, darkTheme: widget.darkTheme, receiverEmail: messages[index], db: widget.db,);
                 },
               ),
             );

@@ -19,6 +19,7 @@ void main() {
           imagePath: 'assets/images/book.jpg',
           location: 'Gaia',
           renter: "email@example.org",
+          book: {},
         ),
       ),
     );
@@ -41,7 +42,7 @@ void main() {
 
     await tester.pumpWidget(MaterialApp(home:
     BookCard(darkTheme: darkTheme, changeTheme: testChangeTheme, userPicture: "assets/images/profile.png",bookName: 'name', authorName: 'author',
-      imagePath: 'assets/images/book.jpg', location: 'Gaia', renter: "email@example.org",),));
+      imagePath: 'assets/images/book.jpg', location: 'Gaia', renter: "email@example.org", book: {},),));
 
     expect(find.text("name"), findsOneWidget);
     expect(find.text("author"), findsOneWidget);

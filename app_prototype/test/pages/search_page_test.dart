@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets("Search page", (WidgetTester tester) async {
+
     bool darkTheme = false;
     void testChangeTheme() { darkTheme = !darkTheme; }
 
@@ -16,6 +17,7 @@ void main() {
   });
 
   testWidgets("Tap filter button", (WidgetTester tester) async {
+
     bool darkTheme = false;
     void testChangeTheme() { darkTheme = !darkTheme; }
 

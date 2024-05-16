@@ -3,11 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../pages/book_page.dart';
 import '/widgets/users/user_icon.dart';
 
 class BookCard extends StatelessWidget {
-  const BookCard({
+  BookCard({
     super.key,
+    required this.book,
     required this.changeTheme,
     required this.darkTheme,
     required this.bookName,
@@ -21,6 +23,7 @@ class BookCard extends StatelessWidget {
   final String bookName, authorName, location, imagePath, renter,userPicture;
   final VoidCallback changeTheme;
   final bool darkTheme;
+  Map<String, dynamic> book;
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +41,10 @@ class BookCard extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ChatPage(
+                    builder: (context) => BookPage(
+                      book: book, darkTheme: darkTheme, db: FirebaseFirestore.instance,
                       changeTheme: changeTheme,
-                      darkTheme: darkTheme,
-                      receiverEmail: renter,
-                      userEmail: currentUserEmail ?? "",
-                      db: FirebaseFirestore.instance,
-                    ),
+                    )
                   ),
                 );
               }

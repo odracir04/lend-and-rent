@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../database/users.dart';
 
 class BookList extends StatefulWidget {
+
   BookList({Key? key, required this.changeTheme, required this.darkTheme, required this.books});
 
   final Future<List<DocumentSnapshot>> books;
@@ -43,6 +44,7 @@ class BookListState extends State<BookList> {
                     } else {
                       String? userPicture = userPictureSnapshot.data;
                       return BookCard(
+                        book: bookData,
                         changeTheme: widget.changeTheme,
                         darkTheme: widget.darkTheme,
                         bookName: "${bookData['title']}",

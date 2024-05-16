@@ -2,10 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-
-/// Get receiver chat user name
-Future<String?> getReceiverName(String? email) async {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<String?> getReceiverName(FirebaseFirestore db, String? email) async {
   email = email?.toLowerCase();
   try {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await db
@@ -27,9 +24,7 @@ Future<String?> getReceiverName(String? email) async {
   }
 }
 
-/// Get chat receiver location
-Future<String?> getReceiverLocation(String? email) async{
-  FirebaseFirestore db = FirebaseFirestore.instance;
+Future<String?> getReceiverLocation(FirebaseFirestore db, String? email) async {
   email = email?.toLowerCase();
   try {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await db
@@ -391,7 +386,6 @@ Future<bool> updateDisplayEmail(FirebaseFirestore db,String? email, bool? displa
   }
 }
 
-
 /// Get full name of user.
 /// Joins both user first name and last name.
 String? assembleName(String? userFirstName, String? userLastName) {
@@ -402,3 +396,11 @@ String? assembleName(String? userFirstName, String? userLastName) {
   return name;
 }
 
+void deleteUser(FirebaseFirestore db, String userEmail) async {
+  QuerySnapshot snapshot = await db.collection('users').where('email', isEqualTo: userEmail).get();
+
+  for (DocumentSnapshot document in snapshot.docs) {
+    DocumentReference reference = db.collection('users').doc(document.id);
+    await reference.delete();
+  }
+}

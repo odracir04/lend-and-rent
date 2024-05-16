@@ -22,18 +22,15 @@ class ChatPage extends StatefulWidget {
 }
 
 class ChatPageState extends State<ChatPage> {
-  late Future<List<DocumentSnapshot>> messages;
   final TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    messages = getChatMessages(widget.db, widget.userEmail, widget.receiverEmail);
   }
   
   void _onPressed() {
     setState(() {
-      messages = getChatMessages(widget.db, widget.userEmail, widget.receiverEmail);
       writeMessage(widget.db, widget.userEmail, widget.receiverEmail, controller.text);
       controller.clear();
     });
@@ -43,7 +40,9 @@ class ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Future.wait([getReceiverName(widget.receiverEmail), getReceiverLocation(widget.receiverEmail),getPictureUrl(FirebaseFirestore.instance, widget.receiverEmail)]),
+        future: Future.wait([getReceiverName(widget.db, widget.receiverEmail),
+                            getReceiverLocation(widget.db, widget.receiverEmail),
+                            getPictureUrl(FirebaseFirestore.instance, widget.receiverEmail)]),
         builder: (builder, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
@@ -56,7 +55,7 @@ class ChatPageState extends State<ChatPage> {
                 body:
                     Column(
                       children: [
-                        MessageList(messages: messages, userEmail: widget.userEmail),
+                        MessageList(receiverEmail: widget.receiverEmail, userEmail: widget.userEmail, db: widget.db,),
                         MessageWriteBar(onPressed: _onPressed, controller: controller,)
                       ],
                     )

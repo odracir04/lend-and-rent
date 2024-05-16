@@ -157,5 +157,14 @@ void main() {
     expect(books.length,1);
   });
 
+  testWidgets("Deleting a book", (WidgetTester tester) async {
+    final snapshot = await fakeFirestore.collection('books').get();
+    final id = snapshot.docs[0].id;
+    fakeFirestore.collection('books').doc(id).delete();
 
+    late Future<List<DocumentSnapshot>> futureBooks = getBooksSearch(
+        'The', fakeFirestore);
+    List<DocumentSnapshot> books = await futureBooks;
+    expect(books.length, 1);
+  });
 }

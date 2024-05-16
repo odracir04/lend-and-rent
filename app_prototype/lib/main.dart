@@ -15,12 +15,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(App());
+  runApp(App(db: FirebaseFirestore.instance, auth: FirebaseAuth.instance));
 }
 class App extends StatefulWidget {
-  App({Key? key});
+  App({Key? key, required this.db, required this.auth});
 
   bool darkTheme = false;
+  final FirebaseAuth auth;
+  final FirebaseFirestore db;
 
   @override
   State<StatefulWidget> createState() => AppState();
@@ -49,7 +51,7 @@ class AppState extends State<App> {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: Themes.getTheme(widget.darkTheme),
-        home: SignInPage(onSignIn: () {
+        home: SignInPage(auth: widget.auth, onSignIn: () {
           handleSignIn();
         }),
         title: "Lend and Rent (Prototype)",
@@ -71,7 +73,7 @@ class AppState extends State<App> {
         destination: ProfilePage(
           changeTheme: changeTheme,
           darkTheme: widget.darkTheme,
-          profileEmail: FirebaseAuth.instance.currentUser!.email!
+          profileEmail: FirebaseAuth.instance.currentUser!.email!,
         ),
       ),
       // Two Examples to remove later

@@ -5,8 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets("Chat App Bar structure", (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home:
-    ChatAppBar( visitingEmail: "pkwdk",userLocation: "Testland", userName: "TestUser",)));
+    await tester.pumpWidget(MaterialApp(home:
+    ChatAppBar( visitingEmail: "pkwdk",userLocation: "Testland",
+      userName: "TestUser", changeTheme: () {}, darkTheme: true, userPicture: "test.jpg",)));
 
     expect(find.byType(AppBar), findsOneWidget);
     expect(find.byType(UserIcon), findsOneWidget);

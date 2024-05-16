@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../database/users.dart';
+import '../main.dart';
 
 /// In this page, user can edit his profile including
 /// Picture, name, location, password, and displayEmail.
@@ -13,12 +15,15 @@ import '../database/users.dart';
 /// For the others, it is necessary to click in save changes.
 
 class EditProfilePage extends StatefulWidget {
-
-  EditProfilePage({super.key, required this.changeTheme, required this.darkTheme, required this.userEmail});
+  EditProfilePage({super.key, required this.changeTheme, required this.darkTheme, required this.userEmail, required this.db,
+                    required this.auth});
 
   final String userEmail;
   final VoidCallback changeTheme;
-  final bool darkTheme;
+  final FirebaseFirestore db;
+  final FirebaseAuth auth;
+  bool darkTheme;
+
   final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
 
   @override
@@ -39,11 +44,11 @@ class _EditProfilePage extends State<EditProfilePage> {
 
   Future<bool> setUserData() async {
     if (!init) {
-      Future<String?> firstName = getFirstName(FirebaseFirestore.instance,widget.userEmail);
-      Future<String?> lastName = getLastName(FirebaseFirestore.instance,widget.userEmail);
-      Future<String?> location = getLocation(FirebaseFirestore.instance,widget.userEmail);
-      Future<bool?> displayEmail = getDisplayEmail(FirebaseFirestore.instance,widget.userEmail);
-      profileUrl = await (getPictureUrl(FirebaseFirestore.instance,widget.userEmail));
+      Future<String?> firstName = getFirstName(widget.db,widget.userEmail);
+      Future<String?> lastName = getLastName(widget.db,widget.userEmail);
+      Future<String?> location = getLocation(widget.db,widget.userEmail);
+      Future<bool?> displayEmail = getDisplayEmail(widget.db,widget.userEmail);
+      profileUrl = await getPictureUrl(widget.db,widget.userEmail);
       // If image is equal to the default
       if (profileUrl == "assets/images/profile.png"){
         profilePicture = AssetImage(profileUrl!);
@@ -402,6 +407,57 @@ class _EditProfilePage extends State<EditProfilePage> {
                           ],
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                key: const Key("delete_profile_button"),
+                                autofocus: true,
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(Color(0xFF700000)),
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  showDialog(context: context, builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text("Delete Profile"),
+                                      content: const Text("Are you sure you want to delete your profile?"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () { Navigator.of(context).pop(true); },
+                                            child: const Text("Yes")
+                                        ),
+                                        TextButton(
+                                            onPressed: () { Navigator.of(context).pop(false); } ,
+                                            child: const Text("No"))
+                                      ],
+                                    );
+                                  }).then((value) {
+                                    if (value) deleteProfile();
+                                  });
+                                },
+                                child: const SizedBox(
+                                  width: double.infinity,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Text(
+                                      'Delete Profile',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -495,11 +551,11 @@ class _EditProfilePage extends State<EditProfilePage> {
 
 
   void saveChangesController() async {
-
-    Future<String?> firstNameFuture = getFirstName(FirebaseFirestore.instance,widget.userEmail);
-    Future<String?> lastNameFuture = getLastName(FirebaseFirestore.instance,widget.userEmail);
-    Future<String?> locationFuture = getLocation(FirebaseFirestore.instance,widget.userEmail);
-    Future<bool?> displayEmailFuture = getDisplayEmail(FirebaseFirestore.instance,widget.userEmail);
+    Future<String?> firstNameFuture = getFirstName(widget.db,widget.userEmail);
+    Future<String?> lastNameFuture = getLastName(widget.db,widget.userEmail);
+    Future<String?> locationFuture = getLocation(widget.db,widget.userEmail);
+    Future<bool?> displayEmailFuture = getDisplayEmail(widget.db,widget.userEmail);
+    Future<String?> displayProfilePicture = getPictureUrl(widget.db,widget.userEmail);
 
     String? newFirstName = firstNameController!.text;
     String? newLastName = lastNameController!.text;
@@ -520,16 +576,16 @@ class _EditProfilePage extends State<EditProfilePage> {
 
 
     if (firstNameUpdated) {
-      await updateUserFirstName(FirebaseFirestore.instance,widget.userEmail, newFirstName);
+      await updateUserFirstName(widget.db,widget.userEmail, newFirstName);
     }
     if (lastNameUpdated) {
-      await updateUserLastName(FirebaseFirestore.instance,widget.userEmail, newLastName);
+      await updateUserLastName(widget.db,widget.userEmail, newLastName);
     }
     if (locationUpdated) {
-      await updateUserLocation(FirebaseFirestore.instance,widget.userEmail, newLocation);
+      await updateUserLocation(widget.db,widget.userEmail, newLocation);
     }
     if (displayEmailUpdated) {
-      await updateDisplayEmail(FirebaseFirestore.instance,widget.userEmail, newDisplayEmail);
+      await updateDisplayEmail(widget.db,widget.userEmail, newDisplayEmail);
     }
     if (newPassword != ""){
       await updatePassword(widget.userEmail, newPassword);
@@ -555,5 +611,11 @@ class _EditProfilePage extends State<EditProfilePage> {
       );
 
     }
+  }
+
+  void deleteProfile() async {
+    await widget.auth.currentUser!.delete();
+    deleteUser(widget.db, widget.userEmail);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => App(db: widget.db, auth: widget.auth,)));
   }
 }

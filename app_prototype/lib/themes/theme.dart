@@ -16,6 +16,13 @@ class Themes {
       ),
       buttonTheme: ButtonThemeData(
         colorScheme: darkMode ? const ColorScheme.dark() : const ColorScheme.light()
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+              return darkMode ? Colors.white : Colors.grey.shade900;
+            })
+        )
       )
     );
   }

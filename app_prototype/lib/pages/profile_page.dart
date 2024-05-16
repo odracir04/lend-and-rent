@@ -1,9 +1,9 @@
-import 'package:app_prototype/database/users.dart';
 import 'package:app_prototype/pages/edit_profile.dart';
-import 'package:app_prototype/widgets/users/my_review_list.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:app_prototype/database/users.dart';
+import 'package:app_prototype/widgets/users/my_review_list.dart';
 import '../widgets/users/my_book_list.dart';
 
 /// Profile page -> User can see image, name, email (on/off).
@@ -117,6 +117,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => EditProfilePage(
+                                    db: FirebaseFirestore.instance,
+                                    auth: FirebaseAuth.instance,
                                     changeTheme: widget.changeTheme,
                                     darkTheme: widget.darkTheme,
                                     userEmail: userEmail ?? "default",

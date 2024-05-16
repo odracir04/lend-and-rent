@@ -5,12 +5,11 @@ import 'package:app_prototype/login/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../pages/edit_profile.dart';
-
 class SignInPage extends StatefulWidget {
   final VoidCallback onSignIn;
+  final FirebaseAuth auth;
 
-  SignInPage({required this.onSignIn});
+  SignInPage({required this.onSignIn, required this.auth});
 
   @override
   State<SignInPage> createState() => _SignInPageState();
@@ -24,12 +23,11 @@ class _SignInPageState extends State<SignInPage> {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   bool wrong = false;
 
   Future<void> _signInWithEmailAndPassword() async {
     try {
-      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      final UserCredential userCredential = await widget.auth.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
