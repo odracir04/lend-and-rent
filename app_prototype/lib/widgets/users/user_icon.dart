@@ -11,14 +11,19 @@ class UserIcon extends StatefulWidget {
 }
 
 class UserIconState extends State<UserIcon> {
-
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        onPressed: null,
-        icon: ClipOval(
-            child: widget.userPicture ==  "assets/images/profile.png" ? Image.asset("assets/images/profile.png") : Image.network(widget.userPicture))
+      onPressed: null,
+      icon: ClipOval(
+        child: SizedBox(
+          width: 40,
+          height: 40,
+          child: widget.userPicture == "assets/images/profile.png"
+              ? Image.asset("assets/images/profile.png", fit: BoxFit.cover)
+              : Image.network(widget.userPicture, fit: BoxFit.cover),
+        ),
+      ),
     );
   }
-
 }

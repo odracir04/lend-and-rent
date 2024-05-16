@@ -37,17 +37,15 @@ class BookCard extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              if (currentUserEmail != renter) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BookPage(
-                      book: book, darkTheme: darkTheme, db: FirebaseFirestore.instance,
-                      changeTheme: changeTheme,
-                    )
-                  ),
-                );
-              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookPage(
+                    book: book, darkTheme: darkTheme, db: FirebaseFirestore.instance,
+                    changeTheme: changeTheme,
+                  )
+                ),
+              );
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),

@@ -21,6 +21,8 @@ class _SignUpPageState extends State<SignUpPage> {
   late TextEditingController _passwordController = TextEditingController();
   late TextEditingController _confirmPasswordController = TextEditingController();
   bool? _termsOfService = false;
+  bool showPassword = false;
+  bool showCheckPassword = false;
   bool wrong1 = false, wrong2 = false, wrong3 = false, wrong4 = false, wrong5 = false;
 
   Future<void> _signUp(BuildContext context) async {
@@ -276,7 +278,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: _passwordController,
-                    obscureText: true,
+                    obscureText: !showPassword,
                     decoration: InputDecoration(
                       labelText: 'Password',
                       labelStyle: TextStyle(
@@ -296,12 +298,23 @@ class _SignUpPageState extends State<SignUpPage> {
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: changeColor(wrong4),),
                       ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          showPassword ? Icons.visibility : Icons.visibility_off,
+                          color: changeColor(wrong4),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            showPassword = !showPassword;
+                          });
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: _confirmPasswordController,
-                    obscureText: true,
+                    obscureText: !showCheckPassword,
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
                       labelStyle: TextStyle(
@@ -320,6 +333,17 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: changeColor(wrong5),),
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          showCheckPassword ? Icons.visibility : Icons.visibility_off,
+                          color: changeColor(wrong5),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            showCheckPassword = !showCheckPassword;
+                          });
+                        },
                       ),
                     ),
                   ),
