@@ -24,6 +24,7 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool wrong = false;
+  bool showPassword = false;
 
   Future<void> _signInWithEmailAndPassword() async {
     try {
@@ -113,7 +114,7 @@ class _SignInPageState extends State<SignInPage> {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: passwordController,
-                    obscureText: true,
+                    obscureText: !showPassword,
                     decoration: InputDecoration(
                       labelText: 'Password',
                       labelStyle: TextStyle(
@@ -132,6 +133,17 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: changeColor(wrong),),
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          showPassword ? Icons.visibility : Icons.visibility_off,
+                          color: changeColor(wrong),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            showPassword = !showPassword;
+                          });
+                        },
                       ),
                     ),
                   ),
