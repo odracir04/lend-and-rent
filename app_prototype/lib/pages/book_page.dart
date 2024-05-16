@@ -1,10 +1,12 @@
 import 'package:app_prototype/database/books.dart';
+import 'package:app_prototype/pages/profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../database/users.dart';
+import '../widgets/users/user_icon.dart';
 import 'chat_page.dart';
 
 class BookPage extends StatefulWidget {
@@ -168,18 +170,47 @@ class BookPageState extends State<BookPage> {
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Renter: ',
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
                             FutureBuilder(
-                                future: Future.wait([getReceiverName(widget.db, widget.book['renter'])]),
+                                future: Future.wait([getReceiverName(widget.db, widget.book['renter']),
+                                  getPictureUrl(FirebaseFirestore.instance, widget.book['renter'])]),
                                 builder: (builder, snapshot) {
                                   if (snapshot.connectionState != ConnectionState.waiting) {
                                     List<String?> data = snapshot.data ?? [];
-                                    return Text(
-                                      data[0]!,
-                                      style: const TextStyle(fontSize: 20),
+                                    return GestureDetector(
+                                      onTap: () {
+                                        final currentUser = FirebaseAuth.instance.currentUser;
+                                        if (currentUser != null) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ProfilePage(
+                                                changeTheme: widget.changeTheme,
+                                                darkTheme: widget.darkTheme,
+                                                profileEmail: widget.book['renter'],
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          print('FirebaseAuth.instance.currentUser is null');
+                                        }
+                                      },
+                                      child: Row(
+                                        children: [
+                                          const Text(
+                                            'Renter: ',
+                                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            height: 40,
+                                            width: 40,
+                                            child: UserIcon( userPicture: data[1]!,),
+                                          ),
+                                          Text(
+                                              data[0]!,
+                                              style: const TextStyle(fontSize: 20),
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   }
                                   else {
