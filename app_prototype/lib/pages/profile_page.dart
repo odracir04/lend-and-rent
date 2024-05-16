@@ -177,10 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             FirebaseAuth.instance.signOut();
                                             Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(
-                                                builder: (context) => SignInPage(
-                                                  onSignIn: () {AppState().handleSignIn();},
-                                                  auth: FirebaseAuth.instance,
-                                                ),
+                                                builder: (context) => App(db: FirebaseFirestore.instance, auth: FirebaseAuth.instance)
                                               ),
                                             );
                                           },
