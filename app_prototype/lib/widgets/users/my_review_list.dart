@@ -196,6 +196,7 @@ class _MyReviewListState extends State<MyReviewList> {
                       ],
                     ),
                   ),
+                const SizedBox(height: 100,)
               ],
             );
           }
