@@ -94,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       toolbarHeight: 50.0,
                       centerTitle: true,
                       title: Text(
-                        'My profile',
+                        accessToFunctionalities ? 'My profile' : "Profile Page",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -103,36 +103,76 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       actions: [
-                        if (accessToFunctionalities)
-                          IconButton(
-                            icon: Icon(
-                              Icons.edit,
-                              size: 18.0,
-                              color: widget.darkTheme
-                                  ? Colors.white
-                                  : Colors.black,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EditProfilePage(
-                                    db: FirebaseFirestore.instance,
-                                    auth: FirebaseAuth.instance,
-                                    changeTheme: widget.changeTheme,
-                                    darkTheme: widget.darkTheme,
-                                    userEmail: userEmail ?? "default",
+                        PopupMenuButton(
+                          offset: Offset(0, 40),
+                          itemBuilder: (BuildContext context) {
+                            List<PopupMenuEntry<String>> items = [];
+                            if (accessToFunctionalities) {
+                              items.add(
+                                PopupMenuItem(
+                                  value: 'edit',
+                                  child: ListTile(
+                                    leading: Icon(Icons.edit),
+                                    title: Text('Edit Profile'),
                                   ),
                                 ),
-                              ).then((result) {
-                                if (result == true) {
-                                  setState(() {
-                                    setUserData();
-                                  });
-                                }
-                              });
-                            },
+                              );
+                              items.add(
+                                PopupMenuItem(
+                                  value: 'logout',
+                                  child: ListTile(
+                                    leading: Icon(Icons.logout),
+                                    title: Text('Log out'),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              items.add(
+                                PopupMenuItem(
+                                  value: 'report',
+                                  child: ListTile(
+                                    leading: Icon(Icons.report),
+                                    title: Text('Report'),
+                                  ),
+                                ),
+                              );
+                            }
+                            return items;
+                          },
+                          onSelected: (String value) {
+                            switch (value) {
+                              case 'edit':
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditProfilePage(
+                                      db: FirebaseFirestore.instance,
+                                      auth: FirebaseAuth.instance,
+                                      changeTheme: widget.changeTheme,
+                                      darkTheme: widget.darkTheme,
+                                      userEmail: userEmail ?? "default",
+                                    ),
+                                  ),
+                                ).then((result) {
+                                  if (result == true) {
+                                    setState(() {
+                                      setUserData();
+                                    });
+                                  }
+                                });
+                                break;
+                              case 'logout':
+                                break;
+                              case 'report':
+                                break;
+                            }
+                          },
+                          icon: Icon(
+                            Icons.more_vert,
+                            size: 18.0,
+                            color: widget.darkTheme ? Colors.white : Colors.black,
                           ),
+                        ),
                       ],
                     ),
                     Container(
