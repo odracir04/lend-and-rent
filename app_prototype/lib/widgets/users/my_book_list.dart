@@ -36,7 +36,7 @@ class _MyBookListState extends State<MyBookList> {
     final List<DocumentSnapshot> futureBooks = await getBooksForUser(FirebaseFirestore.instance, widget.visitingEmail);
     myBooks = futureBooks;
 
-    userPicture = await getPictureUrl(FirebaseFirestore.instance, widget.userEmail);
+    userPicture = await getPictureUrl(FirebaseFirestore.instance, widget.visitingEmail);
 
 
   }
@@ -54,10 +54,11 @@ class _MyBookListState extends State<MyBookList> {
               child: Text(
                 "This user is not selling books yet.",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: widget.darkTheme? Colors.white : Colors.white),
+                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: widget.darkTheme? Colors.white : Colors.black)
               ),
             );
           } else {
+            print(myBooks);
             return SingleChildScrollView(
               child: Column(
                 children: [

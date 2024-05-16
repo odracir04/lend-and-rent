@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   testWidgets("Chat App Bar structure", (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(home:
-    ChatAppBar(userLocation: "Testland", userName: "TestUser",)));
+    ChatAppBar( visitingEmail: "pkwdk",userLocation: "Testland", userName: "TestUser",)));
 
     expect(find.byType(AppBar), findsOneWidget);
     expect(find.byType(UserIcon), findsOneWidget);

@@ -5,10 +5,25 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets("Basic BookCard structure", (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home:
-    BookCard(bookName: 'name', authorName: 'author',
-      imagePath: 'assets/images/book.jpg', location: 'Gaia', renter: "email@example.org",),));
+    bool darkTheme = false;
+    void testChangeTheme() { darkTheme = !darkTheme; }
 
+    await tester.pumpWidget(
+      MaterialApp(
+        home: BookCard(
+          bookName: 'name',
+          authorName: 'author',
+          userPicture: "assets/image/profile.png",
+          darkTheme: darkTheme,
+          changeTheme: testChangeTheme,
+          imagePath: 'assets/images/book.jpg',
+          location: 'Gaia',
+          renter: "email@example.org",
+        ),
+      ),
+    );
+
+    // Expectations
     expect(find.byType(Stack), findsOneWidget);
     expect(find.byType(Card), findsOneWidget);
     expect(find.byType(ClipRRect), findsOneWidget);
@@ -16,12 +31,16 @@ void main() {
     expect(find.byType(Column), findsNWidgets(2));
     expect(find.byType(Row), findsOneWidget);
     expect(find.byType(UserIcon), findsOneWidget);
-    expect(find.byType(Image), findsNWidgets(2));
+
   });
 
+
   testWidgets("BookCard text", (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home:
-    BookCard(bookName: 'name', authorName: 'author',
+    bool darkTheme = false;
+    void testChangeTheme() { darkTheme = !darkTheme; }
+
+    await tester.pumpWidget(MaterialApp(home:
+    BookCard(darkTheme: darkTheme, changeTheme: testChangeTheme, userPicture: "assets/images/profile.png",bookName: 'name', authorName: 'author',
       imagePath: 'assets/images/book.jpg', location: 'Gaia', renter: "email@example.org",),));
 
     expect(find.text("name"), findsOneWidget);

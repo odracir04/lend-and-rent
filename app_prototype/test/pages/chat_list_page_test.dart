@@ -35,7 +35,12 @@ void main() {
   });
   
   testWidgets('Chat List Page structure test', (WidgetTester tester) async {
+    bool darkTheme = false;
+    void testChangeTheme() { darkTheme = !darkTheme; }
+
     await tester.pumpWidget(MaterialApp(home: ChatListPage(
+      darkTheme: darkTheme,
+      changeTheme: testChangeTheme,
       userEmail: "test@example.org",
       db: fakeFirestore
     ),));
@@ -49,7 +54,12 @@ void main() {
   });
 
   testWidgets('No chats structure test', (WidgetTester tester) async {
+    bool darkTheme = false;
+    void testChangeTheme() { darkTheme = !darkTheme; }
+
     await tester.pumpWidget(MaterialApp(home: ChatListPage(
+        darkTheme: darkTheme,
+        changeTheme: testChangeTheme,
         userEmail: "nouser@example.org",
         db: fakeFirestore
     ),));
