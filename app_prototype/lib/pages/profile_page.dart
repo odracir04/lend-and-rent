@@ -172,13 +172,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                       content: Text('Click the button below to log out.'),
                                       actions: <Widget>[
                                         TextButton(
-                                          onPressed: () {
+                                          onPressed: () async {
+                                            await FirebaseAuth.instance.signOut();
                                             AppState().loggedIn = false;
-                                            FirebaseAuth.instance.signOut();
-                                            Navigator.of(context).pushReplacement(
+                                            Navigator.of(context).pushAndRemoveUntil(
                                               MaterialPageRoute(
-                                                builder: (context) => App(db: FirebaseFirestore.instance, auth: FirebaseAuth.instance)
+                                                builder: (context) => App(
+                                                  db: FirebaseFirestore.instance,
+                                                  auth: FirebaseAuth.instance,
+                                                ),
                                               ),
+                                                  (route) => false,
                                             );
                                           },
                                           style: ButtonStyle(
