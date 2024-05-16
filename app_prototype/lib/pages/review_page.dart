@@ -4,19 +4,23 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+import '../database/books.dart';
+
 /// In the review class, you can write your own opinion about the user and give a 0 to 5 stars evaluation
 class Review extends StatefulWidget {
   final VoidCallback changeTheme;
   final bool darkTheme;
   final String emailReview;
-  final String emailReceiver;
+  final String receiver;
+  final bool userReview;
 
   const Review({
     super.key,
+    required this.userReview,
     required this.changeTheme,
     required this.darkTheme,
     required this.emailReview,
-    required this.emailReceiver,
+    required this.receiver,
   });
 
   @override
@@ -194,13 +198,23 @@ class _ReviewState extends State<Review> {
 
   Future<void> sendReview(double rating, String? reviewMessage) async {
     try {
-      bool success = await createReview(
+      bool success;
+      widget.userReview ?
+      success = await createReview(
         FirebaseFirestore.instance,
         rating,
         reviewMessage,
         widget.emailReview,
-        widget.emailReceiver,
+        widget.receiver,
+      ) :
+      success = await writeBookReview(
+        FirebaseFirestore.instance,
+        widget.receiver,
+        widget.emailReview,
+        rating,
+        reviewMessage
       );
+      ;
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

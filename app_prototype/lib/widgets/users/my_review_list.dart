@@ -84,7 +84,8 @@ class _MyReviewListState extends State<MyReviewList> {
                                     changeTheme: widget.changeTheme,
                                     darkTheme: widget.darkTheme,
                                     emailReview: widget.userEmail,
-                                    emailReceiver: widget.visitingEmail,
+                                    receiver: widget.visitingEmail,
+                                    userReview: true,
                                   ),
                                 ),
                               ).then((result) {
@@ -169,7 +170,8 @@ class _MyReviewListState extends State<MyReviewList> {
                                     changeTheme: widget.changeTheme,
                                     darkTheme: widget.darkTheme,
                                     emailReview: widget.userEmail,
-                                    emailReceiver: widget.visitingEmail,
+                                    receiver: widget.visitingEmail,
+                                    userReview: true,
                                   ),
                                 ),
                               ).then((result) {
