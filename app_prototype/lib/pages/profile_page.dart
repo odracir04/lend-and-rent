@@ -1,3 +1,5 @@
+import 'package:app_prototype/login/sign_in_page.dart';
+import 'package:app_prototype/main.dart';
 import 'package:app_prototype/pages/edit_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -162,6 +164,36 @@ class _ProfilePageState extends State<ProfilePage> {
                                 });
                                 break;
                               case 'logout':
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Log Out'),
+                                      content: Text('Click the button below to log out.'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            AppState().loggedIn = false;
+                                            FirebaseAuth.instance.signOut();
+                                            Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                                builder: (context) => SignInPage(
+                                                  onSignIn: () {AppState().handleSignIn();},
+                                                  auth: FirebaseAuth.instance,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                          ),
+                                          child: Text('Log Out'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                                 break;
                               case 'report':
                                 break;
