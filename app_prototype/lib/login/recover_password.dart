@@ -1,23 +1,19 @@
 import 'package:app_prototype/database/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-
 class RecoverPassword extends StatefulWidget {
-  RecoverPassword({Key? key}) : super(key: key);
+  const RecoverPassword({super.key});
 
   @override
-  _RecoverPasswordState createState() => _RecoverPasswordState();
+  State<RecoverPassword> createState() => _RecoverPasswordState();
 }
 
 class _RecoverPasswordState extends State<RecoverPassword> {
   TextEditingController? emailController = TextEditingController();
-  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
-  GlobalKey<ScaffoldMessengerState>();
-
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +36,14 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                         foregroundColor: Colors.white,
                         elevation: 0,
                         leading: IconButton(
+                          key: const Key('goBackButton'),
                           icon: const Icon(
                             Icons.arrow_back,
                             size: 18,
                             color: Colors.black,
                           ),
                           onPressed: () {
-                            Navigator.of(context).pop(true);
+                            Navigator.of(context).pop();
                           },
                         ),
                         title: const Text(
@@ -111,7 +108,6 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                                           hintText: 'Enter your email',
                                           hintStyle: TextStyle(
                                               fontSize: 16.0,
-                                              fontWeight: FontWeight.bold,
                                               color: Colors.grey.shade700),
                                         ),
                                       ),
@@ -122,93 +118,55 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                             ],
                           ),
                         ),
+                        const SizedBox(height: 30),
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 30.0, vertical: 15.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  autofocus: true,
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                    MaterialStateProperty.all(
-                                        const Color(0xFF474747)),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        )),
-                                  ),
-                                  onPressed: () {
-                                    sendEmail();
-                                  },
-                                  child: const SizedBox(
-                                    width: double.infinity,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(10.0),
-                                      child: Text(
-                                        'Reset password',
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.white),
-                                        textAlign: TextAlign.center,
-                                      ),
+                          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 45.0,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                final email = emailController?.text.trim();
+                                if (email != null && email.isNotEmpty) {
+                                  FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Password reset email has been sent.'),
                                     ),
-                                  ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Please enter a valid email.'),
+                                    ),
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                               ),
-                            ],
+                              child: const Text(
+                                'Send Email',
+                                style: TextStyle(
+                                    fontSize: 16.0, color: Colors.white),
+                              ),
+                            ),
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  void sendEmail() async {
-    String? emailResetPassword = emailController?.text;
-    if (emailResetPassword == null) {
-      _scaffoldMessengerKey.currentState!.showSnackBar(
-        const SnackBar(
-          content: Text('Email does not exist.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-    try {
-      bool emailExists = await checkIfEmailExists(FirebaseFirestore.instance,emailResetPassword);
-      if (emailExists) {
-        await FirebaseAuth.instance.sendPasswordResetEmail(email: emailResetPassword!);
-        _scaffoldMessengerKey.currentState!.showSnackBar(
-          const SnackBar(
-            content: Text('Password reset email sent successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      } else {
-        _scaffoldMessengerKey.currentState!.showSnackBar(
-          const SnackBar(
-            content: Text('Email does not exist.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      _scaffoldMessengerKey.currentState!.showSnackBar(
-        SnackBar(
-          content: Text('An error occurred: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   }
 }

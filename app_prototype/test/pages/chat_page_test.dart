@@ -41,7 +41,7 @@ void main() {
   testWidgets("Chat page Structure", (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home:
     ChatPage(receiverEmail: "test@example.org", userEmail: "email@example.org",
-    db: fakeFirestore)));
+    db: fakeFirestore, changeTheme: () {}, darkTheme: true,)));
 
     await tester.pump();
 

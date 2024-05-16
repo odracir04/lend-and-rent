@@ -4,10 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ChatListPage extends StatefulWidget {
-  ChatListPage({super.key, required this.userEmail, required this.db});
+  const ChatListPage({super.key, required this.changeTheme, required this.darkTheme, required this.userEmail, required this.db});
 
   final String userEmail;
   final FirebaseFirestore db;
+  final VoidCallback changeTheme;
+  final bool darkTheme;
 
   @override
   State<StatefulWidget> createState() => ChatListPageState();
@@ -49,7 +51,7 @@ class ChatListPageState extends State<ChatListPage> {
                 scrollDirection: Axis.vertical,
                 itemCount: messages.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ChatListItem(receiverEmail: messages[index], db: widget.db);
+                  return ChatListItem(changeTheme : widget.changeTheme, darkTheme: widget.darkTheme, receiverEmail: messages[index], db: widget.db,);
                 },
               ),
             );

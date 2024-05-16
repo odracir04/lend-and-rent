@@ -5,8 +5,8 @@ import '../database/books.dart';
 import '../widgets/books/book_list.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key, required this.darkTheme});
-
+  SearchPage({super.key, required this.changeTheme, required this.darkTheme });
+  final VoidCallback changeTheme;
   final bool darkTheme;
 
   @override
@@ -170,7 +170,7 @@ class SearchPageState extends State<SearchPage> {
                       ],
                     ),
                   ),
-                  BookList(books: books, darkTheme: widget.darkTheme,),
+                  BookList(books: books, darkTheme: widget.darkTheme, changeTheme: widget.changeTheme,),
                 ],
               )
           ),

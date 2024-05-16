@@ -3,13 +3,16 @@ import 'package:app_prototype/widgets/users/user_icon.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../../pages/chat_page.dart';
 
 class ChatListItem extends StatefulWidget {
-  ChatListItem({super.key, required this.receiverEmail, required this.db});
+
+  ChatListItem({super.key, required this.changeTheme , required this.darkTheme, required this.receiverEmail,
+                required this.db});
 
   final String receiverEmail;
+  final VoidCallback changeTheme;
+  final bool darkTheme;
   final FirebaseFirestore db;
 
   @override
@@ -18,33 +21,32 @@ class ChatListItem extends StatefulWidget {
 }
 
 class ChatListItemState extends State<ChatListItem> {
-  late Future<String?> receiverName;
+  String? receiverName;
+  String? userPicture;
 
-  @override
-  void initState() {
-    super.initState();
-    receiverName = getReceiverName(widget.db, widget.receiverEmail);
+  Future<void> setUserData() async {
+    receiverName = await (getReceiverName(widget.db, widget.receiverEmail));
+    userPicture = await (getPictureUrl(FirebaseFirestore.instance, widget.receiverEmail));
   }
-
-
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: receiverName,
+    return FutureBuilder<void>(
+        future: setUserData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           }
           else {
-            String name = snapshot.data ?? "";
             return ListTile(
               trailing: const Icon(Icons.send),
-              leading: const UserIcon(),
-              title: Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+              leading: UserIcon(userPicture: userPicture!),
+              title: Text(receiverName!, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
               onTap: () {Navigator.push(context,
                   MaterialPageRoute(builder: (context)
                   => ChatPage(
+                      changeTheme: widget.changeTheme,
+                      darkTheme : widget.darkTheme,
                       receiverEmail: widget.receiverEmail,
                       db: FirebaseFirestore.instance,
                       userEmail: FirebaseAuth.instance.currentUser!.email ?? ""

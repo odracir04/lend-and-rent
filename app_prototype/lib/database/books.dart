@@ -40,6 +40,17 @@ Future<List<DocumentSnapshot>> getBooks(int n) async {
   return result;
 }
 
+
+
+Future<List<DocumentSnapshot>> getBooksForUser(FirebaseFirestore db,String email) async {
+  QuerySnapshot books = await db.collection('books').where('renter', isEqualTo: email).get();
+  List<DocumentSnapshot> my_books = [];
+  for (DocumentSnapshot book in books.docs){
+      my_books.add(book);
+  }
+  return my_books;
+}
+
 Future<List<DocumentSnapshot>> getBooksSearch(String string, FirebaseFirestore db) async {
   string =  string.toLowerCase();
   QuerySnapshot books = await db.collection('books')

@@ -8,8 +8,11 @@ import '../database/users.dart';
 import 'chat_page.dart';
 
 class BookPage extends StatefulWidget {
-  const BookPage({super.key, required this.book, required this.darkTheme});
+  const BookPage({super.key, required this.book, required this.darkTheme,
+                    required this.db, required this.changeTheme});
 
+  final VoidCallback changeTheme;
+  final FirebaseFirestore db;
   final Map<String, dynamic> book;
   final bool darkTheme;
 
@@ -44,6 +47,8 @@ class BookPageState extends State<BookPage> {
                     onPressed: () {Navigator.push(context,
                         MaterialPageRoute(builder: (context)
                         => ChatPage(
+                          darkTheme: widget.darkTheme,
+                          changeTheme: widget.changeTheme,
                           receiverEmail: widget.book['renter'],
                           userEmail: FirebaseAuth.instance.currentUser!.email ?? "",
                           db: FirebaseFirestore.instance,
@@ -168,7 +173,7 @@ class BookPageState extends State<BookPage> {
                               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             FutureBuilder(
-                                future: Future.wait([getReceiverName(widget.book['renter'])]),
+                                future: Future.wait([getReceiverName(widget.db, widget.book['renter'])]),
                                 builder: (builder, snapshot) {
                                   if (snapshot.connectionState != ConnectionState.waiting) {
                                     List<String?> data = snapshot.data ?? [];

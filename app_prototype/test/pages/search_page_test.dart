@@ -6,15 +6,23 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets("Search page", (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
-        home: SearchPage(darkTheme: false,)));
+
+    bool darkTheme = false;
+    void testChangeTheme() { darkTheme = !darkTheme; }
+
+    await tester.pumpWidget(MaterialApp(
+        home: SearchPage(darkTheme: darkTheme,changeTheme: testChangeTheme)));
     expect(find.byType(SearchBar), findsOneWidget);
     expect(find.byType(BookCard), findsNothing);
   });
 
   testWidgets("Tap filter button", (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
-        home: SearchPage(darkTheme: false,)));
+
+    bool darkTheme = false;
+    void testChangeTheme() { darkTheme = !darkTheme; }
+
+    await tester.pumpWidget(MaterialApp(
+        home: SearchPage(darkTheme: darkTheme, changeTheme: testChangeTheme)));
 
     await tester.tap(find.byIcon(Icons.filter_list));
     await tester.pump();

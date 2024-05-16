@@ -55,7 +55,9 @@ class BookListPageState extends State<BookListPage> {
                               leading: const Icon(Icons.filter_list),
                               trailing: const [Icon(Icons.search)],
                               hintText: "Search for books here...",
-                              onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(darkTheme: widget.darkTheme,)));},
+                              onTap: () {Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => SearchPage(
+                                    darkTheme: widget.darkTheme, changeTheme: widget.changeTheme,)));},
                             )
                         ),
                         IconButton(
@@ -65,12 +67,11 @@ class BookListPageState extends State<BookListPage> {
                       ],
                     ),
                   ),
-                  BookList(books: books, darkTheme: widget.darkTheme,),
+                  BookList(books: books, darkTheme: widget.darkTheme, changeTheme: widget.changeTheme,),
                 ],
               )
           ),
         )
-
     );
   }
 }

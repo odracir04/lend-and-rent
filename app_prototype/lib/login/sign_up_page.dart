@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app_prototype/database/users.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -96,7 +97,7 @@ class _SignUpPageState extends State<SignUpPage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      Future<bool> createUserInFirestore = createUserRecord(FirebaseFirestore.instance, _emailController.text,_firstNameController.text, _lastNameController.text);
+      Future<bool> createUserInFirestore = createUserRecord(FirebaseFirestore.instance, FirebaseStorage.instance, _emailController.text,_firstNameController.text, _lastNameController.text);
       bool checkFirestore = await createUserInFirestore;
       if (checkFirestore) {
         print('User signed up: ${userCredential.user!.uid}');

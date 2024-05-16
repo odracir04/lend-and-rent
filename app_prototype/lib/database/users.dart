@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 Future<String?> getReceiverName(FirebaseFirestore db, String? email) async {
   email = email?.toLowerCase();
@@ -48,6 +45,37 @@ Future<String?> getReceiverLocation(FirebaseFirestore db, String? email) async {
     return ' ';
   }
 }
+
+/// Get reviews for a user email.
+Future<List<DocumentSnapshot>> getReviews(FirebaseFirestore? db, String? email) async {
+  QuerySnapshot reviewsSnapshot = await db!.collection('reviews').where('review_receiver', isEqualTo: email).get();
+  List<DocumentSnapshot> myReviews = [];
+  for (DocumentSnapshot review in reviewsSnapshot.docs) {
+    myReviews.add(review);
+  }
+  return myReviews;
+}
+
+
+/// Create a review on name of review_sender to review_receiver.
+/// If create review returns true, the function was successfully else an error happened.
+Future<bool> createReview(FirebaseFirestore? db, double? stars, String? reviewMessage, String? senderEmail, String? receiverEmail) async{
+  reviewMessage = reviewMessage?.trim();
+  try {
+    await db?.collection('reviews').add({
+      'review_receiver': receiverEmail,
+      'review_sender': senderEmail,
+      'review_message': reviewMessage,
+      'review_stars': stars,
+    });
+    print('Review sent successfully');
+    return true;
+  } catch (e) {
+    print('Error sending review: $e');
+    return false;
+  }
+}
+
 
 /// Get one of the fields of user.
 /// First/last name, location, display_email, picture and email.
@@ -101,8 +129,8 @@ Future<bool?> getDisplayEmail(FirebaseFirestore db,String? email) async {
   }
   return await getField(db,email, 'display_email');
 }
-/// Get user profile picture.
-Future<String?> getProfilePicture(FirebaseFirestore db, String? email) async{
+/// Get profile picture
+Future<String?> getPictureUrl(FirebaseFirestore db,String? email) async {
   if (email == null){
     return null;
   }
@@ -151,7 +179,7 @@ Future<bool> checkIfEmailExists(FirebaseFirestore db, String? email) async{
 }
 
 /// Create a new record for a user in the database.
-Future<bool> createUserRecord(FirebaseFirestore db, String? email, String? firstName,String? lastName) async {
+Future<bool> createUserRecord(FirebaseFirestore db, FirebaseStorage storage, String? email, String? firstName, String? lastName) async {
   email = email?.trim();
   firstName = firstName?.trim();
   lastName = lastName?.trim();
@@ -162,18 +190,19 @@ Future<bool> createUserRecord(FirebaseFirestore db, String? email, String? first
         .where('email', isEqualTo: email)
         .get();
 
-    if (querySnapshot.docs.isNotEmpty){
+    if (querySnapshot.docs.isNotEmpty) {
       print("Email already exists");
       return false;
     }
 
+    // Add user record to Firestore
     await db.collection('users').add({
       'email': email!.toLowerCase(),
       'first_name': firstName!,
       'last_name': lastName!,
       'location': "Porto",
       'display_email': false,
-      'profile_url': 'assets/images/profile.jpg'
+      'profile_url': "assets/images/profile.png",
     });
 
     print('User record created successfully');
@@ -183,6 +212,41 @@ Future<bool> createUserRecord(FirebaseFirestore db, String? email, String? first
     return false;
   }
 }
+
+Future<bool> updateProfilePicture(FirebaseFirestore db,String? email, String? profileUrl) async {
+  if (email == null || profileUrl == null){
+    print("Some of the parameters are null");
+    return false;
+  }
+  try {
+    final userQuerySnapshot = await db
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+
+    if (userQuerySnapshot.docs.isNotEmpty) {
+      final userId = userQuerySnapshot.docs.first.id;
+
+      await db
+          .collection('users')
+          .doc(userId)
+          .update({'profile_url': profileUrl});
+
+      print('Profile picture updated successfully');
+      return true;
+    }
+    else {
+      print('User with email $email not found');
+      return false;
+    }
+  }
+  catch (e) {
+    print('Error updating profile picture: $e');
+    return false;
+  }
+}
+
+
 
 /// Update the first name of a user.
 Future<bool> updateUserFirstName(FirebaseFirestore db, String? email, String? newFirstName) async {
@@ -320,54 +384,6 @@ Future<bool> updateDisplayEmail(FirebaseFirestore db,String? email, bool? displa
     print('Error updating display email: $e');
     return false;
   }
-}
-/// Function that updates the url in firestore for profile pictures.
-/// Needs to be changed to local storage
-Future<bool> updateProfilePicture(FirebaseFirestore db,String? email, String? profileUrl) async {
-  if (email == null || profileUrl == null){
-    print("Some of the parameters are null");
-    return false;
-  }
-  try {
-    final userQuerySnapshot = await db
-        .collection('users')
-        .where('email', isEqualTo: email)
-        .get();
-
-    if (userQuerySnapshot.docs.isNotEmpty) {
-      final userId = userQuerySnapshot.docs.first.id;
-
-      await db
-          .collection('users')
-          .doc(userId)
-          .update({'profile_url': profileUrl});
-
-      print('Profile picture updated successfully');
-      return true;
-    }
-    else {
-      print('User with email $email not found');
-      return false;
-    }
-  }
-  catch (e) {
-    print('Error updating profile picture: $e');
-    return false;
-  }
-}
-
-/// This function gets the image profile default or user image.
-/// If profilePictureUrl == null -> null.
-/// == "assets/images/profile.jpg" -> default image.
-/// other images.
-dynamic getProfilePictureFile(String? profilePictureUrl) {
-  if (profilePictureUrl == null){
-    return null;
-  }
-  if (profilePictureUrl == "assets/images/profile.jpg") {
-    return AssetImage(profilePictureUrl);
-  }
-  return FileImage(File(profilePictureUrl));
 }
 
 /// Get full name of user.

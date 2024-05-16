@@ -8,12 +8,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../database/users.dart';
 
 class ChatPage extends StatefulWidget {
-  ChatPage({super.key, required this.receiverEmail, required this.db,
+  const ChatPage({super.key, required this.changeTheme, required this.darkTheme, required this.receiverEmail, required this.db,
             required this.userEmail});
 
   final String userEmail;
   final String receiverEmail;
   final FirebaseFirestore db;
+  final VoidCallback changeTheme;
+  final bool darkTheme;
 
   @override
   State<StatefulWidget> createState() => ChatPageState();
@@ -39,7 +41,8 @@ class ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: Future.wait([getReceiverName(widget.db, widget.receiverEmail),
-                            getReceiverLocation(widget.db, widget.receiverEmail),]),
+                            getReceiverLocation(widget.db, widget.receiverEmail),
+                            getPictureUrl(FirebaseFirestore.instance, widget.receiverEmail)]),
         builder: (builder, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
@@ -48,7 +51,7 @@ class ChatPageState extends State<ChatPage> {
             List<String?> data = snapshot.data ?? [];
             return Scaffold(
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                appBar: ChatAppBar(userName: data[0] ?? "", userLocation: data[1] ?? "",),
+                appBar: ChatAppBar(changeTheme: widget.changeTheme, darkTheme: widget.darkTheme, userName: data[0] ?? "", userLocation: data[1] ?? "", visitingEmail: widget.receiverEmail, userPicture: data[2] ?? "assets/images/profile.png"),
                 body:
                     Column(
                       children: [

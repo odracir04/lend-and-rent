@@ -1,11 +1,18 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../database/users.dart';
 import '../main.dart';
+
+/// In this page, user can edit his profile including
+/// Picture, name, location, password, and displayEmail.
+/// Picture is automatically saved on picking image.
+/// For the others, it is necessary to click in save changes.
 
 class EditProfilePage extends StatefulWidget {
   EditProfilePage({super.key, required this.changeTheme, required this.darkTheme, required this.userEmail, required this.db,
@@ -18,19 +25,22 @@ class EditProfilePage extends StatefulWidget {
   bool darkTheme;
 
   final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
+
   @override
-  _EditProfilePage createState() => _EditProfilePage();
+  State<EditProfilePage> createState() => _EditProfilePage();
 }
 
 class _EditProfilePage extends State<EditProfilePage> {
   bool displayEmailInProfile = false;
-  String profilePictureUrl = "";
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   TextEditingController? emailController = TextEditingController();
   TextEditingController? firstNameController = TextEditingController();
   TextEditingController? lastNameController = TextEditingController();
   TextEditingController? locationController = TextEditingController();
   TextEditingController? passwordController = TextEditingController();
   bool init = false;
+  String? profileUrl;
+  dynamic profilePicture;
 
   Future<bool> setUserData() async {
     if (!init) {
@@ -38,13 +48,20 @@ class _EditProfilePage extends State<EditProfilePage> {
       Future<String?> lastName = getLastName(widget.db,widget.userEmail);
       Future<String?> location = getLocation(widget.db,widget.userEmail);
       Future<bool?> displayEmail = getDisplayEmail(widget.db,widget.userEmail);
-      Future<String?> profilePicture = getProfilePicture(widget.db,widget.userEmail);
+      profileUrl = await getPictureUrl(widget.db,widget.userEmail);
+      // If image is equal to the default
+      if (profileUrl == "assets/images/profile.png"){
+        profilePicture = AssetImage(profileUrl!);
+      }
+      else{
+        // Else pick downloaded image from database
+        profilePicture = NetworkImage(profileUrl!);
+      }
       emailController?.text = widget.userEmail;
       firstNameController?.text = (await (firstName))!;
       lastNameController?.text = (await (lastName))!;
       locationController?.text = (await (location))!;
       displayEmailInProfile = (await (displayEmail))!;
-      profilePictureUrl = (await (profilePicture))!;
       init = true;
       return true;
     }
@@ -102,7 +119,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                               onTap: _pickProfileImage,
                               child: CircleAvatar(
                                 radius: 60.0,
-                                backgroundImage: getProfilePictureFile(profilePictureUrl),
+                                backgroundImage: profilePicture,
                               ),
                             ),
                           ],
@@ -346,7 +363,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                                           displayEmailInProfile = newValue;
                                         });
                                       },
-                                      activeTrackColor: Color(0xFF474747),
+                                      activeTrackColor: const Color(0xFF474747),
                                       activeColor: Colors.white,
                                     ),
                                   )
@@ -364,7 +381,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                               child: ElevatedButton(
                                 autofocus: true,
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Color(0xFF474747)),
+                                  backgroundColor: MaterialStateProperty.all(const Color(0xFF474747)),
                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10.0),
@@ -452,6 +469,7 @@ class _EditProfilePage extends State<EditProfilePage> {
     );
   }
 
+  /// Pick image updates automatically the storage.
   Future<void> _pickProfileImage() async {
     final bool? isCamera = await showModalBottomSheet<bool>(
       context: context,
@@ -501,50 +519,61 @@ class _EditProfilePage extends State<EditProfilePage> {
     dynamic pickedImage;
     if (isCamera != null) {
       pickedImage = await ImagePicker().pickImage(
-        source: isCamera! ? ImageSource.camera : ImageSource.gallery,
+        source: isCamera ? ImageSource.camera : ImageSource.gallery,
       );
       if (pickedImage != null) {
-        setState(() {
-          profilePictureUrl = pickedImage.path;
-        });
+        String email = widget.userEmail;
+        Reference storageRef = FirebaseStorage.instance.ref();
+        File file = File(pickedImage.path);
+        var snapshot = (await storageRef.child("profiles/$email/picture").putFile(file));
+        var downloadUrl = await (snapshot.ref.getDownloadURL());
+        bool update = await updateProfilePicture(FirebaseFirestore.instance, email, downloadUrl);
+        if (update) {
+          setState(() {
+            profileUrl = downloadUrl;
+            profilePicture = NetworkImage(profileUrl!);
+          });
+        }
       }
     }
     else{
-      pickedImage = "assets/images/profile.jpg";
-      if (pickedImage != null) {
+      // Remove image and set it to default.
+      pickedImage = "assets/images/profile.png";
+      bool update = await updateProfilePicture(FirebaseFirestore.instance, widget.userEmail, pickedImage);
+      if (update) {
         setState(() {
-          profilePictureUrl = pickedImage;
+          profileUrl = pickedImage;
+          profilePicture = AssetImage(pickedImage);
         });
       }
     }
   }
+
 
   void saveChangesController() async {
     Future<String?> firstNameFuture = getFirstName(widget.db,widget.userEmail);
     Future<String?> lastNameFuture = getLastName(widget.db,widget.userEmail);
     Future<String?> locationFuture = getLocation(widget.db,widget.userEmail);
     Future<bool?> displayEmailFuture = getDisplayEmail(widget.db,widget.userEmail);
-    Future<String?> displayProfilePicture = getProfilePicture(widget.db,widget.userEmail);
+    Future<String?> displayProfilePicture = getPictureUrl(widget.db,widget.userEmail);
 
     String? newFirstName = firstNameController!.text;
     String? newLastName = lastNameController!.text;
     String? newLocation = locationController!.text;
     String? newPassword = passwordController!.text;
     bool? newDisplayEmail = displayEmailInProfile;
-    String? newProfilePicture = profilePictureUrl;
 
     String? currentFirstName = await firstNameFuture;
     String? currentLastName = await lastNameFuture;
     String? currentLocation = await locationFuture;
     bool? currentDisplayEmail = await displayEmailFuture;
-    String? currentProfilePicture = await displayProfilePicture;
 
     bool firstNameUpdated = currentFirstName != newFirstName;
     bool lastNameUpdated = currentLastName != newLastName;
     bool locationUpdated = currentLocation != newLocation;
     bool passwordUpdated;
     bool displayEmailUpdated = currentDisplayEmail != newDisplayEmail;
-    bool displayProfilePictureUpdated = currentProfilePicture != newProfilePicture;
+
 
     if (firstNameUpdated) {
       await updateUserFirstName(widget.db,widget.userEmail, newFirstName);
@@ -566,19 +595,15 @@ class _EditProfilePage extends State<EditProfilePage> {
       passwordUpdated = false;
     }
 
-   if (displayProfilePictureUpdated) {
-      await updateProfilePicture(widget.db,widget.userEmail, newProfilePicture);
-    }
-
-    if (firstNameUpdated || lastNameUpdated || locationUpdated || passwordUpdated || displayEmailUpdated || displayProfilePictureUpdated) {
-      ScaffoldMessenger.of(context).showSnackBar(
+    if (firstNameUpdated || lastNameUpdated || locationUpdated || passwordUpdated || displayEmailUpdated) {
+      _scaffoldMessengerKey.currentState!.showSnackBar(
         const SnackBar(
             content: Text('Success updating profile!', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white)),
             backgroundColor: Colors.green
         ),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
+      _scaffoldMessengerKey.currentState!.showSnackBar(
         const SnackBar(
           content: Text('Error updating profile!', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white)),
             backgroundColor: Colors.red

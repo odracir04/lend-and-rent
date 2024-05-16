@@ -3,47 +3,82 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app_prototype/database/users.dart';
+import 'package:app_prototype/widgets/users/my_review_list.dart';
+import '../widgets/users/my_book_list.dart';
+
+/// Profile page -> User can see image, name, email (on/off).
+/// On the profile page there are 2 sub menus - one for reviews and other for the books
+/// that the user is selling
+/// Profile email is the email on the profile.
+/// User email is the actual login email.
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key? key, required this.changeTheme, required this.darkTheme, required this.userEmail}) : super(key: key);
+  const ProfilePage({
+    super.key,
+    required this.changeTheme,
+    required this.darkTheme,
+    required this.profileEmail,
+  });
 
   final VoidCallback changeTheme;
-  final String userEmail;
-  bool darkTheme;
+  final String profileEmail;
+  final bool darkTheme;
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  bool accessToFunctionalities = false;
   int selectedTabIndex = 0;
+  String? userEmail;
   String? _firstName;
   String? _lastName;
   String? _location;
   bool? _displayEmail;
-  String? _profilePictureUrl;
   String? userName;
+  String? profileUrl;
+  dynamic profilePicture;
 
-  Future<bool> setUserData() async {
-      Future<String?> firstName = getFirstName(FirebaseFirestore.instance,widget.userEmail);
-      Future<String?> lastName = getLastName(FirebaseFirestore.instance,widget.userEmail);
-      Future<String?> location = getLocation(FirebaseFirestore.instance,widget.userEmail);
-      Future<bool?> displayEmail = getDisplayEmail(FirebaseFirestore.instance,widget.userEmail);
-      Future<String?> profilePictureUrl = getProfilePicture(FirebaseFirestore.instance,widget.userEmail);
-      _firstName = (await (firstName))!;
-      _lastName = (await (lastName))!;
-      _location = (await (location))!;
-      _displayEmail = (await (displayEmail))!;
-      _profilePictureUrl = (await (profilePictureUrl))!;
-      userName = assembleName(_firstName, _lastName);
-      return true;
+  Future<void> setUserData() async {
+    userEmail = FirebaseAuth.instance.currentUser!.email!;
+    Future<String?> firstName = getFirstName(FirebaseFirestore.instance, widget.profileEmail);
+    Future<String?> lastName = getLastName(FirebaseFirestore.instance, widget.profileEmail);
+    Future<String?> location = getLocation(FirebaseFirestore.instance, widget.profileEmail);
+    Future<bool?> displayEmail = getDisplayEmail(FirebaseFirestore.instance, widget.profileEmail);
+    profileUrl = await (getPictureUrl(FirebaseFirestore.instance,widget.profileEmail));
+
+
+    if (profileUrl == "assets/images/profile.png"){
+      profilePicture = AssetImage(profileUrl!);
+    }
+    else{
+      profilePicture = NetworkImage(profileUrl!);
+    }
+    // Get user parameters of the database
+    _firstName = (await (firstName));
+    _lastName = (await (lastName));
+    _location = (await (location));
+    _displayEmail = (await (displayEmail));
+
+
+    userName = assembleName(_firstName, _lastName); // Get full name of the user
+
+    // Can this user edit profile?. When viewing other users profiles the access to this functionalities
+    // should be restricted.
+
+    if (widget.profileEmail == userEmail) {
+      accessToFunctionalities = true;
+    } else {
+      accessToFunctionalities = false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<void>(
       future: setUserData(),
-      builder: (c, k) {
+      builder: (context, snapshot) {
         return Scaffold(
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -54,8 +89,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     AppBar(
-                      backgroundColor: Colors.transparent,
-                      foregroundColor: Colors.white,
+                      scrolledUnderElevation: 0,
+                      backgroundColor: widget.darkTheme ? Colors.black : Colors.white,
                       toolbarHeight: 50.0,
                       centerTitle: true,
                       title: Text(
@@ -63,43 +98,46 @@ class _ProfilePageState extends State<ProfilePage> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: widget.darkTheme ? Colors.white : Colors.black,
+                          color:
+                          widget.darkTheme ? Colors.white : Colors.black,
                         ),
                       ),
-
                       actions: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.edit,
-                            size: 18.0,
-                            color: widget.darkTheme ? Colors.white : Colors.black,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditProfilePage(
-                                  changeTheme: widget.changeTheme,
-                                  darkTheme: widget.darkTheme,
-                                  userEmail: widget.userEmail,
-                                  db: FirebaseFirestore.instance,
-                                  auth: FirebaseAuth.instance,
+                        if (accessToFunctionalities)
+                          IconButton(
+                            icon: Icon(
+                              Icons.edit,
+                              size: 18.0,
+                              color: widget.darkTheme
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditProfilePage(
+                                    db: FirebaseFirestore.instance,
+                                    auth: FirebaseAuth.instance,
+                                    changeTheme: widget.changeTheme,
+                                    darkTheme: widget.darkTheme,
+                                    userEmail: userEmail ?? "default",
+                                  ),
                                 ),
-                              ),
-                            ).then((result) {
-                              if (result == true) {
-                                setState(() {
-                                  setUserData();
-                                });
-                              }
-                            });
-                          },
-                        ),
+                              ).then((result) {
+                                if (result == true) {
+                                  setState(() {
+                                    setUserData();
+                                  });
+                                }
+                              });
+                            },
+                          ),
                       ],
                     ),
                     Container(
                       padding: const EdgeInsets.all(20.0),
-                      decoration:  const BoxDecoration(
+                      decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(30.0),
                           bottomRight: Radius.circular(30.0),
@@ -113,19 +151,20 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 CircleAvatar(
                                   radius: 60.0,
-                                  backgroundImage: getProfilePictureFile(_profilePictureUrl),
+                                  backgroundImage: profilePicture ?? const AssetImage("assets/images/profile.png"),
                                 ),
                                 const SizedBox(height: 20.0),
-
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      userName!,
+                                      userName ?? "default",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18.0,
-                                        color: widget.darkTheme ? Colors.white : Colors.black,
+                                        color: widget.darkTheme
+                                            ? Colors.white
+                                            : Colors.black,
                                       ),
                                     ),
                                   ],
@@ -136,43 +175,50 @@ class _ProfilePageState extends State<ProfilePage> {
                                   children: [
                                     Row(
                                       children: [
-                                        Icon(Icons.location_on, size: 12, color: widget.darkTheme ? Colors.white : Colors.black),
+                                        Icon(Icons.location_on,
+                                            size: 12,
+                                            color: widget.darkTheme
+                                                ? Colors.white
+                                                : Colors.black),
                                         const SizedBox(width: 5),
                                         Text(
-                                          _location!,
+                                          _location ?? "default",
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12.0,
-                                            color: widget.darkTheme ? Colors.white : Colors.black,
+                                            color: widget.darkTheme
+                                                ? Colors.white
+                                                : Colors.black,
                                           ),
                                         ),
                                       ],
                                     ),
-
-                                    if (_displayEmail!)
+                                    if (_displayEmail ?? false)
                                       Row(
                                         children: [
                                           const SizedBox(width: 20),
                                           Icon(
                                             Icons.email,
                                             size: 12.0,
-                                            color: widget.darkTheme ? Colors.white : Colors.black,
+                                            color: widget.darkTheme
+                                                ? Colors.white
+                                                : Colors.black,
                                           ),
                                           const SizedBox(width: 5),
                                           Text(
-                                            widget.userEmail,
+                                            widget.profileEmail,
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 12.0,
-                                              color: widget.darkTheme ? Colors.white : Colors.black,
+                                              color: widget.darkTheme
+                                                  ? Colors.white
+                                                  : Colors.black,
                                             ),
                                           ),
                                         ],
                                       ),
                                   ],
                                 ),
-
-
                               ],
                             ),
                           ),
@@ -192,21 +238,24 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            IconButton(
+                            const IconButton(
                               onPressed: null,
-                              icon: Icon(Icons.book, size: 18, color: selectedTabIndex == 0 ? (widget.darkTheme ? Colors.white : Colors.black ) : Colors.grey.shade900),
+                              icon: Icon(Icons.book, size: 18),
                             ),
                             AnimatedContainer(
                               duration: const Duration(milliseconds: 300),
                               height: 2,
-                              color: selectedTabIndex == 0 ? (widget.darkTheme ? Colors.white : Colors.black ) : Colors.transparent,
+                              color: selectedTabIndex == 0
+                                  ? (widget.darkTheme
+                                  ? Colors.white
+                                  : Colors.black)
+                                  : Colors.transparent,
                             ),
                           ],
                         ),
                       ),
                     ),
                   ),
-
                   Expanded(
                     child: GestureDetector(
                       onTap: () => changeProfileMenu(1),
@@ -215,57 +264,50 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            IconButton(
+                            const IconButton(
                               onPressed: null,
-                              icon: Icon(Icons.star, size: 18, color: selectedTabIndex == 1 ? (widget.darkTheme ? Colors.white : Colors.black ) : Colors.grey.shade900),
+                              icon: Icon(Icons.star, size: 18),
                             ),
                             AnimatedContainer(
                               duration: const Duration(milliseconds: 300),
                               height: 2,
-                              color: selectedTabIndex == 1 ? (widget.darkTheme ? Colors.white : Colors.black ) : Colors.transparent,
+                              color: selectedTabIndex == 1
+                                  ? (widget.darkTheme
+                                  ? Colors.white
+                                  : Colors.black)
+                                  : Colors.transparent,
                             ),
                           ],
                         ),
                       ),
                     ),
                   ),
-
                 ],
               ),
-
-
               Expanded(
                 flex: 8,
                 child: (selectedTabIndex == 0)
+                // User books
                     ? Container(
                   color: widget.darkTheme ? Colors.black : Colors.white,
-                  child:
-                    Center(
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        "No books\n currently being read",  style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                        color: widget.darkTheme ? Colors.white : Colors.black,
-                      ),
-                      )
-                    )
-                ) : Container(
+                  child: MyBookList(
+                    visitingEmail: widget.profileEmail,
+                    userEmail: userEmail ?? "default",
+                    darkTheme: widget.darkTheme,
+                    changeTheme: widget.changeTheme,
+                  ),
+                )
+                // User reviews
+                    : Container(
                   color: widget.darkTheme ? Colors.black : Colors.white,
-                    child:
-                    Center(
-                        child: Text(
-                          textAlign: TextAlign.center,
-                            "No reviews\n posted yet",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
-                            color: widget.darkTheme ? Colors.white : Colors.black,
-                          ),
-                        )
-                    )
+                  child: MyReviewList(
+                    visitingEmail: widget.profileEmail,
+                    userEmail: userEmail ?? "default",
+                    darkTheme: widget.darkTheme,
+                    changeTheme: widget.changeTheme,
+                  )
                 ),
-                ),
+              ),
             ],
           ),
         );
@@ -277,7 +319,7 @@ class _ProfilePageState extends State<ProfilePage> {
   /// 0 - Books tab.
   /// 1 - Reviews tab.
   void changeProfileMenu(int tabIndex) {
-    if (tabIndex>=0 && tabIndex<=1) {
+    if (tabIndex >= 0 && tabIndex <= 1) {
       setState(() {
         if (selectedTabIndex != tabIndex) {
           selectedTabIndex = tabIndex;
@@ -285,6 +327,4 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
   }
-
-
 }
