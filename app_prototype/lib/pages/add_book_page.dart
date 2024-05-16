@@ -9,9 +9,9 @@ import 'package:image_picker/image_picker.dart';
 import '../database/books.dart';
 
 class AddBookPage extends StatefulWidget {
-  AddBookPage({super.key, required this.darkTheme});
+  const AddBookPage({super.key, required this.darkTheme});
 
-  bool darkTheme;
+  final bool darkTheme;
 
   @override
   State<StatefulWidget> createState() => AddBookPageState();
@@ -33,6 +33,7 @@ class AddBookPageState extends State<AddBookPage> {
   String author = '';
   String location = '';
   String pictureUrl = '';
+  late TextEditingController textEditingController;
 
   void selectValue(String? string) {
     setState(() {
@@ -81,14 +82,20 @@ class AddBookPageState extends State<AddBookPage> {
             children: <Widget>[
               ListTile(
                 leading: const Icon(Icons.camera_alt,color: Colors.black),
-                title: Text('Camera',),
+                title: const Text('Camera', style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20)),
                 onTap: () {
                   Navigator.pop(context, true);
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library,color: Colors.black),
-                title: Text('Gallery',),
+                title: const Text('Gallery', style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20)),
                 onTap: () {
                   Navigator.pop(context, false);
                 },
@@ -115,21 +122,18 @@ class AddBookPageState extends State<AddBookPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {Navigator.pop(context);},
+              icon: const Icon(Icons.arrow_back, size: 30,)
+          ),
+          title: const Text('Add book'),
+        ),
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 50),
-              Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: 10),
-                    IconButton(
-                        onPressed: () {Navigator.pop(context);},
-                        icon: const Icon(Icons.arrow_back, size: 30,)
-                    )
-                  ]
-              ),
+              const SizedBox(height: 20),
               Padding(
                 padding: EdgeInsets.only(
                     left: 25,
@@ -160,11 +164,6 @@ class AddBookPageState extends State<AddBookPage> {
                           height: 50,
                           child: TextButton(
                             onPressed: pickImage,
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                                  return widget.darkTheme ? Colors.white : Colors.grey.shade900;
-                                })
-                            ),
                             child: Text('Select Image', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white70),),
                           )
                         )
@@ -202,9 +201,19 @@ class AddBookPageState extends State<AddBookPage> {
                     Autocomplete<String>(
                         onSelected: (String? value) {
                           selectValue(value);
+                          textEditingController.text = '';
+                          FocusManager.instance.primaryFocus?.unfocus();
                         },
                         optionsBuilder: (TextEditingValue textEditingValue) {
                           return genres.where((String option) {return option.toLowerCase().contains(textEditingValue.text.toLowerCase());});
+                        },
+                        fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController,
+                            FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
+                          textEditingController = fieldTextEditingController;
+                          return TextField(
+                            controller: fieldTextEditingController,
+                            focusNode: fieldFocusNode,
+                          );
                         }
                     ),
                     if (genresSelected.isNotEmpty) Column(
@@ -223,9 +232,19 @@ class AddBookPageState extends State<AddBookPage> {
                                         ),
                                         child: Row(
                                           children: [
-                                            const SizedBox(width: 9),
+                                            const SizedBox(width: 10),
                                             Text(genresSelected[j], style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white70),),
-                                            IconButton(onPressed: (){removeValue(genresSelected[j]);}, icon: Icon(Icons.close, color: widget.darkTheme ? Colors.black : Colors.white70,))
+                                            IconButton(
+                                                onPressed: (){removeValue(genresSelected[j]);},
+                                                icon: Icon(Icons.close, color: widget.darkTheme ? Colors.black : Colors.white70,),
+                                                constraints: const BoxConstraints(
+                                                    minWidth: 30,
+                                                    minHeight: 45
+                                                ),
+                                                style: const ButtonStyle(
+                                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                ),
+                                            )
                                           ],
                                         )
                                     ),
@@ -281,6 +300,7 @@ class AddBookPageState extends State<AddBookPage> {
                         width: 0.90 * MediaQuery.of(context).size.width,
                         height: 50,
                         child: (title.isEmpty || genresSelected.isEmpty || author.isEmpty || location.isEmpty || pictureUrl.isEmpty) ? TextButton(
+                          key: const Key('addButton'),
                           onPressed: null,
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
@@ -290,12 +310,8 @@ class AddBookPageState extends State<AddBookPage> {
                           child: const Text('Add book'),
                         )
                             : TextButton(
+                              key: const Key('addButton'),
                               onPressed: _addBook,
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                                    return widget.darkTheme ? Colors.white : Colors.grey.shade900;
-                                  })
-                              ),
                               child: Text('Add book', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white70),),
                             )
                     ),
