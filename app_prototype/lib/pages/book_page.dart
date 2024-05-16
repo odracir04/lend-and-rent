@@ -1,4 +1,5 @@
 import 'package:app_prototype/database/books.dart';
+import 'package:app_prototype/pages/book_reviews_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -33,17 +34,21 @@ class BookPageState extends State<BookPage> {
         ),
         bottomNavigationBar: BottomAppBar(
           height: 80,
-          child: (widget.book['renter'] == FirebaseAuth.instance.currentUser!.email) ? TextButton(
-                  onPressed: () {
-                    FirebaseStorage storage = FirebaseStorage.instance;
-                    Reference ref = storage.refFromURL(widget.book['imagePath']);
-                    ref.delete();
-                    deleteBook(FirebaseFirestore.instance, widget.book);
-                    Navigator.pop(context);
-                  },
-                  child: Text('Remove book', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white)),
-                )
-                : TextButton(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                  child: (widget.book['renter'] == FirebaseAuth.instance.currentUser!.email) ? TextButton(
+                    onPressed: () {
+                      FirebaseStorage storage = FirebaseStorage.instance;
+                      Reference ref = storage.refFromURL(widget.book['imagePath']);
+                      ref.delete();
+                      deleteBook(FirebaseFirestore.instance, widget.book);
+                      Navigator.pop(context);
+                    },
+                    child: Text('Remove book', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white)),
+                  )
+                      : TextButton(
                     onPressed: () {Navigator.push(context,
                         MaterialPageRoute(builder: (context)
                         => ChatPage(
@@ -55,6 +60,22 @@ class BookPageState extends State<BookPage> {
                         )));},
                     child: Text('Chat', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white)),
                   )
+              ),
+              const SizedBox(width: 20,),
+              Expanded(
+                  child: TextButton(
+                    onPressed: () {Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => BookReviewsPage(
+                          db: widget.db, book: widget.book['title'],
+                          changeTheme: widget.changeTheme, darkTheme: widget.darkTheme,
+                          auth: FirebaseAuth.instance,
+                        ))
+                    ); },
+                    child: Text('Reviews', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white)),
+                  )
+              )
+            ],
+          )
         ),
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
@@ -192,7 +213,7 @@ class BookPageState extends State<BookPage> {
                       const SizedBox(height: 50),
                     ],
                   ),
-                )
+                ),
               ],
             )
         )

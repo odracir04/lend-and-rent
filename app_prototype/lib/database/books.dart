@@ -1,35 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-void populateDB() {
-  FirebaseFirestore db = FirebaseFirestore.instance;
-  for (int i = 1; i < 20; i++) {
-    final book = {
-      "author": "Jack Smith",
-      "title": "The Amazing Saga Vol.$i",
-      "title_lowercase": "the amazing saga vol.$i",
-      "location": "Paranhos, Porto",
-      "imagePath": "assets/images/book.jpg"
-    };
-    db.collection('books').doc("book$i").set(book);
-  }
-  Map<String, String> book = {
-    "author": "Jack Smith",
-    "title": "An Amazing Saga",
-    "title_lowercase": "an amazing saga",
-    "location": "Paranhos, Porto",
-    "imagePath": "assets/images/book.jpg"
-  };
-  db.collection('books').doc("book20").set(book);
-  book = {
-    "author": "Jack Smith",
-    "title": "Very Amazing Saga",
-    "title_lowercase": "very amazing saga",
-    "location": "Paranhos, Porto",
-    "imagePath": "assets/images/book.jpg"
-  };
-  db.collection('books').doc("book21").set(book);
-}
-
 Future<List<DocumentSnapshot>> getBooks(int n) async {
   FirebaseFirestore db = FirebaseFirestore.instance;
   QuerySnapshot books = await db.collection('books').limit(n).get();
@@ -39,8 +9,6 @@ Future<List<DocumentSnapshot>> getBooks(int n) async {
   }
   return result;
 }
-
-
 
 Future<List<DocumentSnapshot>> getBooksForUser(FirebaseFirestore db,String email) async {
   QuerySnapshot books = await db.collection('books').where('renter', isEqualTo: email).get();
@@ -133,4 +101,30 @@ Future<void> addBook(FirebaseFirestore db, final book) async {
 
 Future<void> deleteBook(FirebaseFirestore db, final book) async {
   db.collection('books').doc(book['id']).delete();
+}
+
+Future<List<DocumentSnapshot>> getBookReviews(FirebaseFirestore db, String title) async {
+  QuerySnapshot reviews = await db.collection('bookreviews')
+  .where('book', isEqualTo: title).get();
+  List<DocumentSnapshot> result = [];
+  for (DocumentSnapshot review in reviews.docs) {
+    result.add(review);
+  }
+  return result;
+}
+
+Future<bool> writeBookReview(FirebaseFirestore db, String book, String email, double stars, String? text) async {
+  try {
+    db.collection('bookreviews').add({
+      'book': book,
+      'review_email': email,
+      'review_stars': stars,
+      'text': text
+    });
+  } catch (e) {
+    print(e);
+    return false;
+  }
+
+  return true;
 }
