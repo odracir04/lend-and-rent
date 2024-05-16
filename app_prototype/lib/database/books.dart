@@ -119,3 +119,7 @@ Future<List<DocumentSnapshot>> getBooksSearchAll(String query, String genre, Str
 Future<void> addBook(FirebaseFirestore db, final book) async {
   db.collection('books').doc().set(book);
 }
+
+Future<void> deleteBook(FirebaseFirestore db, final book) async {
+  db.collection('books').doc(book['id']).delete();
+}
