@@ -32,6 +32,16 @@ class AppState extends State<App> {
   bool loggedIn = false;
   User? user;
 
+  void initState() {
+    super.initState();
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      setState(() {
+        this.user = user;
+        this.loggedIn = user != null;
+      });
+    });
+  }
+
   void changeTheme() {
     setState(() {
       widget.darkTheme = !widget.darkTheme;
