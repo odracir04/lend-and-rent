@@ -46,11 +46,16 @@ class _SignInPageState extends State<SignInPage> {
           return AlertDialog(
             title: Text('Error'),
             content: Text('Failed to sign in: Wrong email or password. Please try again.'),
+            backgroundColor: Colors.white,
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF474747),
+                  foregroundColor: Colors.white,
+                ),
                 child: Text('OK'),
               ),
             ],
@@ -136,7 +141,7 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          showPassword ? Icons.visibility : Icons.visibility_off,
+                          !showPassword ? Icons.visibility : Icons.visibility_off,
                           color: changeColor(wrong),
                         ),
                         onPressed: () {
