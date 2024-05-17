@@ -169,6 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: Text('Log Out'),
+                                      backgroundColor: Colors.white,
                                       content: Text('Click the button below to log out.'),
                                       actions: <Widget>[
                                         TextButton(
@@ -203,6 +204,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: Text('Report'),
+                                      backgroundColor: Colors.white,
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         crossAxisAlignment: CrossAxisAlignment.start,
