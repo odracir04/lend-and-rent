@@ -34,6 +34,7 @@ class BookListState extends State<BookList> {
               itemCount: books.length,
               itemBuilder: (BuildContext context, int index) {
                 Map<String, dynamic> bookData = books[index].data() as Map<String, dynamic>;
+                bookData['id'] = books[index].id;
                 return FutureBuilder(
                   future: getPictureUrl(FirebaseFirestore.instance, bookData['renter']),
                   builder: (context, AsyncSnapshot<String?> userPictureSnapshot) {
