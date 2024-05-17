@@ -89,7 +89,6 @@ class _MyBookListState extends State<MyBookList> {
                         )
                       );
                     },
-
                   ),
                 ],
               ),

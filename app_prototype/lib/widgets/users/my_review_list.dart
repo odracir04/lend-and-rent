@@ -146,6 +146,9 @@ class _MyReviewListState extends State<MyReviewList> {
                     },
                   ),
                 ),
+                if (widget.visitingEmail == widget.userEmail)
+                  const SizedBox(height: 100),
+
                 if (widget.visitingEmail != widget.userEmail)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
@@ -198,7 +201,6 @@ class _MyReviewListState extends State<MyReviewList> {
                       ],
                     ),
                   ),
-                const SizedBox(height: 100,)
               ],
             );
           }
