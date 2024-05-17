@@ -297,7 +297,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                                         hintStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
                                         suffixIcon: IconButton(
                                           icon: Icon(
-                                            showPassword ? Icons.visibility : Icons.visibility_off,
+                                            !showPassword ? Icons.visibility : Icons.visibility_off,
                                           ),
                                           onPressed: () {
                                             setState(() {

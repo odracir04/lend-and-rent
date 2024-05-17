@@ -5,6 +5,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../main.dart';
+
 class SignUpPage extends StatefulWidget {
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -23,7 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool? _termsOfService = false;
   bool showPassword = false;
   bool showCheckPassword = false;
-  bool wrong1 = false, wrong2 = false, wrong3 = false, wrong4 = false, wrong5 = false;
+  bool wrong1 = false, wrong2 = false, wrong3 = false, wrong4 = false, wrong5 = false, notos = false;
 
   Future<void> _signUp(BuildContext context) async {
     wrong1 = false;
@@ -31,24 +33,37 @@ class _SignUpPageState extends State<SignUpPage> {
     wrong3 = false;
     wrong4 = false;
     wrong5 = false;
-    if (_firstNameController.text.isEmpty && _lastNameController.text.isEmpty && _emailController.text.isEmpty && _passwordController.text.isEmpty && _confirmPasswordController.text.isEmpty) {
+    notos = false;
+    if (_firstNameController.text.isEmpty || _lastNameController.text.isEmpty || _emailController.text.isEmpty || _passwordController.text.isEmpty || _confirmPasswordController.text.isEmpty) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Error'),
             content: Text('Failed to sign up: One or more fields are empty.'),
+            backgroundColor: Colors.white,
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF474747),
+                  foregroundColor: Colors.white,
+                ),
                 child: Text('OK'),
               ),
             ],
           );
         },
       );
+      setState(() {
+        wrong1 = _firstNameController.text.isEmpty;
+        wrong2 = _lastNameController.text.isEmpty;
+        wrong3 = _emailController.text.isEmpty;
+        wrong4 = _passwordController.text.isEmpty;
+        wrong5 = _confirmPasswordController.text.isEmpty;
+      });
       return;
     }
 
@@ -59,17 +74,26 @@ class _SignUpPageState extends State<SignUpPage> {
           return AlertDialog(
             title: Text('Error'),
             content: Text('Failed to sign up: \'Password\' and \'Confirm Password\' fields do not match.'),
+            backgroundColor: Colors.white,
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF474747),
+                  foregroundColor: Colors.white,
+                ),
                 child: Text('OK'),
               ),
             ],
           );
         },
       );
+      setState(() {
+        wrong4 = true;
+        wrong5 = true;
+      });
       return;
     }
 
@@ -80,17 +104,25 @@ class _SignUpPageState extends State<SignUpPage> {
           return AlertDialog(
             title: Text('Error'),
             content: Text('Failed to sign up: Please accept the Terms of Service and Privacy Policy.'),
+            backgroundColor: Colors.white,
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF474747),
+                  foregroundColor: Colors.white,
+                ),
                 child: Text('OK'),
               ),
             ],
           );
         },
       );
+      setState(() {
+        notos = true;
+      });
       return;
     }
 
@@ -110,12 +142,17 @@ class _SignUpPageState extends State<SignUpPage> {
             return AlertDialog(
               title: Text('Sign Up Successful'),
               content: Text(
-                  'Your sign in was successful, please log in to enjoy the app fully.'),
+                  'Your sign in was successful, please enjoy the app.'),
+              backgroundColor: Colors.white,
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF474747),
+                    foregroundColor: Colors.white,
+                  ),
                   child: Text('Ok'),
                 ),
               ],
@@ -300,7 +337,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          showPassword ? Icons.visibility : Icons.visibility_off,
+                          !showPassword ? Icons.visibility : Icons.visibility_off,
                           color: changeColor(wrong4),
                         ),
                         onPressed: () {
@@ -336,7 +373,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          showCheckPassword ? Icons.visibility : Icons.visibility_off,
+                          !showCheckPassword ? Icons.visibility : Icons.visibility_off,
                           color: changeColor(wrong5),
                         ),
                         onPressed: () {
