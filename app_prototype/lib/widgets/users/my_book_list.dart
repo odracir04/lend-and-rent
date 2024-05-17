@@ -69,6 +69,7 @@ class _MyBookListState extends State<MyBookList> {
                     itemBuilder: (BuildContext context, int index) {
                       final Map<String, dynamic> bookData =
                       (myBooks![index].data() as Map<String, dynamic>);
+                      bookData['id'] = myBooks![index].id;
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 50.0),
                         child: Column (
