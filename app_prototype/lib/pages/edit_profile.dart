@@ -22,7 +22,7 @@ class EditProfilePage extends StatefulWidget {
   final VoidCallback changeTheme;
   final FirebaseFirestore db;
   final FirebaseAuth auth;
-  bool darkTheme;
+  final bool darkTheme;
 
   final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
 
@@ -294,7 +294,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
                                         hintText: 'Enter a new password',
-                                        hintStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
+                                        hintStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
                                         suffixIcon: IconButton(
                                           icon: Icon(
                                             !showPassword ? Icons.visibility : Icons.visibility_off,
@@ -427,7 +427,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                                 key: const Key("delete_profile_button"),
                                 autofocus: true,
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Color(0xFF700000)),
+                                  backgroundColor: MaterialStateProperty.all(const Color(0xFF700000)),
                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10.0),
@@ -566,7 +566,6 @@ class _EditProfilePage extends State<EditProfilePage> {
     Future<String?> lastNameFuture = getLastName(widget.db,widget.userEmail);
     Future<String?> locationFuture = getLocation(widget.db,widget.userEmail);
     Future<bool?> displayEmailFuture = getDisplayEmail(widget.db,widget.userEmail);
-    Future<String?> displayProfilePicture = getPictureUrl(widget.db,widget.userEmail);
 
     String? newFirstName = firstNameController!.text;
     String? newLastName = lastNameController!.text;
@@ -607,14 +606,14 @@ class _EditProfilePage extends State<EditProfilePage> {
     }
 
     if (firstNameUpdated || lastNameUpdated || locationUpdated || passwordUpdated || displayEmailUpdated) {
-      _scaffoldMessengerKey.currentState!.showSnackBar(
+     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Success updating profile!', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white)),
             backgroundColor: Colors.green
         ),
       );
     } else {
-      _scaffoldMessengerKey.currentState!.showSnackBar(
+     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Error updating profile!', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white)),
             backgroundColor: Colors.red

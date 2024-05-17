@@ -28,6 +28,7 @@ class Review extends StatefulWidget {
 }
 
 class _ReviewState extends State<Review> {
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   double rating = 0.0;
   String? reviewMessage;
 
@@ -92,7 +93,7 @@ class _ReviewState extends State<Review> {
                               itemCount: 5,
                               glow: false,
                               itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-                              itemSize: 30.0, // Adjust the size of the stars
+                              itemSize: 30.0,
                               itemBuilder: (context, _) => const Icon(
                                 Icons.star,
                                 color: Colors.amber,
@@ -126,15 +127,15 @@ class _ReviewState extends State<Review> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: TextField(
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white), // Change border color to white
+                              borderSide: BorderSide(color: widget.darkTheme ? Colors.white : Colors.black),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white), // Change focused border color to white
+                              borderSide: BorderSide(color: widget.darkTheme ? Colors.white : Colors.black),
                             ),
-                            contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0), // Increase height
-                            hintText: 'Enter your review here...', // Add placeholder text
+                            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                            hintText: 'Enter your review here...',
                           ),
                           onChanged: (value) {
                             setState(() {
@@ -155,7 +156,7 @@ class _ReviewState extends State<Review> {
                               child: ElevatedButton(
                                 autofocus: true,
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Color(0xFF474747)),
+                                  backgroundColor: MaterialStateProperty.all(const Color(0xFF474747)),
                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10.0),
@@ -214,7 +215,6 @@ class _ReviewState extends State<Review> {
         rating,
         reviewMessage
       );
-      ;
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

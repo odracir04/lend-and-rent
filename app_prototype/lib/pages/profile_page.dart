@@ -249,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               'timestamp': DateTime.now(),
                                             }).then((_) {
                                               ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text('Report submitted successfully')),
+                                                const SnackBar(content: Text('Report submitted successfully')),
                                               );
                                             }).catchError((error) {
                                               ScaffoldMessenger.of(context).showSnackBar(

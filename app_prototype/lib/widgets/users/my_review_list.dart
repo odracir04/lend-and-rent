@@ -20,7 +20,7 @@ class MyReviewList extends StatefulWidget {
   });
 
   @override
-  _MyReviewListState createState() => _MyReviewListState();
+  State<MyReviewList> createState() => _MyReviewListState();
 }
 
 class _MyReviewListState extends State<MyReviewList> {
@@ -69,7 +69,7 @@ class _MyReviewListState extends State<MyReviewList> {
                           child: ElevatedButton(
                             autofocus: true,
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Color(0xFF474747)),
+                              backgroundColor: MaterialStateProperty.all(const Color(0xFF474747)),
                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
@@ -158,7 +158,7 @@ class _MyReviewListState extends State<MyReviewList> {
                           child: ElevatedButton(
                             autofocus: true,
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Color(0xFF474747)),
+                              backgroundColor: MaterialStateProperty.all(const Color(0xFF474747)),
                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),

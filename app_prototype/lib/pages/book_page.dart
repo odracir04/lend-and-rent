@@ -28,6 +28,7 @@ class BookPageState extends State<BookPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          elevation: 0,
           leading: IconButton(
               onPressed: () {Navigator.pop(context);},
               icon: const Icon(Icons.arrow_back, size: 30,)

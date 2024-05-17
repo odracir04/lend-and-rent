@@ -52,7 +52,13 @@ class BookReviewsPageState extends State<BookReviewsPage> {
                         darkTheme: widget.darkTheme,
                         emailReview: widget.auth.currentUser!.email!,
                         receiver: widget.book,
-                        userReview: false,))); },
+                        userReview: false,))).then((result) {
+                    if (result == true) {
+                      setState(() {
+                        reviews = getBookReviews(FirebaseFirestore.instance, widget.book);
+                      });
+                    }
+                  });; },
                   child: Text("Write a review", style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white)),
                 ),
               ),
