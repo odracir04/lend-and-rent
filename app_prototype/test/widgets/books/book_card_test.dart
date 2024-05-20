@@ -2,13 +2,15 @@ import 'package:app_prototype/widgets/books/book_card.dart';
 import 'package:app_prototype/widgets/users/user_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 void main() {
   testWidgets("Basic BookCard structure", (WidgetTester tester) async {
     bool darkTheme = false;
     void testChangeTheme() { darkTheme = !darkTheme; }
 
-    await tester.pumpWidget(
+    await mockNetworkImagesFor(()
+    => tester.pumpWidget(
       MaterialApp(
         home: BookCard(
           bookName: 'name',
@@ -22,7 +24,7 @@ void main() {
           book: {},
         ),
       ),
-    );
+    ));
 
     // Expectations
     expect(find.byType(Stack), findsOneWidget);
@@ -40,9 +42,11 @@ void main() {
     bool darkTheme = false;
     void testChangeTheme() { darkTheme = !darkTheme; }
 
-    await tester.pumpWidget(MaterialApp(home:
+    await mockNetworkImagesFor(() => tester.pumpWidget(MaterialApp(home:
     BookCard(darkTheme: darkTheme, changeTheme: testChangeTheme, userPicture: "assets/images/profile.png",bookName: 'name', authorName: 'author',
-      imagePath: 'assets/images/book.jpg', location: 'Gaia', renter: "email@example.org", book: {},),));
+      imagePath: 'assets/images/book.jpg', location: 'Gaia', renter: "email@example.org", book: {},),)));
+
+    await tester.pumpAndSettle();
 
     expect(find.text("name"), findsOneWidget);
     expect(find.text("author"), findsOneWidget);

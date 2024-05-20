@@ -27,8 +27,6 @@ class BookCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUserEmail = FirebaseAuth.instance.currentUser!.email;
-
     return Card(
       margin: const EdgeInsets.only(bottom: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

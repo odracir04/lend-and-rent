@@ -4,6 +4,7 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 void main() {
   final mockUser = MockUser(
@@ -37,9 +38,10 @@ void main() {
   testWidgets("Delete user account test", (WidgetTester tester) async {
     const Key deleteButton = Key("delete_profile_button");
 
-    await tester.pumpWidget(MaterialApp(
-      home: EditProfilePage(changeTheme: () {}, darkTheme: false,
-          userEmail: "email@example.org", db: fakeFirestore, auth: fakeAuth)));
+    await mockNetworkImagesFor(() =>
+        tester.pumpWidget(MaterialApp(
+            home: EditProfilePage(changeTheme: () {}, darkTheme: false,
+                userEmail: "email@example.org", db: fakeFirestore, auth: fakeAuth))));
 
     await tester.pumpAndSettle();
     await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -500));

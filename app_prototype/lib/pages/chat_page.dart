@@ -42,7 +42,7 @@ class ChatPageState extends State<ChatPage> {
     return FutureBuilder(
         future: Future.wait([getReceiverName(widget.db, widget.receiverEmail),
                             getReceiverLocation(widget.db, widget.receiverEmail),
-                            getPictureUrl(FirebaseFirestore.instance, widget.receiverEmail)]),
+                            getPictureUrl(widget.db, widget.receiverEmail)]),
         builder: (builder, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();

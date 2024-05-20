@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:app_prototype/login/recover_password.dart';
 import 'package:app_prototype/login/sign_up_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -34,7 +36,7 @@ class _SignInPageState extends State<SignInPage> {
       );
       widget.onSignIn();
       print('User signed in: ${userCredential.user!.uid}');
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await widget.auth.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
@@ -176,7 +178,8 @@ class _SignInPageState extends State<SignInPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SignUpPage()),
+                        MaterialPageRoute(builder: (context) => SignUpPage(auth: widget.auth,
+                          db: FirebaseFirestore.instance, storage: FirebaseStorage.instance,)),
                       );
                       print('Sign up button pressed');
                     },
