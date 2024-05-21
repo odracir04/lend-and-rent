@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 
 
 class BookListPage extends StatefulWidget {
-  BookListPage({super.key, required this.changeTheme, required this.darkTheme});
+  BookListPage({super.key, required this.changeTheme, required this.darkTheme,
+                required this.db});
 
   final VoidCallback changeTheme;
   bool darkTheme;
+  final FirebaseFirestore db;
 
   @override
   State<StatefulWidget> createState() => BookListPageState();
@@ -22,7 +24,7 @@ class BookListPageState extends State<BookListPage> {
   @override
   void initState() {
     super.initState();
-    books = getBooks(FirebaseFirestore.instance, 20);
+    books = getBooks(widget.db, 20);
   }
 
   @override
@@ -31,7 +33,7 @@ class BookListPageState extends State<BookListPage> {
         body: RefreshIndicator(
           onRefresh: () {
             setState(() {
-              books = getBooks(FirebaseFirestore.instance, 20);
+              books = getBooks(widget.db, 20);
             });
             return Future<void>.delayed(const Duration(seconds: 0));
           },

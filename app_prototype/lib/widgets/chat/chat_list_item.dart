@@ -8,12 +8,13 @@ import '../../pages/chat_page.dart';
 class ChatListItem extends StatefulWidget {
 
   ChatListItem({super.key, required this.changeTheme , required this.darkTheme, required this.receiverEmail,
-                required this.db});
+                required this.db, required this.auth});
 
   final String receiverEmail;
   final VoidCallback changeTheme;
   final bool darkTheme;
   final FirebaseFirestore db;
+  final FirebaseAuth auth;
 
   @override
   State<StatefulWidget> createState() => ChatListItemState();
@@ -26,7 +27,7 @@ class ChatListItemState extends State<ChatListItem> {
 
   Future<void> setUserData() async {
     receiverName = await (getReceiverName(widget.db, widget.receiverEmail));
-    userPicture = await (getPictureUrl(FirebaseFirestore.instance, widget.receiverEmail));
+    userPicture = await (getPictureUrl(widget.db, widget.receiverEmail));
   }
 
   @override
@@ -48,8 +49,8 @@ class ChatListItemState extends State<ChatListItem> {
                       changeTheme: widget.changeTheme,
                       darkTheme : widget.darkTheme,
                       receiverEmail: widget.receiverEmail,
-                      db: FirebaseFirestore.instance,
-                      userEmail: FirebaseAuth.instance.currentUser!.email ?? ""
+                      db: widget.db,
+                      userEmail: widget.auth.currentUser!.email ?? ""
                   )));},
             );
           }

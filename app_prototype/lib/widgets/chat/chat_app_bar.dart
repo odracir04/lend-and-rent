@@ -13,18 +13,21 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.userName,
     required this.userLocation,
     required this.userPicture,
+    required this.auth,
   });
 
   final String userName, userLocation, visitingEmail,userPicture;
   final VoidCallback changeTheme;
   final bool darkTheme;
+  final FirebaseAuth auth;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: GestureDetector(
+        key: const Key('chat_app_bar_icon'),
         onTap: () {
-          final currentUser = FirebaseAuth.instance.currentUser;
+          final currentUser = auth.currentUser;
           if (currentUser != null) {
             Navigator.push(
               context,

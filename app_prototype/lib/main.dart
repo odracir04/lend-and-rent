@@ -74,6 +74,7 @@ class AppState extends State<App> {
         icon: Icons.house,
         label: 'Books',
         destination: BookListPage(
+          db: widget.db,
           changeTheme: changeTheme,
           darkTheme: widget.darkTheme,
         ),
@@ -91,7 +92,9 @@ class AppState extends State<App> {
     Menu(
         icon: Icons.message,
         label: 'Chat',
-        destination: ChatListPage(changeTheme: changeTheme, darkTheme: widget.darkTheme, userEmail: FirebaseAuth.instance.currentUser!.email!, db: FirebaseFirestore.instance),
+        destination: ChatListPage(changeTheme: changeTheme, darkTheme: widget.darkTheme,
+            userEmail: FirebaseAuth.instance.currentUser!.email!, db: FirebaseFirestore.instance,
+            auth: FirebaseAuth.instance,),
       ),
 
       // Add more destinations as needed
