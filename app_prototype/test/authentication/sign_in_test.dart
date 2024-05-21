@@ -2,10 +2,12 @@ import 'package:app_prototype/login/recover_password.dart';
 import 'package:app_prototype/login/sign_in_page.dart';
 import 'package:app_prototype/login/sign_up_page.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mock_exceptions/mock_exceptions.dart';
 
 void main() {
   testWidgets("Sign in test", (WidgetTester tester) async {
@@ -87,6 +89,7 @@ void main() {
   
   testWidgets("Wrong credentials test", (WidgetTester tester) async {
     MockFirebaseAuth mockFirebaseAuth = MockFirebaseAuth(mockUser: MockUser(email: 'julie@example.org'));
+
     FakeFirebaseFirestore fakeFirebaseFirestore = FakeFirebaseFirestore();
     MockFirebaseStorage firebaseStorage = MockFirebaseStorage();
 
@@ -94,6 +97,9 @@ void main() {
     SignInPage(onSignIn: () {}, auth: mockFirebaseAuth,
       db: fakeFirebaseFirestore, storage: firebaseStorage,),));
     await tester.pumpAndSettle();
+
+    whenCalling(Invocation.method(#signInWithEmailAndPassword, null)).on(mockFirebaseAuth)
+        .thenThrow(FirebaseAuthException(code: 'error'));
     
     await tester.enterText(find.byKey(const Key('sign_in_email')), 'john@example.org');
     await tester.pumpAndSettle();
@@ -103,5 +109,10 @@ void main() {
 
     expect(find.byType(AlertDialog), findsOneWidget);
     expect(find.text('Error'), findsOneWidget);
+
+    await tester.tap(find.text("OK"));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AlertDialog), findsNothing);
   });
 }
