@@ -1,21 +1,26 @@
 import 'package:app_prototype/login/recover_password.dart';
 import 'package:app_prototype/login/sign_in_page.dart';
 import 'package:app_prototype/login/sign_up_page.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets("Sign in test", (WidgetTester tester) async {
-    bool signedIn = false;
     MockFirebaseAuth mockFirebaseAuth = MockFirebaseAuth();
+    FakeFirebaseFirestore fakeFirebaseFirestore = FakeFirebaseFirestore();
+    MockFirebaseStorage firebaseStorage = MockFirebaseStorage();
 
+    bool signedIn = false;
     void testSignIn() {
       signedIn = true;
     }
 
     await tester.pumpWidget(MaterialApp(home:
-    SignInPage(onSignIn: testSignIn, auth: mockFirebaseAuth,),));
+    SignInPage(onSignIn: testSignIn, auth: mockFirebaseAuth,
+    db: fakeFirebaseFirestore, storage: firebaseStorage,),));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text("Sign in"));
@@ -26,9 +31,12 @@ void main() {
 
   testWidgets("Show password button test", (WidgetTester tester) async {
     MockFirebaseAuth mockFirebaseAuth = MockFirebaseAuth();
+    FakeFirebaseFirestore fakeFirebaseFirestore = FakeFirebaseFirestore();
+    MockFirebaseStorage firebaseStorage = MockFirebaseStorage();
 
     await tester.pumpWidget(MaterialApp(home:
-      SignInPage(onSignIn: () {}, auth: mockFirebaseAuth,)));
+    SignInPage(onSignIn: () {}, auth: mockFirebaseAuth,
+      db: fakeFirebaseFirestore, storage: firebaseStorage,),));
     await tester.pumpAndSettle();
 
     expect(find.byIcon(Icons.visibility), findsOneWidget);
@@ -41,9 +49,12 @@ void main() {
   
   testWidgets("Recover password button test", (WidgetTester tester) async {
     MockFirebaseAuth mockFirebaseAuth = MockFirebaseAuth();
+    FakeFirebaseFirestore fakeFirebaseFirestore = FakeFirebaseFirestore();
+    MockFirebaseStorage firebaseStorage = MockFirebaseStorage();
 
     await tester.pumpWidget(MaterialApp(home:
-    SignInPage(onSignIn: () {}, auth: mockFirebaseAuth,)));
+    SignInPage(onSignIn: () {}, auth: mockFirebaseAuth,
+      db: fakeFirebaseFirestore, storage: firebaseStorage,),));
     await tester.pumpAndSettle();
 
     await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -500));
@@ -57,9 +68,12 @@ void main() {
 
   testWidgets("Sign up button test", (WidgetTester tester) async {
     MockFirebaseAuth mockFirebaseAuth = MockFirebaseAuth();
+    FakeFirebaseFirestore fakeFirebaseFirestore = FakeFirebaseFirestore();
+    MockFirebaseStorage firebaseStorage = MockFirebaseStorage();
 
     await tester.pumpWidget(MaterialApp(home:
-    SignInPage(onSignIn: () {}, auth: mockFirebaseAuth,)));
+    SignInPage(onSignIn: () {}, auth: mockFirebaseAuth,
+      db: fakeFirebaseFirestore, storage: firebaseStorage,),));
     await tester.pumpAndSettle();
 
     await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -500));
@@ -69,5 +83,25 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(SignUpPage), findsOneWidget);
+  });
+  
+  testWidgets("Wrong credentials test", (WidgetTester tester) async {
+    MockFirebaseAuth mockFirebaseAuth = MockFirebaseAuth(mockUser: MockUser(email: 'julie@example.org'));
+    FakeFirebaseFirestore fakeFirebaseFirestore = FakeFirebaseFirestore();
+    MockFirebaseStorage firebaseStorage = MockFirebaseStorage();
+
+    await tester.pumpWidget(MaterialApp(home:
+    SignInPage(onSignIn: () {}, auth: mockFirebaseAuth,
+      db: fakeFirebaseFirestore, storage: firebaseStorage,),));
+    await tester.pumpAndSettle();
+    
+    await tester.enterText(find.byKey(const Key('sign_in_email')), 'john@example.org');
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text("Sign in"));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.text('Error'), findsOneWidget);
   });
 }

@@ -2,6 +2,7 @@ import 'package:app_prototype/login/sign_in_page.dart';
 import 'package:app_prototype/pages/chat_list_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:app_prototype/pages/book_list_page.dart';
@@ -63,7 +64,7 @@ class AppState extends State<App> {
         theme: Themes.getTheme(widget.darkTheme),
         home: SignInPage(auth: widget.auth, onSignIn: () {
           handleSignIn();
-        }),
+        }, db: FirebaseFirestore.instance, storage: FirebaseStorage.instance,),
         title: "Lend and Rent (Prototype)",
       );
     }

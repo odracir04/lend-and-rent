@@ -248,6 +248,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    key: const Key('first_name'),
                     controller: _firstNameController,
                     decoration: InputDecoration(
                       labelText: 'First Name',
@@ -272,6 +273,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    key: const Key('last_name'),
                     controller: _lastNameController,
                     decoration: InputDecoration(
                       labelText: 'Last Name',
@@ -296,6 +298,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    key: const Key('email'),
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
@@ -320,6 +323,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    key: const Key('password'),
                     controller: _passwordController,
                     obscureText: !showPassword,
                     decoration: InputDecoration(
@@ -342,6 +346,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderSide: BorderSide(color: changeColor(wrong4),),
                       ),
                       suffixIcon: IconButton(
+                        key: const Key('show_password'),
                         icon: Icon(
                           !showPassword ? Icons.visibility : Icons.visibility_off,
                           color: changeColor(wrong4),
@@ -356,6 +361,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    key: const Key('repeat_password'),
                     controller: _confirmPasswordController,
                     obscureText: !showCheckPassword,
                     decoration: InputDecoration(
@@ -378,6 +384,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderSide: BorderSide(color: changeColor(wrong5),),
                       ),
                       suffixIcon: IconButton(
+                        key: const Key('show_check_password'),
                         icon: Icon(
                           !showCheckPassword ? Icons.visibility : Icons.visibility_off,
                           color: changeColor(wrong5),
