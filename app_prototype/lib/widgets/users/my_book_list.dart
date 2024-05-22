@@ -84,7 +84,7 @@ class _MyBookListState extends State<MyBookList> {
                               renter: "${bookData['renter']}",
                               userPicture: userPicture!,
                             ),
-                            const SizedBox(height: 100.0)
+                            SizedBox(height: index == myBooks!.length - 1 ? 100 : 5)
                           ],
                         )
                       );
