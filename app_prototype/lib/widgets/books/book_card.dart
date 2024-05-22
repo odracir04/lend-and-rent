@@ -1,6 +1,4 @@
-import 'package:app_prototype/pages/chat_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../pages/book_page.dart';
@@ -27,110 +25,30 @@ class BookCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUserEmail = FirebaseAuth.instance.currentUser!.email;
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 20),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      color: Theme.of(context).cardColor,
-      child: Stack(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => BookPage(
-                      book: book, darkTheme: darkTheme, db: FirebaseFirestore.instance,
-                      changeTheme: changeTheme,
-                    )
-                ),
-              );
-            },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: imagePath == "assets/images/book.jpg"
-                  ? Image.asset(imagePath, fit: BoxFit.cover)
-                  : Image.network(imagePath, fit: BoxFit.cover),
-            ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => BookPage(
+                book: book, darkTheme: darkTheme, db: FirebaseFirestore.instance,
+                changeTheme: changeTheme,
+              )
           ),
-          Positioned(
-            bottom: 8,
-            left: 8,
-            right: 8,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(right: 30),
-                      constraints: const BoxConstraints(
-                        maxHeight: 75,
-                        maxWidth: 100,
-                      ),
-                      child: UserIcon(userPicture: userPicture),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            location,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            bookName,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                          Text(
-                            authorName,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-    /*return SizedBox(
-      height: 200, // Adjust the height as needed
-      child: Card(
-        margin: const EdgeInsets.only(bottom: 20),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        color: Theme.of(context).cardColor,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BookPage(
-                            book: book, darkTheme: darkTheme, db: FirebaseFirestore.instance,
-                            changeTheme: changeTheme,
-                          )
-                      ),
-                    );
-                  },
-                  child: ClipRRect(
+        );
+      },
+      child: SizedBox(
+        height: 200, // Adjust the height as needed
+        child: Card(
+          margin: const EdgeInsets.only(bottom: 20),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          color: Theme.of(context).cardColor,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                    child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: imagePath == "assets/images/book.jpg"
                         ? Image.asset(imagePath, fit: BoxFit.cover)
@@ -138,61 +56,60 @@ class BookCard extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              bottom: 8,
-              left: 8,
-              right: 8,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(right: 30),
-                        constraints: const BoxConstraints(
-                          maxHeight: 75,
-                          maxWidth: 100,
+              Positioned(
+                bottom: 8,
+                left: 8,
+                right: 8,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(right: 30),
+                          constraints: const BoxConstraints(
+                            maxHeight: 75,
+                            maxWidth: 100,
+                          ),
+                          child: UserIcon(userPicture: userPicture),
                         ),
-                        child: UserIcon(userPicture: userPicture),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              location,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                location,
+                                style: TextStyle(
+                                  color: darkTheme ? Colors.white : Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                            Text(
-                              bookName,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w900,
+                              Text(
+                                bookName,
+                                style: TextStyle(
+                                  color: darkTheme ? Colors.white : Colors.black,
+                                  fontWeight: FontWeight.w900,
+                                ),
                               ),
-                            ),
-                            Text(
-                              authorName,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w300,
+                              Text(
+                                authorName,
+                                style: TextStyle(
+                                  color: darkTheme ? Colors.white : Colors.black,
+                                  fontWeight: FontWeight.w300,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    );*/
-
+    );
   }
 }
