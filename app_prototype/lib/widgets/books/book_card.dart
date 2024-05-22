@@ -38,7 +38,7 @@ class BookCard extends StatelessWidget {
         );
       },
       child: SizedBox(
-        height: 200, // Adjust the height as needed
+        height: 150, // Adjust the height as needed
         child: Card(
           margin: const EdgeInsets.only(bottom: 20),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -50,9 +50,12 @@ class BookCard extends StatelessWidget {
                   alignment: Alignment.centerRight,
                     child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: imagePath == "assets/images/book.jpg"
-                        ? Image.asset(imagePath, fit: BoxFit.cover)
-                        : Image.network(imagePath, fit: BoxFit.cover),
+                    child: SizedBox(
+                      width: 100,
+                      child: imagePath == "assets/images/book.jpg"
+                          ? Image.asset(imagePath, fit: BoxFit.cover)
+                          : Image.network(imagePath, fit: BoxFit.cover),
+                    )
                   ),
                 ),
               ),
