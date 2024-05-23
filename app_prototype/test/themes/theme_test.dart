@@ -8,8 +8,8 @@ void main() {
 
     expect(theme.primaryColor, Colors.grey.shade400);
     expect(theme.brightness, Brightness.light);
-    expect(theme.scaffoldBackgroundColor, Colors.white70);
-    expect(theme.cardColor, Colors.grey.shade200);
+    expect(theme.scaffoldBackgroundColor, Colors.grey.shade300);
+    expect(theme.cardColor, Colors.grey.shade400);
 
     theme = Themes.getTheme(true);
 

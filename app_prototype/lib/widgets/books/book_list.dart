@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'book_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,9 +7,14 @@ import '../../database/users.dart';
 
 class BookList extends StatefulWidget {
 
-  BookList({Key? key, required this.changeTheme, required this.darkTheme, required this.books});
+  BookList({Key? key, required this.changeTheme, required this.darkTheme
+    , required this.books, required this.db, required this.auth,
+      required this.storage});
 
   final Future<List<DocumentSnapshot>> books;
+  final FirebaseFirestore db;
+  final FirebaseAuth auth;
+  final FirebaseStorage storage;
   final VoidCallback changeTheme;
   final bool darkTheme;
 
@@ -34,7 +41,7 @@ class BookListState extends State<BookList> {
                 Map<String, dynamic> bookData = books[index].data() as Map<String, dynamic>;
                 bookData['id'] = books[index].id;
                 return FutureBuilder(
-                  future: getPictureUrl(FirebaseFirestore.instance, bookData['renter']),
+                  future: getPictureUrl(widget.db, bookData['renter']),
                   builder: (context, AsyncSnapshot<String?> userPictureSnapshot) {
                     if (userPictureSnapshot.connectionState == ConnectionState.waiting) {
                       return SizedBox(
@@ -59,6 +66,9 @@ class BookListState extends State<BookList> {
                         location: "${bookData['location']}",
                         renter: "${bookData['renter']}",
                         userPicture: userPicture ?? "",
+                        db: widget.db,
+                        auth: widget.auth,
+                        storage: widget.storage,
                       );
                     }
                   },

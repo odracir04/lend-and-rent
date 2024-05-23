@@ -3,6 +3,7 @@ import 'package:app_prototype/main.dart';
 import 'package:app_prototype/pages/edit_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:app_prototype/database/users.dart';
 import 'package:app_prototype/widgets/users/my_review_list.dart';
@@ -20,8 +21,14 @@ class ProfilePage extends StatefulWidget {
     required this.changeTheme,
     required this.darkTheme,
     required this.profileEmail,
+    required this.db,
+    required this.auth,
+    required this.storage
   });
 
+  final FirebaseFirestore db;
+  final FirebaseAuth auth;
+  final FirebaseStorage storage;
   final VoidCallback changeTheme;
   final String profileEmail;
   final bool darkTheme;
@@ -43,12 +50,12 @@ class _ProfilePageState extends State<ProfilePage> {
   dynamic profilePicture;
 
   Future<void> setUserData() async {
-    userEmail = FirebaseAuth.instance.currentUser!.email!;
-    Future<String?> firstName = getFirstName(FirebaseFirestore.instance, widget.profileEmail);
-    Future<String?> lastName = getLastName(FirebaseFirestore.instance, widget.profileEmail);
-    Future<String?> location = getLocation(FirebaseFirestore.instance, widget.profileEmail);
-    Future<bool?> displayEmail = getDisplayEmail(FirebaseFirestore.instance, widget.profileEmail);
-    profileUrl = await (getPictureUrl(FirebaseFirestore.instance,widget.profileEmail));
+    userEmail = widget.auth.currentUser!.email!;
+    Future<String?> firstName = getFirstName(widget.db, widget.profileEmail);
+    Future<String?> lastName = getLastName(widget.db, widget.profileEmail);
+    Future<String?> location = getLocation(widget.db, widget.profileEmail);
+    Future<bool?> displayEmail = getDisplayEmail(widget.db, widget.profileEmail);
+    profileUrl = await (getPictureUrl(widget.db,widget.profileEmail));
 
 
     if (profileUrl == "assets/images/profile.png"){
@@ -148,8 +155,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => EditProfilePage(
-                                      db: FirebaseFirestore.instance,
-                                      auth: FirebaseAuth.instance,
+                                      db: widget.db,
+                                      auth: widget.auth,
+                                      storage: widget.storage,
                                       changeTheme: widget.changeTheme,
                                       darkTheme: widget.darkTheme,
                                       userEmail: userEmail ?? "default",
@@ -174,13 +182,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () async {
-                                            await FirebaseAuth.instance.signOut();
+                                            await widget.auth.signOut();
                                             AppState().loggedIn = false;
                                             Navigator.of(context).pushAndRemoveUntil(
                                               MaterialPageRoute(
                                                 builder: (context) => App(
-                                                  db: FirebaseFirestore.instance,
-                                                  auth: FirebaseAuth.instance,
+                                                  db: widget.db,
+                                                  auth: widget.auth,
+                                                  storage: widget.storage,
                                                 ),
                                               ),
                                                   (route) => false,
@@ -239,8 +248,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         ElevatedButton(
                                           onPressed: () {
-                                            final user = FirebaseAuth.instance.currentUser;
-                                            final reportsCollection = FirebaseFirestore.instance.collection('reports');
+                                            final user = widget.auth.currentUser;
+                                            final reportsCollection = widget.db.collection('reports');
 
                                             reportsCollection.add({
                                               'reportedUser': widget.profileEmail,
@@ -439,6 +448,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     userEmail: userEmail ?? "default",
                     darkTheme: widget.darkTheme,
                     changeTheme: widget.changeTheme,
+                    db: widget.db,
+                    auth: widget.auth,
+                    storage: widget.storage
                   ),
                 )
                 // User reviews

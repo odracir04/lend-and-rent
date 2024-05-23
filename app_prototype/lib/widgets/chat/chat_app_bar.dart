@@ -1,5 +1,7 @@
 import 'package:app_prototype/pages/profile_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../users/user_icon.dart';
@@ -14,12 +16,16 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.userLocation,
     required this.userPicture,
     required this.auth,
+    required this.db,
+    required this.storage
   });
 
+  final FirebaseFirestore db;
   final String userName, userLocation, visitingEmail,userPicture;
   final VoidCallback changeTheme;
   final bool darkTheme;
   final FirebaseAuth auth;
+  final FirebaseStorage storage;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +42,9 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                   changeTheme: changeTheme,
                   darkTheme: darkTheme,
                   profileEmail: visitingEmail,
+                  db: db,
+                  auth: auth,
+                  storage: storage,
                 ),
               ),
             );
