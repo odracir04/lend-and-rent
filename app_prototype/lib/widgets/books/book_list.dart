@@ -21,9 +21,7 @@ class BookListState extends State<BookList> {
     return FutureBuilder(
       future: widget.books,
       builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
+        if (snapshot.hasError) {
           return Text("ERROR: ${snapshot.error}");
         } else {
           List<DocumentSnapshot> books = snapshot.data ?? [];
@@ -39,9 +37,16 @@ class BookListState extends State<BookList> {
                   future: getPictureUrl(FirebaseFirestore.instance, bookData['renter']),
                   builder: (context, AsyncSnapshot<String?> userPictureSnapshot) {
                     if (userPictureSnapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
+                      return SizedBox(
+                        height: 150,
+                        child: Center(child: CircularProgressIndicator(
+                          color: widget.darkTheme ? Colors.white : Colors.black54,),),
+                      );
                     } else if (userPictureSnapshot.hasError) {
-                      return Text("ERROR: ${userPictureSnapshot.error}");
+                      return SizedBox(
+                        height: 150,
+                        child: Text("ERROR: ${userPictureSnapshot.error}"),
+                      );
                     } else {
                       String? userPicture = userPictureSnapshot.data;
                       return BookCard(
