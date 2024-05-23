@@ -2,14 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app_prototype/database/users.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key, required this.auth, required this.db,
+                    required this.storage});
+
   @override
   State<SignUpPage> createState() => _SignUpPageState();
+
+  final FirebaseAuth auth;
+  final FirebaseFirestore db;
+  final FirebaseStorage storage;
 }
 
 class _SignUpPageState extends State<SignUpPage> {
@@ -127,11 +133,11 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     try {
-      final UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final UserCredential userCredential = await widget.auth.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
-      Future<bool> createUserInFirestore = createUserRecord(FirebaseFirestore.instance, FirebaseStorage.instance, _emailController.text,_firstNameController.text, _lastNameController.text);
+      Future<bool> createUserInFirestore = createUserRecord(widget.db, widget.storage, _emailController.text,_firstNameController.text, _lastNameController.text);
       bool checkFirestore = await createUserInFirestore;
       if (checkFirestore) {
         print('User signed up: ${userCredential.user!.uid}');
@@ -242,6 +248,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    key: const Key('first_name'),
                     controller: _firstNameController,
                     decoration: InputDecoration(
                       labelText: 'First Name',
@@ -266,6 +273,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    key: const Key('last_name'),
                     controller: _lastNameController,
                     decoration: InputDecoration(
                       labelText: 'Last Name',
@@ -290,6 +298,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    key: const Key('email'),
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
@@ -314,6 +323,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    key: const Key('password'),
                     controller: _passwordController,
                     obscureText: !showPassword,
                     decoration: InputDecoration(
@@ -336,6 +346,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderSide: BorderSide(color: changeColor(wrong4),),
                       ),
                       suffixIcon: IconButton(
+                        key: const Key('show_password'),
                         icon: Icon(
                           !showPassword ? Icons.visibility : Icons.visibility_off,
                           color: changeColor(wrong4),
@@ -350,6 +361,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    key: const Key('repeat_password'),
                     controller: _confirmPasswordController,
                     obscureText: !showCheckPassword,
                     decoration: InputDecoration(
@@ -372,6 +384,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderSide: BorderSide(color: changeColor(wrong5),),
                       ),
                       suffixIcon: IconButton(
+                        key: const Key('show_check_password'),
                         icon: Icon(
                           !showCheckPassword ? Icons.visibility : Icons.visibility_off,
                           color: changeColor(wrong5),

@@ -2,14 +2,20 @@ import 'package:app_prototype/database/books.dart';
 import 'package:app_prototype/pages/search_page.dart';
 import 'package:app_prototype/widgets/books/book_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 
 class BookListPage extends StatefulWidget {
-  BookListPage({super.key, required this.changeTheme, required this.darkTheme});
+  BookListPage({super.key, required this.changeTheme, required this.darkTheme,
+                required this.db, required this.auth, required this.storage});
 
   final VoidCallback changeTheme;
   bool darkTheme;
+  final FirebaseFirestore db;
+  final FirebaseAuth auth;
+  final FirebaseStorage storage;
 
   @override
   State<StatefulWidget> createState() => BookListPageState();
@@ -22,7 +28,7 @@ class BookListPageState extends State<BookListPage> {
   @override
   void initState() {
     super.initState();
-    books = getBooks(20);
+    books = getBooks(widget.db, 20);
   }
 
   @override
@@ -31,7 +37,7 @@ class BookListPageState extends State<BookListPage> {
         body: RefreshIndicator(
           onRefresh: () {
             setState(() {
-              books = getBooks(20);
+              books = getBooks(widget.db, 20);
             });
             return Future<void>.delayed(const Duration(seconds: 0));
           },
@@ -57,7 +63,8 @@ class BookListPageState extends State<BookListPage> {
                               hintText: "Search for books here...",
                               onTap: () {Navigator.push(context,
                                   MaterialPageRoute(builder: (context) => SearchPage(
-                                    darkTheme: widget.darkTheme, changeTheme: widget.changeTheme,)));},
+                                    darkTheme: widget.darkTheme, changeTheme: widget.changeTheme, db: widget.db,
+                                    auth: widget.auth, storage: widget.storage,)));},
                             )
                         ),
                         IconButton(
@@ -67,7 +74,8 @@ class BookListPageState extends State<BookListPage> {
                       ],
                     ),
                   ),
-                  BookList(books: books, darkTheme: widget.darkTheme, changeTheme: widget.changeTheme,),
+                  BookList(books: books, darkTheme: widget.darkTheme, changeTheme: widget.changeTheme,
+                    db: widget.db, auth: widget.auth, storage: widget.storage,),
                 ],
               )
           ),

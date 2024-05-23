@@ -1,6 +1,5 @@
 import 'package:app_prototype/database/books.dart';
 import 'package:app_prototype/pages/review_page.dart';
-import 'package:app_prototype/widgets/chat/message_write_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +54,7 @@ class BookReviewsPageState extends State<BookReviewsPage> {
                         userReview: false,))).then((result) {
                     if (result == true) {
                       setState(() {
-                        reviews = getBookReviews(FirebaseFirestore.instance, widget.book);
+                        reviews = getBookReviews(widget.db, widget.book);
                       });
                     }
                   });; },

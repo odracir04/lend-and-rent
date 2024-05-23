@@ -16,12 +16,13 @@ import '../main.dart';
 
 class EditProfilePage extends StatefulWidget {
   EditProfilePage({super.key, required this.changeTheme, required this.darkTheme, required this.userEmail, required this.db,
-                    required this.auth});
+                    required this.auth, required this.storage});
 
   final String userEmail;
   final VoidCallback changeTheme;
   final FirebaseFirestore db;
   final FirebaseAuth auth;
+  final FirebaseStorage storage;
   final bool darkTheme;
 
   final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
@@ -534,11 +535,11 @@ class _EditProfilePage extends State<EditProfilePage> {
       );
       if (pickedImage != null) {
         String email = widget.userEmail;
-        Reference storageRef = FirebaseStorage.instance.ref();
+        Reference storageRef = widget.storage.ref();
         File file = File(pickedImage.path);
         var snapshot = (await storageRef.child("profiles/$email/picture").putFile(file));
         var downloadUrl = await (snapshot.ref.getDownloadURL());
-        bool update = await updateProfilePicture(FirebaseFirestore.instance, email, downloadUrl);
+        bool update = await updateProfilePicture(widget.db, email, downloadUrl);
         if (update) {
           setState(() {
             profileUrl = downloadUrl;
@@ -550,7 +551,7 @@ class _EditProfilePage extends State<EditProfilePage> {
     else{
       // Remove image and set it to default.
       pickedImage = "assets/images/profile.png";
-      bool update = await updateProfilePicture(FirebaseFirestore.instance, widget.userEmail, pickedImage);
+      bool update = await updateProfilePicture(widget.db, widget.userEmail, pickedImage);
       if (update) {
         setState(() {
           profileUrl = pickedImage;
@@ -626,6 +627,6 @@ class _EditProfilePage extends State<EditProfilePage> {
   void deleteProfile() async {
     await widget.auth.currentUser!.delete();
     deleteUser(widget.db, widget.userEmail);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => App(db: widget.db, auth: widget.auth,)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => App(db: widget.db, auth: widget.auth, storage: widget.storage,)));
   }
 }

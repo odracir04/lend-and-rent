@@ -1,5 +1,7 @@
 import 'package:app_prototype/pages/profile_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../users/user_icon.dart';
@@ -13,18 +15,25 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.userName,
     required this.userLocation,
     required this.userPicture,
+    required this.auth,
+    required this.db,
+    required this.storage
   });
 
+  final FirebaseFirestore db;
   final String userName, userLocation, visitingEmail,userPicture;
   final VoidCallback changeTheme;
   final bool darkTheme;
+  final FirebaseAuth auth;
+  final FirebaseStorage storage;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: GestureDetector(
+        key: const Key('chat_app_bar_icon'),
         onTap: () {
-          final currentUser = FirebaseAuth.instance.currentUser;
+          final currentUser = auth.currentUser;
           if (currentUser != null) {
             Navigator.push(
               context,
@@ -33,6 +42,9 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                   changeTheme: changeTheme,
                   darkTheme: darkTheme,
                   profileEmail: visitingEmail,
+                  db: db,
+                  auth: auth,
+                  storage: storage,
                 ),
               ),
             );

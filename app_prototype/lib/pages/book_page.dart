@@ -12,10 +12,13 @@ import 'chat_page.dart';
 
 class BookPage extends StatefulWidget {
   const BookPage({super.key, required this.book, required this.darkTheme,
-                    required this.db, required this.changeTheme});
+                    required this.db, required this.changeTheme,
+                    required this.auth, required this.storage});
 
   final VoidCallback changeTheme;
   final FirebaseFirestore db;
+  final FirebaseAuth auth;
+  final FirebaseStorage storage;
   final Map<String, dynamic> book;
   final bool darkTheme;
 
@@ -41,12 +44,11 @@ class BookPageState extends State<BookPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                  child: (widget.book['renter'] == FirebaseAuth.instance.currentUser!.email) ? TextButton(
+                  child: (widget.book['renter'] == widget.auth.currentUser!.email) ? TextButton(
                     onPressed: () {
-                      FirebaseStorage storage = FirebaseStorage.instance;
-                      Reference ref = storage.refFromURL(widget.book['imagePath']);
+                      Reference ref = widget.storage.refFromURL(widget.book['imagePath']);
                       ref.delete();
-                      deleteBook(FirebaseFirestore.instance, widget.book);
+                      deleteBook(widget.db, widget.book);
                       Navigator.pop(context);
                     },
                     child: Text('Remove book', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white)),
@@ -58,8 +60,10 @@ class BookPageState extends State<BookPage> {
                           darkTheme: widget.darkTheme,
                           changeTheme: widget.changeTheme,
                           receiverEmail: widget.book['renter'],
-                          userEmail: FirebaseAuth.instance.currentUser!.email ?? "",
-                          db: FirebaseFirestore.instance,
+                          userEmail: widget.auth.currentUser!.email ?? "",
+                          db: widget.db,
+                          auth: widget.auth,
+                          storage: widget.storage,
                         )));},
                     child: Text('Chat', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white)),
                   )
@@ -71,7 +75,7 @@ class BookPageState extends State<BookPage> {
                         MaterialPageRoute(builder: (context) => BookReviewsPage(
                           db: widget.db, book: widget.book['title'],
                           changeTheme: widget.changeTheme, darkTheme: widget.darkTheme,
-                          auth: FirebaseAuth.instance,
+                          auth: widget.auth,
                         ))
                     ); },
                     child: Text('Reviews', style: TextStyle(color: widget.darkTheme ? Colors.black : Colors.white)),
@@ -194,21 +198,24 @@ class BookPageState extends State<BookPage> {
                           children: [
                             FutureBuilder(
                                 future: Future.wait([getReceiverName(widget.db, widget.book['renter']),
-                                  getPictureUrl(FirebaseFirestore.instance, widget.book['renter'])]),
+                                  getPictureUrl(widget.db, widget.book['renter'])]),
                                 builder: (builder, snapshot) {
                                   if (snapshot.connectionState != ConnectionState.waiting) {
                                     List<String?> data = snapshot.data ?? [];
                                     return GestureDetector(
                                       onTap: () {
-                                        final currentUser = FirebaseAuth.instance.currentUser;
+                                        final currentUser = widget.auth.currentUser;
                                         if (currentUser != null) {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) => ProfilePage(
+                                                db: widget.db,
                                                 changeTheme: widget.changeTheme,
                                                 darkTheme: widget.darkTheme,
                                                 profileEmail: widget.book['renter'],
+                                                auth: widget.auth,
+                                                storage: widget.storage,
                                               ),
                                             ),
                                           );
