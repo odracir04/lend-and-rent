@@ -47,6 +47,30 @@ void main() {
       "genres": ["Action", "Adventure"],
       "renter": "test@email.com"
     });
+    await fakeFirestore.collection('bookreviews').add({
+      "book": "The Amazing Saga Vol.2",
+      "review_email": "email@example.org",
+      "review_stars": 2.0,
+      "text": "It was terrible!"
+    });
+    await fakeFirestore.collection('bookreviews').add({
+      "book": "The Amazing Saga Vol.1",
+      "review_email": "email@example.org",
+      "review_stars": 5.0,
+      "text": "It was great!"
+    });
+  });
+
+  testWidgets("Get books test", (WidgetTester tester) async {
+    List<DocumentSnapshot> books = await getBooks(fakeFirestore, 4);
+    List<String> names = [];
+    for (DocumentSnapshot book in books) {
+      final result = book.data() as Map<String, dynamic>;
+      names.add(result['title']);
+    }
+
+    expect(names, ["The Amazing Saga Vol.1", "The Amazing Saga Vol.2", "An Amazing Saga", "An Amazing Saga"]);
+    expect(names.length, 4);
   });
 
   testWidgets("Searching books by title", (WidgetTester tester) async {
@@ -160,11 +184,71 @@ void main() {
   testWidgets("Deleting a book", (WidgetTester tester) async {
     final snapshot = await fakeFirestore.collection('books').get();
     final id = snapshot.docs[0].id;
-    fakeFirestore.collection('books').doc(id).delete();
+    deleteBook(fakeFirestore, {'id': id});
 
     late Future<List<DocumentSnapshot>> futureBooks = getBooksSearch(
         'The', fakeFirestore);
     List<DocumentSnapshot> books = await futureBooks;
     expect(books.length, 1);
+  });
+
+  testWidgets("Add book test", (WidgetTester tester) async {
+    final book = {
+      "author": "Jack Smith",
+      "title": "Test Saga",
+      "title_lowercase": "test saga",
+      "location": "Paranhos, Porto",
+      "imagePath": "assets/images/book.jpg",
+      "genres": ["Action", "Adventure"],
+      "renter": "test@email.com"
+    };
+    await addBook(fakeFirestore, book);
+
+    final books = await fakeFirestore.collection('books')
+          .where('title', isEqualTo: 'Test Saga').get();
+
+    expect(books.docs.length, 1);
+  });
+
+  testWidgets("Get reviews test", (WidgetTester tester) async {
+    List<DocumentSnapshot> reviews = await getBookReviews(fakeFirestore, "The Amazing Saga Vol.1");
+    String reviewEmail = "";
+    double stars = 0;
+    String text = "";
+    for (DocumentSnapshot review in reviews) {
+      final result = review.data() as Map<String, dynamic>;
+      reviewEmail = result['review_email'];
+      stars = result['review_stars'];
+      text = result['text'];
+    }
+
+    expect(reviews.length, 1);
+    expect(reviewEmail, 'email@example.org');
+    expect(stars, 5);
+    expect(text, "It was great!");
+  });
+
+  testWidgets("Write review test", (WidgetTester tester) async {
+    await writeBookReview(fakeFirestore, "The Amazing Saga Vol.1", "test@email.org",
+        3.0, "Test review");
+
+    QuerySnapshot reviews = await fakeFirestore.collection('bookreviews')
+        .where('book', isEqualTo: "The Amazing Saga Vol.1")
+        .where('review_stars', isEqualTo: 3.0).get();
+    List<DocumentSnapshot> result = [];
+    for (DocumentSnapshot review in reviews.docs) {
+      result.add(review);
+    }
+
+    expect(result.length, 1);
+
+    reviews = await fakeFirestore.collection('bookreviews')
+        .where('book', isEqualTo: "The Amazing Saga Vol.1").get();
+    result = [];
+    for (DocumentSnapshot review in reviews.docs) {
+      result.add(review);
+    }
+
+    expect(result.length, 2);
   });
 }

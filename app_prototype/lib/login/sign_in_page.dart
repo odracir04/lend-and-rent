@@ -2,14 +2,19 @@ import 'dart:async';
 
 import 'package:app_prototype/login/recover_password.dart';
 import 'package:app_prototype/login/sign_up_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInPage extends StatefulWidget {
   final VoidCallback onSignIn;
   final FirebaseAuth auth;
+  final FirebaseStorage storage;
+  final FirebaseFirestore db;
 
-  SignInPage({required this.onSignIn, required this.auth});
+  SignInPage({required this.onSignIn, required this.auth,
+              required this.db, required this.storage});
 
   @override
   State<SignInPage> createState() => _SignInPageState();
@@ -34,7 +39,7 @@ class _SignInPageState extends State<SignInPage> {
       );
       widget.onSignIn();
       print('User signed in: ${userCredential.user!.uid}');
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await widget.auth.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
@@ -94,6 +99,7 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                   const SizedBox(height: 20),
                   TextFormField(
+                    key: const Key('sign_in_email'),
                     controller: emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
@@ -118,6 +124,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    key: const Key('sign_in_password'),
                     controller: passwordController,
                     obscureText: !showPassword,
                     decoration: InputDecoration(
@@ -176,7 +183,8 @@ class _SignInPageState extends State<SignInPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SignUpPage()),
+                        MaterialPageRoute(builder: (context) => SignUpPage(auth: widget.auth,
+                          db: widget.db, storage: widget.storage,)),
                       );
                       print('Sign up button pressed');
                     },

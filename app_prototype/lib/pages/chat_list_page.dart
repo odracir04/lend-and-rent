@@ -1,14 +1,19 @@
 import 'package:app_prototype/database/chats.dart';
 import 'package:app_prototype/widgets/chat/chat_list_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class ChatListPage extends StatefulWidget {
-  const ChatListPage({super.key, required this.changeTheme, required this.darkTheme, required this.userEmail, required this.db});
+  const ChatListPage({super.key, required this.changeTheme, required this.darkTheme,
+    required this.userEmail, required this.db, required this.auth, required this.storage});
 
   final String userEmail;
   final FirebaseFirestore db;
+  final FirebaseAuth auth;
   final VoidCallback changeTheme;
+  final FirebaseStorage storage;
   final bool darkTheme;
 
   @override
@@ -51,7 +56,8 @@ class ChatListPageState extends State<ChatListPage> {
                 scrollDirection: Axis.vertical,
                 itemCount: messages.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ChatListItem(changeTheme : widget.changeTheme, darkTheme: widget.darkTheme, receiverEmail: messages[index], db: widget.db,);
+                  return ChatListItem(changeTheme : widget.changeTheme, darkTheme: widget.darkTheme,
+                    receiverEmail: messages[index], db: widget.db, auth: widget.auth, storage: widget.storage,);
                 },
               ),
             );

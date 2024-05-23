@@ -127,7 +127,7 @@ Future<bool?> getDisplayEmail(FirebaseFirestore db,String? email) async {
   if (email == null){
     return null;
   }
-  return await getField(db,email, 'display_email');
+  return await getField(db, email, 'display_email');
 }
 /// Get profile picture
 Future<String?> getPictureUrl(FirebaseFirestore db,String? email) async {
