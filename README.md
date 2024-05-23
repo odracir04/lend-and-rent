@@ -49,19 +49,10 @@ We believe that knowledge is power, and our mission is to empower users through 
 - [x] **User Profiles:** Profiles for each user to manage their accounts and user details.
 
 ### Elevator Pitch
-> [!WARNING]
-> This section is not written out yet.
-Draft a small text to help you quickly introduce and describe your product in a short time (lift travel time ~90 seconds) and a few words (~800 characters), a technique usually known as elevator pitch.
 
-Take a look at the following links to learn some techniques:
-* [Crafting an Elevator Pitch](https://www.mindtools.com/pages/article/elevator-pitch.htm)
-* [The Best Elevator Pitch Examples, Templates, and Tactics - A Guide to Writing an Unforgettable Elevator Speech, by strategypeak.com](https://strategypeak.com/elevator-pitch-examples/)
-* [Top 7 Killer Elevator Pitch Examples, by toggl.com](https://blog.toggl.com/elevator-pitch-examples/)
-
+Todos nós já pensámos: "Eu quero muito este livro, mas pagar tanto para o ler uma vez e nunca mais tocar nele? Não vale a pena!" É aqui que entra a Lend and Rent. Com a Lend and Rent, podes dar uma nova vida aos livros que já leste e receber os livros que desejas sem pagar nada. És apaixonado por leitura, mas já vês a tua casa a ser engolida pelos livros? Ou então simplesmente tens dificuldades a financiar essa tua paixão? Então a Lend and Rent é para ti! Comprar livros é caro, e a própria impressão deles tem um forte impacto no ambiente. Mesmo as bibliotecas têm sempre prazos para o arrendamento. E apesar de vivermos na era digital, há quem não queira deixar o prazer do livro de capa dura. Então junta-te à Lend and Rent e terás todos os livros a um clique de distância. Vamos virar a página para um mundo mais sustentável.
 
 ## Requirements
-
-In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
 
 ### Domain model
 
@@ -73,33 +64,22 @@ The app is structured so that users can lend and rent books. Therefore, users ca
 
 
 ## Architecture and Design
-> [!WARNING]
-> This section is not written out yet.
-
-The architecture of a software system encompasses the set of key decisions about its overall organization. 
-
-A well written architecture document is brief but reduces the amount of time it takes new programmers to a project to understand the code to feel able to make modifications and enhancements.
-
-To document the architecture requires describing the decomposition of the system in their parts (high-level components) and the key behaviors and collaborations between them. 
-
-In this section you should start by briefly describing the overall components of the project and their interrelations. You should also describe how you solved typical problems you may have encountered, pointing to well-known architectural and design patterns, if applicable.
 
 ### Logical architecture
-The purpose of this subsection is to document the high-level logical structure of the code (Logical View), using a UML diagram with logical packages, without the worry of allocating to components, processes or machines.
-
-It can be beneficial to present the system in a horizontal decomposition, defining layers and implementation concepts, such as the user interface, business logic and concepts.
+The application consists of a layered approach with three layers and a separated Firebase API. The UI component, responsible for the 'front-end' of the application, renders the application onto the screen and captures the users inputs. It communicates with the business logic to know what to render and for the inputs to be passed from the former to the latter in order to be processed.
+The business logic handles the "internal state" of the app. It's connected to both the UI and Database schemas in order to have the information received from the user as well as the database and authentication mechanisms. With this information it processes what the next state will be, reporting back any updates necessary to both UI and Database.
+The database schemas layer is simply an interface for the communication between the Firebase API and the business logic of the application.
 
 ![LogicalView](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/blob/main/docs/Architecture%20and%20Design/logical_archutecture.png)
 
 ### Physical architecture
-The goal of this subsection is to document the high-level physical structure of the software system (machines, connections, software components installed, and their dependencies) using UML deployment diagrams (Deployment View) or component diagrams (Implementation View), separate or integrated, showing the physical structure of the system.
-
-It should describe also the technologies considered and justify the selections made. Examples of technologies relevant for ESOF are, for example, frameworks for mobile applications (such as Flutter).
+The physical side of the application consists of the device on which the app is stored and ran, its local storage, and the Firebase servers with which the app communicates for database access (Firestore and FirebaseStorage) and authentication (FirebaseAuth).
+We have chosen Firebase for the database and authentication features for its simplicity of use and efficiency. We have also chosen to develop the app in Flutter to assist with portability, and, like Firebase, due to the low degree of difficulty in using it.
 
 ![DeploymentView](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/blob/main/docs/Architecture%20and%20Design/physical_architecture.png)
 
 ### Vertical prototype
-To help on validating all the architectural, design and technological decisions made, we have implemented a vertical prototype, a thin vertical slice of the system integrating as many technologies as we can.
+To help on validating all the architectural, design and technological decisions made, we have implemented a [vertical prototype](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/releases/tag/vertical-prototype), a thin vertical slice of the system integrating as many technologies as we can.
 
 The vertical prototype consists of a simpler version of the apps home page containing only the following functionalities:
 - Book display
@@ -108,26 +88,8 @@ The vertical prototype consists of a simpler version of the apps home page conta
 - Theming, dark and light mode
 
 ## Project management
-> [!WARNING]
-> This section is not written out yet.
 
-Software project management is the art and science of planning and leading software projects, in which software projects are planned, implemented, monitored and controlled.
-
-In the context of ESOF, we recommend each team to adopt a set of project management practices and tools capable of registering tasks, assigning tasks to team members, adding estimations to tasks, monitor tasks progress, and therefore being able to track their projects.
-
-Common practices of managing iterative software development are: backlog management, release management, estimation, iteration planning, iteration development, acceptance tests, and retrospectives.
-
-You can find below information and references related with the project management in our team: 
-
-* Backlog management: Product backlog and Sprint backlog in a [Github Projects board](https://github.com/orgs/FEUP-LEIC-ES-2023-24/projects/54);
-* Release management: [v0](#), v1, v2, v3, ...;
-* Sprint planning and retrospectives: 
-  * plans: screenshots of Github Projects board at begin and end of each iteration;
-  * retrospectives: meeting notes in a document in the repository;
-
- ---
-
- ## Sprint 1
+ ## [Sprint 1](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/releases/tag/Sprint1)
 
  ### Implemented Features
 
@@ -164,7 +126,7 @@ In regards to the development of the app itself, all but one of the planned feat
 
 Thus far, our team was faced with lack of communication and problems regarding the organization of the project, issues that lead our performance as a team to overall fall below expected. As such, we're looking forward to improve on those regards until the next sprint.
 
-## Sprint 2
+## [Sprint 2](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC16T3/releases/tag/Sprint2)
 
 ### Implemented Features
 
